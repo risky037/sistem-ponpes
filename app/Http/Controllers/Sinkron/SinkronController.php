@@ -75,7 +75,7 @@ class SinkronController extends Controller
                         Sheets::spreadsheet('YOUR_SPREADSHEET_ID')->sheet('Santri Aktif')->append($santri_aktif);
                     }
                 }
-                
+
                 return response()->json(['success' => true], 200);
             } else {
                 return response()->json(['success' => false, 'message' => 'Silahkan isi ID Spreadsheet terlebih dahulu'], 200);
