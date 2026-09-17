@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SantriRequest;
 use App\Imports\SantriImport;
 use App\Models\AlamatSantri;
-use App\Models\Kamar;
 use App\Models\KamarSantri;
 use App\Models\KelasSantri;
 use App\Models\Santri;
@@ -17,6 +16,7 @@ use App\Models\WaliSantri;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -57,15 +57,19 @@ class SantriController extends Controller
                 })
                 ->toJson();
         }
+
         return view('pages.santri.index');
     }
+
     public function show(Santri $santri)
     {
-        $santri->load('user', 'wali_santri', 'kamar_santri',  'kelas_santri', 'alamat_santri', 'alamat_santri.provinsi', 'alamat_santri.kabupaten', 'alamat_santri.kecamatan', 'alamat_santri.kelurahan');
+        $santri->load('user', 'wali_santri', 'kamar_santri', 'kelas_santri', 'alamat_santri', 'alamat_santri.provinsi', 'alamat_santri.kabupaten', 'alamat_santri.kecamatan', 'alamat_santri.kelurahan');
+
         return view('pages.santri.detail', [
             'item' => $santri,
         ]);
     }
+
     public function store(SantriRequest $request)
     {
         $validate = $request->validated();
@@ -97,23 +101,22 @@ class SantriController extends Controller
                 $path = storage_path('app/public/uploads/santri/');
                 $filename = $foto->hashName();
 
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
 
                 Image::make($foto->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 $validate['foto'] = $filename;
             } else {
                 $validate['foto'] = 'santri.png';
             }
             $user = User::create([
                 'name' => $request->nama_lengkap,
-                'email' => 'santri_' . Str::slug($request->nama_lengkap) . config('app.domain'),
-                'password' => bcrypt('password'),
-                'role_id' => 4,
+                'email' => 'santri_'.Str::slug($request->nama_lengkap).config('app.domain'),
+                'password' => Hash::make($request->filled('password') ? $request->password : 'password'),
             ]);
             $user->assignRole('Santri');
             $validate['user_id'] = $user->id;
@@ -122,11 +125,11 @@ class SantriController extends Controller
             $santri = Santri::create($validate);
             KamarSantri::create([
                 'santri_id' => $santri->id,
-                'kamar_id' => $kamar_santri['kamar_id']
+                'kamar_id' => $kamar_santri['kamar_id'],
             ]);
             KelasSantri::create([
                 'santri_id' => $santri->id,
-                'kelas_id' => $kelas_santri['kelas_id']
+                'kelas_id' => $kelas_santri['kelas_id'],
             ]);
             $alamat = AlamatSantri::create([
                 'santri_id' => $santri->id,
@@ -142,7 +145,7 @@ class SantriController extends Controller
                 'nama_ayah' => $validate['nama_ayah'],
                 'nama_ibu' => $validate['nama_ibu'],
             ]);
-            if (!$santri) {
+            if (! $santri) {
                 $user->delete();
                 $wali->delete();
                 $alamat->delete();
@@ -150,20 +153,22 @@ class SantriController extends Controller
                 User::find($validate['user_id'])->assignRole('Santri');
             }
             Toastr::success('Berhasil menambah data');
+
             return redirect()->back();
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::error('Gagal menambah data');
 
             return redirect()->back();
         }
     }
+
     public function edit(Santri $santri)
     {
         return view('pages.santri.edit', [
             'item' => $santri->load('user', 'wali_santri', 'kamar_santri', 'kelas_santri', 'alamat_santri'),
         ]);
     }
+
     public function update(SantriRequest $request, Santri $santri)
     {
         $validate = $request->validated();
@@ -193,22 +198,29 @@ class SantriController extends Controller
             if (isset($foto) == true) {
                 $path = storage_path('app/public/uploads/santri/');
                 $filename = $foto->hashName();
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
                 Image::make($foto->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 $validate['foto'] = $filename;
             } else {
                 $validate['foto'] = $santri->foto;
             }
-            User::where('id', $santri->user_id)->update([
+            $userData = [
                 'name' => $request->nama_lengkap,
-                'email' => 'santri_' . Str::slug($request->nama_lengkap) . config('app.domain'),
-                'password' => bcrypt('password'),
-            ]);
+                'email' => 'santri_'.Str::slug($request->nama_lengkap).config('app.domain'),
+            ];
+
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->password);
+            }
+
+            if ($santri->user_id) {
+                User::where('id', $santri->user_id)->update($userData);
+            }
             if ($santri->alamat_santri) {
                 AlamatSantri::where('santri_id', $santri->id)->update([
                     'provinsi_id' => $validate['provinsi_id'],
@@ -231,22 +243,22 @@ class SantriController extends Controller
             $kelas = KelasSantri::where('santri_id', $santri->id)->first();
             if ($kamar) {
                 $kamar->update([
-                    'kamar_id' => $kamar_santri['kamar_id']
+                    'kamar_id' => $kamar_santri['kamar_id'],
                 ]);
             } else {
                 KamarSantri::create([
                     'santri_id' => $santri->id,
-                    'kamar_id' => $kamar_santri['kamar_id']
+                    'kamar_id' => $kamar_santri['kamar_id'],
                 ]);
             }
             if ($kelas) {
                 $kelas->update([
-                    'kelas_id' => $kelas_santri['kelas_id']
+                    'kelas_id' => $kelas_santri['kelas_id'],
                 ]);
             } else {
                 KelasSantri::create([
                     'santri_id' => $santri->id,
-                    'kelas_id' => $kelas_santri['kelas_id']
+                    'kelas_id' => $kelas_santri['kelas_id'],
                 ]);
             }
             $wali = WaliSantri::where('santri_id', $santri->id)->first();
@@ -264,16 +276,18 @@ class SantriController extends Controller
             }
             $validate['nik'] = request()->input('nik');
             $validate['kk'] = request()->input('kk');
+            unset($validate['password'], $validate['password_confirmation']);
             $santri->update($validate);
             Toastr::success('Berhasil merubah data');
+
             return redirect()->back();
-        } catch (\Illuminate\Database\QueryException $th) {
-            dd($th->getMessage());
+        } catch (\Throwable $th) {
             Toastr::error('Gagal merubah data');
 
             return redirect()->back()->withInput();
         }
     }
+
     public function destroy(Santri $santri)
     {
         try {
@@ -290,24 +304,29 @@ class SantriController extends Controller
             $santri->kamar_santri()->delete();
             $santri->kelas_santri()->delete();
             Toastr::success('Berhasil menghapus data');
+
             return to_route('santri.index');
         } catch (\Throwable $th) {
             Toastr::error('Gagal menghapus data');
+
             return redirect()->back();
         }
     }
+
     public function print_kts(Santri $santri)
     {
         return view('pages.santri.print', compact('santri'));
     }
+
     public function download()
     {
         $mime = Storage::mimeType('Format import data santri.xlsx');
 
-        return response()->download(public_path('files/') . 'Format import data santri.xlsx', 'Format import data santri.xlsx', ['Content-Type' => $mime]);
+        return response()->download(public_path('files/').'Format import data santri.xlsx', 'Format import data santri.xlsx', ['Content-Type' => $mime]);
 
         return redirect()->back();
     }
+
     public function import(Request $request)
     {
         try {
@@ -319,13 +338,16 @@ class SantriController extends Controller
                 Excel::import(new SantriImport, $file);
             }
             Toastr::success('Berhasil import data santri');
+
             return redirect()->back();
         } catch (\Throwable $th) {
             // dd($th->getMessage());
             Toastr::error('Gagal import data santri');
+
             return redirect()->back();
         }
     }
+
     public function export(Request $request)
     {
         $santri = [];
