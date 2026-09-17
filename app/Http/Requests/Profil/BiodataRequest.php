@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Profil;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BiodataRequest extends FormRequest
@@ -11,13 +12,13 @@ class BiodataRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() && $this->user()->can('updateBiodata', $this->route('user'));
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -33,7 +34,7 @@ class BiodataRequest extends FormRequest
             'dusun' => ['required', 'string'],
             'nik' => ['required', 'min:16'],
             'kk' => ['required', 'min:16'],
-            'foto' => ['nullable', 'mimes:png,jpg,jpeg', 'max:3020']
+            'foto' => ['nullable', 'mimes:png,jpg,jpeg', 'max:3020'],
         ];
     }
 }
