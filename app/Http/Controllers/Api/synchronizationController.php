@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\SyncKelasRequest;
+use App\Http\Requests\Api\SyncSantriRequest;
+use App\Models\ActivityLog;
 use App\Models\Kamar;
 use App\Models\Kelas;
 use App\Models\Santri;
@@ -10,7 +13,7 @@ use App\Models\User;
 use App\Models\WaliSantri;
 use Carbon\Carbon;
 use Helper;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -28,15 +31,30 @@ class synchronizationController extends Controller
         ], 200);
     }
 
-    public function store_kelas(Request $request)
+    public function store_kelas(SyncKelasRequest $request)
     {
-        $validate = $request->validate([
-            'tingkatan' => 'required|min:3',
-            'kelas' => 'required|min:3',
-            'keterangan' => 'nullable',
-        ]);
+        $validate = $request->validated();
         try {
+            if (empty($validate['kode'])) {
+                $validate['kode'] = 'KLS-'.Str::upper(Str::random(6));
+            }
             $kelas = Kelas::create($validate);
+
+            // Audit logging for mutation
+            $userId = auth()->id() ?? $request->user()?->id;
+            ActivityLog::create([
+                'user_id' => $userId,
+                'activity' => "[SYNC] POST /api/v1/sync/kelas action:create resource:Kelas id:{$kelas->id} at ".now()->toIso8601String(),
+            ]);
+
+            Log::info('Synchronization API: Kelas created', [
+                'user_id' => $userId,
+                'endpoint' => $request->path(),
+                'action' => 'create',
+                'resource' => 'Kelas',
+                'resource_id' => $kelas->id,
+                'timestamp' => now()->toIso8601String(),
+            ]);
 
             return response()->json([
                 'status' => true,
@@ -44,48 +62,35 @@ class synchronizationController extends Controller
                 'data' => $kelas,
             ], 201);
         } catch (\Throwable $th) {
+            Log::error('Synchronization API error on store_kelas: '.$th->getMessage(), [
+                'exception' => $th,
+            ]);
+
             return response()->json([
                 'status' => false,
                 'message' => 'error created data',
-            ], 401);
+                'errors' => [
+                    'server' => [$th->getMessage()],
+                ],
+            ], 500);
         }
     }
 
-    // function for sync kelas
+    // function for sync santri
     public function get_santri()
     {
-        $kelas = Kelas::all();
+        $santri = Santri::with(['user', 'kamar_santri', 'kelas_santri'])->get();
 
         return response()->json([
             'status' => true,
-            'message' => 'get all data kelas',
-            'data' => $kelas,
+            'message' => 'get all data santri',
+            'data' => $santri,
         ], 200);
     }
 
-    public function store_santri(Request $request)
+    public function store_santri(SyncSantriRequest $request)
     {
-        $validate = $request->validate([
-            'kelas' => 'required|exists:kelas,id',
-            'kamar' => 'required|exists:kamars,id',
-            'nama_lengkap' => 'required|string|min:3|max:225',
-            'dusun' => 'required|min:3',
-            'desa' => 'required|min:3',
-            'kecamatan' => 'required|min:3',
-            'kabupaten' => 'required|min:3',
-            'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
-            'nik' => 'required|digits:16',
-            'kk' => 'required|digits:16',
-            'whatsapp' => 'required|numeric|digits:11',
-            'tanggal_lahir' => 'required|numeric|min:1|max:31',
-            'bulan_lahir' => 'required|numeric|min:1|max:12',
-            'tahun_lahir' => 'required',
-            'tempat_lahir' => 'required|string',
-            'tahun_masuk' => 'required',
-            'tanggal_boyong' => 'nullable',
-            'nama_ayah' => 'required',
-            'nama_ibu' => 'required',
-        ]);
+        $validate = $request->validated();
         try {
             // get tahun hijriyah
             $date = Carbon::parse($request->tahun_masuk);
@@ -176,8 +181,26 @@ class synchronizationController extends Controller
 
             // update kamar
             $kamar = Kamar::where('id', $validate['kamar_id'])->first();
-            $kamar->update([
-                'jumlah_santri' => $kamar->jumlah_santri + 1,
+            if ($kamar) {
+                $kamar->update([
+                    'jumlah_santri' => $kamar->jumlah_santri + 1,
+                ]);
+            }
+
+            // Audit logging for mutation
+            $userId = auth()->id() ?? $request->user()?->id;
+            ActivityLog::create([
+                'user_id' => $userId,
+                'activity' => "[SYNC] POST /api/v1/sync/santri action:create resource:Santri id:{$santri->id} at ".now()->toIso8601String(),
+            ]);
+
+            Log::info('Synchronization API: Santri created', [
+                'user_id' => $userId,
+                'endpoint' => $request->path(),
+                'action' => 'create',
+                'resource' => 'Santri',
+                'resource_id' => $santri->id,
+                'timestamp' => now()->toIso8601String(),
             ]);
 
             return response()->json([
@@ -186,10 +209,17 @@ class synchronizationController extends Controller
                 'data' => $santri,
             ], 201);
         } catch (\Throwable $th) {
+            Log::error('Synchronization API error on store_santri: '.$th->getMessage(), [
+                'exception' => $th,
+            ]);
+
             return response()->json([
                 'status' => false,
                 'message' => 'error created data',
-            ], 401);
+                'errors' => [
+                    'server' => [$th->getMessage()],
+                ],
+            ], 500);
         }
     }
 }

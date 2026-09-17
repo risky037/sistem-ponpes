@@ -28,6 +28,20 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        RateLimiter::for('sync-api', function (Request $request) {
+            return Limit::perMinute(60)
+                ->by($request->user()?->id ?: $request->ip())
+                ->response(function (Request $request, array $headers) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Too many requests. Rate limit exceeded.',
+                        'errors' => [
+                            'rate_limit' => ['You have exceeded the allowed limit of 60 requests per minute.'],
+                        ],
+                    ], 429, $headers);
+                });
+        });
+
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('v1')
