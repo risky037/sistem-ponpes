@@ -1,0 +1,19 @@
+# CODEOWNERS for Sistem Informasi Pondok Pesantren Fatimah Az-Zahra
+# Syntax: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global repository owner
+* @risky037
+
+# Core Architecture & Application Logic
+/app/ @risky037
+/bootstrap/ @risky037
+
+# Configuration & Security
+/config/ @risky037
+/.github/ @risky037
+
+# Database Migrations, Seeders, and Factories
+/database/ @risky037
+
+# Routing & Public API
+/routes/ @risky037
