@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Kelas;
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -14,11 +16,13 @@ class KelasController extends Controller
     {
         if (request()->ajax()) {
             $kelas = Kelas::all();
+
             return DataTables::of($kelas)
                 ->addIndexColumn()
                 ->addColumn('action', 'pages.kelas.include.action')
                 ->toJson();
         }
+
         return view('pages.kelas.index');
     }
 
@@ -31,12 +35,19 @@ class KelasController extends Controller
         ]);
 
         try {
-            $validate['kode'] = fake()->regexify('[A-Z]{5}[0-4]{5}');
+            do {
+                $kode = 'KLS-'.Str::upper(Str::random(6));
+            } while (Kelas::where('kode', $kode)->exists());
+
+            $validate['kode'] = $kode;
             Kelas::create($validate);
             Toastr::success('Berhasil menambah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('KelasController store error: '.$th->getMessage(), [
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menambah data');
 
             return redirect()->back();

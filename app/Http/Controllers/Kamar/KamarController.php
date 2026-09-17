@@ -6,6 +6,8 @@ use App\Exports\KamarExport;
 use App\Http\Controllers\Controller;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,11 +18,13 @@ class KamarController extends Controller
     {
         if (request()->ajax()) {
             $kamar = Kamar::get();
+
             return DataTables::of($kamar)
                 ->addIndexColumn()
                 ->addColumn('action', 'pages.kamar.include.action')
                 ->toJson();
         }
+
         return view('pages.kamar.index');
     }
 
@@ -34,12 +38,19 @@ class KamarController extends Controller
         ]);
 
         try {
-            $validate['kode'] = fake()->regexify('[A-Z]{5}[0-4]{5}');
+            do {
+                $kode = 'KMR-'.Str::upper(Str::random(6));
+            } while (Kamar::where('kode', $kode)->exists());
+
+            $validate['kode'] = $kode;
             Kamar::create($validate);
             Toastr::success('Berhasil menambah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('KamarController store error: '.$th->getMessage(), [
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menambah data');
 
             return redirect()->back();
@@ -83,9 +94,11 @@ class KamarController extends Controller
             return redirect()->back();
         }
     }
+
     public function download()
     {
         $kamar = Kamar::get(['kode', 'nama', 'blok', 'jumlah_santri', 'maksimal_santri']);
+
         return Excel::download(new KamarExport($kamar), 'kamar.xlsx');
     }
 }
