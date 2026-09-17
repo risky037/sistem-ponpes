@@ -16,31 +16,44 @@ class AuthController extends Controller
 
     public function auth(Request $request)
     {
-        $validate = $request->validate([
-            'email' => 'required|min:5|email|exists:users,email',
-            'password' => 'required|min:8',
+        $credentials = $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
         ]);
-        if (Auth::attempt($validate)) {
-            ActivityLog::create([
-                'user_id' => auth()->user()->id,
-                'activity' => auth()->user()->name.' Login pada '.date('d F Y H:i s'),
-            ]);
+
+        $remember = $request->boolean('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            if (Auth::check()) {
+                ActivityLog::create([
+                    'user_id' => Auth::id(),
+                    'activity' => Auth::user()->name.' Login pada '.date('d F Y H:i s'),
+                ]);
+            }
 
             return redirect()->intended(route('dashboard'));
         }
-        flash('Anda tidak terdaftar dalam sistem', 'error');
 
-        return redirect()->back();
+        flash('Email atau password yang Anda masukkan salah.', 'error');
+
+        return redirect()->back()
+            ->withInput($request->only('email', 'remember'))
+            ->withErrors(['email' => 'Email atau password yang Anda masukkan salah.']);
     }
 
     public function logout(Request $request)
     {
-        ActivityLog::create([
-            'user_id' => auth()->user()->id,
-            'activity' => auth()->user()->name.' Logout pada '.date('d F Y H:i s'),
-        ]);
+        if (Auth::check()) {
+            ActivityLog::create([
+                'user_id' => Auth::id(),
+                'activity' => Auth::user()->name.' Logout pada '.date('d F Y H:i s'),
+            ]);
+        }
+
         Auth::logout();
+        $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->to('login');
