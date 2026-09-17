@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SantriRequest extends FormRequest
@@ -17,7 +18,7 @@ class SantriRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -38,6 +39,7 @@ class SantriRequest extends FormRequest
             'nama_ayah' => 'required',
             'nama_ibu' => 'required',
             'foto' => 'nullable|mimes:jpeg,png,jpg|max:2048',
+            'password' => 'nullable|string|min:8|confirmed',
         ];
     }
 }
