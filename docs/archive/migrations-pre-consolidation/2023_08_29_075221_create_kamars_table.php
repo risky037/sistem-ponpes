@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Kelas;
-use App\Models\Santri;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wali_kelas', function (Blueprint $table) {
+        Schema::create('kamars', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Kelas::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Santri::class)->constrained()->cascadeOnDelete();
+            $table->string('kode');
+            $table->string('nama');
+            $table->string('blok');
+            $table->integer('jumlah_santri')->default(0);
+            $table->integer('maksimal_santri')->default(6);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wali_kelas');
+        Schema::dropIfExists('kamars');
     }
 };

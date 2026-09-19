@@ -58,6 +58,8 @@ Ongoing infrastructure modernization:
 4. **[Database Migration Cleanup & Consolidation Assessment](domain-assessments/Laravel12_Migration_Cleanup_Assessment.md):** Detailed analysis of 27 migrations, duplicate alterations, and pre-production consolidation blueprint.
 5. **[Database Migration & Seeder Refinement Assessment](domain-assessments/Laravel12_Database_Refinement_Assessment.md):** Master assessment covering seeder decoupling, credential standardization, schema verification, and migration consolidation decision.
 6. **[Seeder Modularization Implementation Report](domain-assessments/Laravel12_Seeder_Modularization_Implementation.md):** Decoupled, idempotent seeder pipeline with standard development credentials (`admin@gmail.com` / `password`).
+7. **[Database Migration Consolidation Assessment](domain-assessments/Laravel12_Migration_Consolidation_Assessment.md):** Phase 5.8.6A comprehensive audit of 27 migration files and consolidation roadmap.
+8. **[Database Migration Consolidation Implementation Report](domain-assessments/Laravel12_Migration_Consolidation_Implementation.md):** Phase 5.8.6B execution report consolidating 27 legacy migrations into 15 canonical migrations with zero schema drift.
 
 ---
 
@@ -88,5 +90,7 @@ docs/reports/
     ├── intervention_image_migration_assessment.md
     ├── Laravel12_Migration_Cleanup_Assessment.md
     ├── Laravel12_Database_Refinement_Assessment.md
-    └── Laravel12_Seeder_Modularization_Implementation.md
+    ├── Laravel12_Seeder_Modularization_Implementation.md
+    ├── Laravel12_Migration_Consolidation_Assessment.md
+    └── Laravel12_Migration_Consolidation_Implementation.md
 ```

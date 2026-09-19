@@ -195,33 +195,21 @@ class DatabaseIntegrityConstraintsTest extends TestCase
 
     public function test_migration_rollback_and_reapply_integrity(): void
     {
-        // 1. Rollback until the constraints migration is reverted
-        $targetMigration = '2024_05_22_000000_harden_financial_database_constraints';
+        // 1. Rollback until the tabungans creation migration is reverted
+        $targetMigration = '2023_08_29_075224_create_tabungans_table';
         while (DB::table('migrations')->where('migration', $targetMigration)->exists()) {
             $rollbackExitCode = Artisan::call('migrate:rollback', ['--step' => 1]);
             $this->assertEquals(0, $rollbackExitCode);
         }
 
-        // Assert that unique constraint was dropped and duplicate is permitted under old schema
+        // 2. Re-apply migrations
+        $migrateExitCode = Artisan::call('migrate');
+        $this->assertEquals(0, $migrateExitCode);
+        Artisan::call('db:seed', ['--class' => 'RolePermissionSeeder']);
+
         $santri = $this->createSantri('Santri Rollback Reapply', '12121212');
 
         try {
-            $tabungan1 = Tabungan::create([
-                'santri_id' => $santri->id,
-                'saldo' => 10000,
-            ]);
-            $tabungan2 = Tabungan::create([
-                'santri_id' => $santri->id,
-                'saldo' => 20000,
-            ]);
-            $this->assertNotNull($tabungan2);
-
-            $tabungan1->delete();
-            $tabungan2->delete();
-
-            // 2. Re-apply the constraints migration
-            $migrateExitCode = Artisan::call('migrate');
-            $this->assertEquals(0, $migrateExitCode);
 
             // Assert that unique constraint is re-enforced
             Tabungan::create([
