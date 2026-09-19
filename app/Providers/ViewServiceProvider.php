@@ -50,10 +50,6 @@ class ViewServiceProvider extends ServiceProvider
             $santris = Santri::whereHas('tabungan')->with('user')->get();
             $view->with('santris', $santris);
         });
-        view()->composer('pages.mapel.index', function ($view) {
-            $kelas = Kelas::all();
-            $view->with('kelas', $kelas);
-        });
         view()->composer('pages.profil.*', function ($view) {
             $provinsi = Provinsi::all();
             $view->with('provinsi', $provinsi);

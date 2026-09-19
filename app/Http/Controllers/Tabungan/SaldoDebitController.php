@@ -45,41 +45,38 @@ class SaldoDebitController extends Controller
         ]);
         try {
             if ($request->santri_id == 'semua') {
-                $santri_tabungan = Tabungan::get()->pluck('santri_id')->toArray();
-                if (count($santri_tabungan) > 0) {
-                    Toastr::info('Tidak dapat menambah semua santri');
+                $santri_tabungan = Tabungan::pluck('santri_id')->toArray();
+                $santri = Santri::where('status', 'Santri Aktif')
+                    ->whereNotIn('id', $santri_tabungan)
+                    ->get();
+
+                if ($santri->isEmpty()) {
+                    Toastr::info('Tidak ada santri yang dapat ditambahkan');
 
                     return redirect()->back();
-                } else {
-                    $santri = Santri::where('status', 'Santri Aktif')->get();
-                    if (count($santri) > 0) {
-                        DB::transaction(function () use ($santri) {
-                            foreach ($santri as $key => $value) {
-                                $tabungan = Tabungan::create([
-                                    'santri_id' => $value->id,
-                                    'saldo' => 0,
-                                    'keterangan' => null,
-                                ]);
-                                if ($tabungan->saldo > 0) {
-                                    TransaksiTabungan::create([
-                                        'santri_id' => $tabungan->santri_id,
-                                        'tanggal_transaksi' => date('Y-m-d'),
-                                        'jenis_transaksi' => 'Setoran',
-                                        'jumlah_transaksi' => $tabungan->saldo,
-                                        'saldo_saatini' => $tabungan->saldo,
-                                    ]);
-                                }
-                            }
-                        });
-                        Toastr::success('Berhasil menambahkan semua santri');
-
-                        return redirect()->back();
-                    } else {
-                        Toastr::info('Tidak ada santri yang dapat ditambahkan');
-
-                        return redirect()->back();
-                    }
                 }
+
+                DB::transaction(function () use ($santri) {
+                    foreach ($santri as $key => $value) {
+                        $tabungan = Tabungan::create([
+                            'santri_id' => $value->id,
+                            'saldo' => 0,
+                            'keterangan' => null,
+                        ]);
+                        if ($tabungan->saldo > 0) {
+                            TransaksiTabungan::create([
+                                'santri_id' => $tabungan->santri_id,
+                                'tanggal_transaksi' => date('Y-m-d'),
+                                'jenis_transaksi' => 'Setoran',
+                                'jumlah_transaksi' => $tabungan->saldo,
+                                'saldo_saatini' => $tabungan->saldo,
+                            ]);
+                        }
+                    }
+                });
+                Toastr::success('Berhasil menambahkan semua santri');
+
+                return redirect()->back();
             }
             $santriTarget = Santri::with('tabungan')->find($validate['santri_id']);
             if ($santriTarget?->tabungan) {

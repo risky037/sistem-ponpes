@@ -153,7 +153,6 @@ class TransaksiController extends Controller
                 });
 
                 if ($executed) {
-                    $this->send_message($santri, 'Uang Jajan', number_format($validate['kredit']));
                     Toastr::success('Berhasil menyimpan data');
                 }
             }
@@ -173,6 +172,9 @@ class TransaksiController extends Controller
         }
     }
 
+    /**
+     * @deprecated Single notification flow is handled by TransaksiTabunganObserver.
+     */
     public function send_message($santri, $tujuan, $nominal)
     {
         $sender = config('whatsapp.sender_number');

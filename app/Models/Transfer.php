@@ -32,18 +32,18 @@ class Transfer extends Model
     public static function boot()
     {
         parent::boot();
-        self::creating(function ($user) {
-            $transfer = class_basename($user)." $user->name";
-            $user->CreateLog('Creatting '.$transfer);
+        self::creating(function ($transfer) {
+            $activity = class_basename($transfer).' '.$transfer->jumlah_transfer;
+            $transfer->CreateLog('Creating '.$activity);
         });
 
-        self::updating(function ($user) {
-            $transfer = class_basename($user)." $user->name";
-            $user->CreateLog('Updating '.$transfer);
+        self::updating(function ($transfer) {
+            $activity = class_basename($transfer).' '.$transfer->jumlah_transfer;
+            $transfer->CreateLog('Updating '.$activity);
         });
-        self::deleting(function ($user) {
-            $transfer = class_basename($user)." $user->name";
-            $user->CreateLog('Deleting '.$transfer);
+        self::deleting(function ($transfer) {
+            $activity = class_basename($transfer).' '.$transfer->jumlah_transfer;
+            $transfer->CreateLog('Deleting '.$activity);
         });
     }
 }

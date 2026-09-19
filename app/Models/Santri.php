@@ -82,13 +82,6 @@ class Santri extends Model
             // buat log
             $activity = class_basename($santri).' '.$santri->user->name;
             $santri->CreateLog("Creating $activity");
-            // Saat pembuatan santri baru, tambahkan jumlah_santri
-            if ($santri->kamar_id) {
-                $oldKamar = Kamar::find($santri->kamar_id);
-                if ($oldKamar) {
-                    $oldKamar->jumlah_santri + 1;
-                }
-            }
         });
 
         self::updating(function ($santri) {
@@ -114,12 +107,6 @@ class Santri extends Model
             // buat log
             $activity = class_basename($santri).' '.$santri->user->name;
             $santri->CreateLog("Deleting $activity");
-            // Saat santri dihapus, kurangkan jumlah_santri di kamar terkait
-            $kamar = Kamar::find($santri->kamar_id);
-            if ($kamar) {
-                // $kamar->decrement('jumlah_santri');
-                $kamar->jumlah_santri - 1;
-            }
         });
     }
 }
