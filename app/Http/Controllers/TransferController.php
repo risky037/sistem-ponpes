@@ -10,6 +10,7 @@ use App\Models\Transfer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Toastr;
+use Yajra\DataTables\Facades\DataTables;
 
 class TransferController extends Controller
 {
@@ -18,7 +19,7 @@ class TransferController extends Controller
         if (request()->ajax()) {
             $data = Transfer::with(['pengirim.user', 'penerima.user'])->get();
 
-            return datatables()->of($data)
+            return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', 'pages.transfer.include.action')
                 ->toJson();
