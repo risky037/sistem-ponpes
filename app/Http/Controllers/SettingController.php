@@ -31,7 +31,7 @@ class SettingController extends Controller
                 $filename = $logo->hashName();
 
                 if (! file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    mkdir($path, 0755, true);
                 }
                 Image::read($logo->getRealPath())
                     ->scaleDown(width: 240, height: 295)
@@ -44,7 +44,7 @@ class SettingController extends Controller
                 $filename = $favicon->hashName();
 
                 if (! file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    mkdir($path, 0755, true);
                 }
 
                 Image::read($favicon->getRealPath())
@@ -58,7 +58,7 @@ class SettingController extends Controller
                 $filename = $kts_master->hashName();
 
                 if (! file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    mkdir($path, 0755, true);
                 }
 
                 Image::read($kts_master->getRealPath())
@@ -95,7 +95,7 @@ class SettingController extends Controller
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $logo->hashName();
                 if (! file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    mkdir($path, 0755, true);
                 }
                 Image::read($logo->getRealPath())
                     ->scaleDown(width: 240, height: 295)
@@ -111,7 +111,7 @@ class SettingController extends Controller
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $favicon->hashName();
                 if (! file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    mkdir($path, 0755, true);
                 }
                 Image::read($favicon->getRealPath())
                     ->scaleDown(width: 240, height: 295)
@@ -127,7 +127,7 @@ class SettingController extends Controller
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $kts_master->hashName();
                 if (! file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    mkdir($path, 0755, true);
                 }
                 Image::read($kts_master->getRealPath())
                     ->scaleDown(width: 240, height: 295)

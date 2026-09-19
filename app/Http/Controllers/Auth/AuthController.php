@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use Illuminate\Auth\Events\Lockout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -21,9 +24,29 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        $throttleKey = Str::transliterate(Str::lower($request->input('email')).'|'.$request->ip());
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            event(new Lockout($request));
+
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $message = trans('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => ceil($seconds / 60),
+            ]);
+
+            flash($message, 'error');
+
+            return redirect()->back()
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors(['email' => $message]);
+        }
+
         $remember = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember)) {
+            RateLimiter::clear($throttleKey);
+
             $request->session()->regenerate();
 
             if (Auth::check()) {
@@ -35,6 +58,8 @@ class AuthController extends Controller
 
             return redirect()->intended(route('dashboard'));
         }
+
+        RateLimiter::hit($throttleKey, 60);
 
         flash('Email atau password yang Anda masukkan salah.', 'error');
 

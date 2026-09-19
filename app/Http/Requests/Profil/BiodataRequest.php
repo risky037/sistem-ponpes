@@ -34,7 +34,7 @@ class BiodataRequest extends FormRequest
             'dusun' => ['required', 'string'],
             'nik' => ['required', 'min:16'],
             'kk' => ['required', 'min:16'],
-            'foto' => ['nullable', 'mimes:png,jpg,jpeg', 'max:3020'],
+            'foto' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:3020'],
         ];
     }
 }

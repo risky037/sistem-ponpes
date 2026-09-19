@@ -29,4 +29,20 @@ class UserPolicy
     {
         return $currentUser->id === $targetUser->id || $currentUser->hasRole('Administrator');
     }
+
+    /**
+     * Determine whether the user can delete the target user.
+     */
+    public function delete(User $currentUser, User $targetUser): bool
+    {
+        if ($currentUser->id === $targetUser->id) {
+            return false;
+        }
+
+        if ($targetUser->hasRole('Administrator') && User::role('Administrator')->count() <= 1) {
+            return false;
+        }
+
+        return $currentUser->hasRole('Administrator');
+    }
 }

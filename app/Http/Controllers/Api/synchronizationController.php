@@ -147,7 +147,7 @@ class synchronizationController extends Controller
                 $filename = $foto->hashName();
 
                 if (! file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    mkdir($path, 0755, true);
                 }
 
                 Image::read($foto->getRealPath())
