@@ -52,7 +52,9 @@ Direct architectural upgrade from Laravel 11 to Laravel 12.69.2:
 ### 2.4. Repository Modernization & CI Enhancements (Phase 5.8)
 Ongoing infrastructure modernization:
 
-- **[Laravel 12 CI & Repository Modernization Assessment](laravel12/Laravel12_CI_Repository_Modernization_Assessment.md):** Assessment of GitHub Actions CI matrix, PHP 8.2 retirement evaluation, migration consolidation plan, seeder refactoring plan, and hardcoded domain value audit.
+1. **[Laravel 12 CI & Repository Modernization Assessment](laravel12/Laravel12_CI_Repository_Modernization_Assessment.md):** Assessment of GitHub Actions CI matrix, PHP 8.2 retirement evaluation, migration consolidation plan, seeder refactoring plan, and hardcoded domain value audit.
+2. **[Repository Hygiene & Documentation Cleanup Implementation](laravel12/Laravel12_Repository_Hygiene_Implementation_Report.md):** Deletion of obsolete `qodana.yaml` tooling, migration reports restructuring into `docs/reports/`, and `CHANGELOG.md` baseline updates.
+3. **[CI Pipeline Modernization Implementation](laravel12/Laravel12_CI_Modernization_Report.md):** Retirement of failing PHP 8.2 runner, PHP 8.4 CI baseline standardization, concurrency control, manual workflow dispatch, and standardized validation steps.
 
 ---
 
@@ -74,7 +76,9 @@ docs/reports/
 │   ├── Laravel12_Security_Hardening_Report.md
 │   ├── Laravel12_Repository_Hygiene_Report.md
 │   ├── Laravel12_Baseline_Initialization_Report.md
-│   └── Laravel12_CI_Repository_Modernization_Assessment.md
+│   ├── Laravel12_CI_Repository_Modernization_Assessment.md
+│   ├── Laravel12_Repository_Hygiene_Implementation_Report.md
+│   └── Laravel12_CI_Modernization_Report.md
 └── domain-assessments/
     ├── debug_cleanup_implementation_plan.md
     ├── financial_transaction_reliability_assessment.md

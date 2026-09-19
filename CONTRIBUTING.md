@@ -55,22 +55,31 @@ upgrade(framework): prepare configuration files for laravel 11
 
 ---
 
-## 3. Pull Request Process
+## 3. Pull Request Process & CI Standards
 
 1. **Fork or Create a Topic Branch:** Create your branch from the latest `develop` branch (`git checkout -b feature/your-feature-name develop`).
-2. **Adhere to Code Standards:**
-   - Format code according to **Laravel / PSR-12** standards using Laravel Pint:
+2. **Supported PHP Version & Runtime:**
+   - The official development, testing, and CI baseline is **PHP 8.4** (PHP 8.4.16+).
+   - Core dependency locks strictly require PHP >= 8.3/8.4.
+3. **Adhere to Code Standards:**
+   - Format code according to **Laravel / PSR-12** standards using Laravel Pint (`pint.json`):
      ```bash
-     composer run lint         # Fix formatting issues
-     composer run lint:check   # Dry-run check (as in CI)
+     composer run lint         # Automatically fix formatting issues
+     composer run lint:check   # Dry-run check (identical to CI)
      ```
    - Do not leave debugging code (`dd()`, `dump()`, `ray()`, `var_dump()`) anywhere in committed code.
-3. **Verify Locally:** Ensure tests and static checks pass before pushing:
+4. **Local Validation Commands:** Ensure all static, styling, and regression checks pass locally prior to opening a PR:
    ```bash
-   composer test
-   composer audit
+   composer validate --strict   # Validate composer.json and composer.lock
+   composer run lint:check      # Code style compliance check
+   composer test                # Clear cache and run PHPUnit test suite
+   composer audit               # Security advisory audit
    ```
-4. **Submit Pull Request:**
+5. **Continuous Integration (CI) Requirements:**
+   - Every Pull Request automatically triggers the GitHub Actions CI pipeline (`.github/workflows/ci.yml`) on PHP 8.4.
+   - All tests run against SQLite in-memory (`DB_CONNECTION=sqlite DB_DATABASE=:memory:`). Note: 3 MySQL-specific check-constraint tests are gracefully skipped on SQLite.
+   - PRs cannot be merged until all CI checks pass.
+6. **Submit Pull Request:**
    - Open your PR against the `develop` branch.
    - Complete every section of the [Pull Request Template](.github/pull_request_template.md).
    - Ensure all automated GitHub Actions CI checks pass.
