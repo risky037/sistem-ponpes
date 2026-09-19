@@ -13,7 +13,7 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $santri = new Santri();
+        $santri = new Santri;
         $putri = $santri->where('jenis_kelamin', 'Perempuan')->where('status', 'Santri Aktif')->count();
         $putra = $santri->where('jenis_kelamin', 'Laki-Laki')->where('status', 'Santri Aktif')->count();
         $santri_aktif = $santri->where('status', 'Santri Aktif')->count();

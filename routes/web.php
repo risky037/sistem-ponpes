@@ -5,24 +5,20 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Kamar\KamarController;
 use App\Http\Controllers\Kelas\KelasController;
-use App\Http\Controllers\MapelController;
 use App\Http\Controllers\ProfilController;
-use App\Http\Controllers\Rapor\RaportSantriController;
 use App\Http\Controllers\Riwayat\RiwayatController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Santri\SantriController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Sinkron\SinkronController;
-use App\Http\Controllers\Surat\JenisSuratController;
-use App\Http\Controllers\Surat\SuratController;
 use App\Http\Controllers\Tabungan\SaldoDebitController;
 use App\Http\Controllers\Transaksi\TransaksiController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\Users\UsersController;
-use App\Models\Transfer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('set_theme', function (Illuminate\Http\Request $request) {
+Route::get('set_theme', function (Request $request) {
     if ($request['newTheme'] == 'light-theme') {
         session(['theme' => 'light-theme']);
 

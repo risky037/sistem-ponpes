@@ -2,7 +2,6 @@
 
 namespace App\View\Components;
 
-use App\Models\Setting;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;

@@ -19,7 +19,7 @@ class Helper
         if ($get_santri_latest) {
             // Ambil nomor induk terakhir dan tambahkan 1
             $start_noinduk = substr($get_santri_latest->no_induk, 4);
-            $next = (int)$start_noinduk + 1;
+            $next = (int) $start_noinduk + 1;
         } else {
             // Tentukan nomor awal berdasarkan jenis kelamin
             $next = ($jenis_kelamin == 'Laki-Laki') ? 1 : 1001;
@@ -27,7 +27,7 @@ class Helper
 
         // Format nomor induk berikutnya dengan padding zero
         $next_noinduk = str_pad($next, 4, '0', STR_PAD_LEFT);
-        $noinduk = $tahun_masuk_hijriyah . $next_noinduk;
+        $noinduk = $tahun_masuk_hijriyah.$next_noinduk;
 
         return $noinduk;
     }
@@ -59,7 +59,7 @@ class Helper
 
     public static function kab($params, $id)
     {
-        $kab = public_path('wilayah/kabupaten' . '/' . $params . '.json');
+        $kab = public_path('wilayah/kabupaten'.'/'.$params.'.json');
         $jsonString = file_get_contents($kab);
         $dataArray = json_decode($jsonString, true);
         $dataKab = '';
@@ -74,7 +74,7 @@ class Helper
 
     public static function kec($params, $id)
     {
-        $kec = public_path('wilayah/kecamatan' . '/' . $params . '.json');
+        $kec = public_path('wilayah/kecamatan'.'/'.$params.'.json');
         $jsonString = file_get_contents($kec);
         $dataArray = json_decode($jsonString, true);
         $dataKec = '';
@@ -89,7 +89,7 @@ class Helper
 
     public static function kel($params, $id)
     {
-        $kel = public_path('wilayah/kelurahan' . '/' . $params . '.json');
+        $kel = public_path('wilayah/kelurahan'.'/'.$params.'.json');
         $jsonString = file_get_contents($kel);
         $dataArray = json_decode($jsonString, true);
         $dataKel = '';

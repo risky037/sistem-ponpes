@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class KelasSantri extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
+
     public function kelas(): BelongsTo
     {
         return $this->belongsTo(Kelas::class);

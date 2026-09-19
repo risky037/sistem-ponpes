@@ -12,6 +12,7 @@ class RiwayatController extends Controller
     {
         if (request()->ajax()) {
             $riwayat = ActivityLog::with('user')->orderBy('id', 'desc')->get();
+
             return DataTables::of($riwayat)
                 ->addIndexColumn()
                 ->addColumn('user', function ($row) {
@@ -19,6 +20,7 @@ class RiwayatController extends Controller
                 })
                 ->toJson();
         }
+
         return view('pages.riwayat.index');
     }
 }

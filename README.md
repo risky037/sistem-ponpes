@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](docs/OPEN_SOURCE_NOTICE.md)
 [![PHP](https://img.shields.io/badge/PHP-8.2%20%7C%208.4-777BB4?logo=php&logoColor=white)](https://www.php.net/)
-[![Laravel](https://img.shields.io/badge/Laravel-10.x%20%7C%2011.x%20Ready-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![CI Pipeline](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=github-actions&logoColor=white)](.github/workflows/ci.yml)
 
@@ -44,17 +44,17 @@ The application centralizes the day-to-day operational workflow of Pondok Pesant
 - 📜 **Audit Trail & Riwayat:** Comprehensive activity logging for administrative accountability.
 
 ### 1.4. Technology Stack
-- **Backend Framework:** Laravel 10.x (Prepared for Laravel 11.x migration)
-- **Language:** PHP 8.2+ (PHP 8.4 runtime ready)
-- **Database:** MySQL 8.0 / MariaDB 10.3+
+- **Backend Framework:** Laravel 12.x (Laravel 12.69.2)
+- **Language:** PHP 8.2+ (Validated on PHP 8.4.16)
+- **Database:** MySQL 8.0 / MariaDB 10.3+ / SQLite (in-memory for CI test suite)
 - **Frontend / Asset Bundling:** Blade Templates, Bootstrap 5, Vite, jQuery, Yajra DataTables
 - **Package Ecosystem:**
-  - `spatie/laravel-permission`: Role and permission management
-  - `yajra/laravel-datatables`: Server-side pagination and filtering
-  - `maatwebsite/excel`: Spreadsheet import and export
-  - `milon/barcode`: Dynamic 1D/2D barcode generation
-  - `revolution/laravel-google-sheets`: Google Sheets API v4 integration
-  - `intervention/image`: Profile image resizing and optimization
+  - `spatie/laravel-permission`: Role and permission management (^6.0)
+  - `yajra/laravel-datatables`: Server-side pagination and filtering (^12.0)
+  - `maatwebsite/excel`: Spreadsheet import and export (^3.1)
+  - `milon/barcode`: Dynamic 1D/2D barcode generation (^12.0)
+  - `revolution/laravel-google-sheets`: Google Sheets API v4 integration (^7.0)
+  - `intervention/image-laravel`: Profile image resizing and optimization (v3 architecture, ^1.5)
 
 ---
 
@@ -202,6 +202,26 @@ Examples:
 ```
 
 For complete workflow guidelines, please consult [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### 4.3. Development Commands & Tooling
+The project includes predefined composer scripts for streamlined local development:
+- **Run Development Server:**
+  ```bash
+  composer run dev
+  ```
+- **Execute Test Suite:**
+  ```bash
+  composer test
+  ```
+- **Code Style Linting (Laravel Pint):**
+  ```bash
+  composer run lint         # Automatically fix code formatting
+  composer run lint:check   # Dry-run check for CI
+  ```
+- **Quick Project Setup:**
+  ```bash
+  composer run setup
+  ```
 
 ---
 

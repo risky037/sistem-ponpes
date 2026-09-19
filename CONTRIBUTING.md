@@ -59,14 +59,15 @@ upgrade(framework): prepare configuration files for laravel 11
 
 1. **Fork or Create a Topic Branch:** Create your branch from the latest `develop` branch (`git checkout -b feature/your-feature-name develop`).
 2. **Adhere to Code Standards:**
-   - Format code according to **PSR-12** standards using Laravel Pint:
+   - Format code according to **Laravel / PSR-12** standards using Laravel Pint:
      ```bash
-     vendor/bin/pint
+     composer run lint         # Fix formatting issues
+     composer run lint:check   # Dry-run check (as in CI)
      ```
    - Do not leave debugging code (`dd()`, `dump()`, `ray()`, `var_dump()`) anywhere in committed code.
 3. **Verify Locally:** Ensure tests and static checks pass before pushing:
    ```bash
-   php artisan test
+   composer test
    composer audit
    ```
 4. **Submit Pull Request:**

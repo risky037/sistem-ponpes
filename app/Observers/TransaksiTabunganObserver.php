@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 class TransaksiTabunganObserver
 {
     protected $uri = 'https://connect.labelin.co/send-message';
+
     public function created(TransaksiTabungan $transaksiTabungan)
     {
         $setting = Setting::first();
@@ -17,19 +18,19 @@ class TransaksiTabunganObserver
             if ($transaksiTabungan->jenis_transaksi == 'Setoran') {
                 $params = [
                     'nama' => $transaksiTabungan->santri->user->name,
-                    'nominal' => "Rp. " . number_format($transaksiTabungan->jumlah_transaksi),
+                    'nominal' => 'Rp. '.number_format($transaksiTabungan->jumlah_transaksi),
                     'tanggal' => $transaksiTabungan->tanggal_transaksi,
-                    'number' => $transaksiTabungan->santri->whatsapp
+                    'number' => $transaksiTabungan->santri->whatsapp,
                 ];
                 $param = $this->msg_setor_tunai($params);
                 Http::get($this->uri, $param);
             } else {
                 $params = [
                     'nama' => $transaksiTabungan->santri->user->name,
-                    'nominal' => "Rp. " . number_format($transaksiTabungan->jumlah_transaksi),
+                    'nominal' => 'Rp. '.number_format($transaksiTabungan->jumlah_transaksi),
                     'tanggal' => $transaksiTabungan->tanggal_transaksi,
                     'number' => $transaksiTabungan->santri->whatsapp,
-                    'tujuan' => $transaksiTabungan->tujuan
+                    'tujuan' => $transaksiTabungan->tujuan,
                 ];
                 $param = $this->msg_tarik_tunai($params);
                 Http::get($this->uri, $param);
@@ -41,6 +42,7 @@ class TransaksiTabunganObserver
     {
         //
     }
+
     public function msg_setor_tunai($params)
     {
         $setting = Setting::first();
@@ -51,7 +53,7 @@ class TransaksiTabunganObserver
             'nama' => $params['nama'],
             'nominal' => $params['nominal'],
             'tanggal' => $params['tanggal'],
-            'waktu' => $this->waktu()
+            'waktu' => $this->waktu(),
         ];
         foreach ($tarik_tunai as $key => $value) {
             $messageText = str_replace("{{$key}}", $value, $messageText);
@@ -65,6 +67,7 @@ class TransaksiTabunganObserver
 
         return $params;
     }
+
     public function msg_tarik_tunai($params)
     {
         $setting = Setting::first();
@@ -76,7 +79,7 @@ class TransaksiTabunganObserver
             'nominal' => $params['nominal'],
             'tujuan' => $params['tujuan'],
             'tanggal' => $params['tanggal'],
-            'waktu' => $this->waktu()
+            'waktu' => $this->waktu(),
         ];
         foreach ($tarik_tunai as $key => $value) {
             $messageText = str_replace("{{$key}}", $value, $messageText);
@@ -90,6 +93,7 @@ class TransaksiTabunganObserver
 
         return $params;
     }
+
     public function waktu()
     {
         $waktu = '';
@@ -102,6 +106,7 @@ class TransaksiTabunganObserver
         if (date('H') >= 10 && date('H') < 16) {
             $waktu = 'Siang';
         }
+
         return $waktu;
     }
 }
