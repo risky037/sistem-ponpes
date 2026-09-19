@@ -8,7 +8,7 @@ use App\Models\AlamatSantri;
 use App\Models\Santri;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 use Toastr;
 
 class ProfilController extends Controller
@@ -57,10 +57,9 @@ class ProfilController extends Controller
                 if (! file_exists($path)) {
                     mkdir($path, 0755, true);
                 }
-                Image::make($foto->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($foto->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 $validated['foto'] = $filename;
             } else {
                 $validated['foto'] = $user->santri ? $user->santri->foto : 'santri.png';

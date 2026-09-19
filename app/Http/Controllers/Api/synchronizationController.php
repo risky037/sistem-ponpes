@@ -15,7 +15,7 @@ use Carbon\Carbon;
 use Helper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 class synchronizationController extends Controller
 {
@@ -120,6 +120,8 @@ class synchronizationController extends Controller
             $validate['whatsapp'] = '62'.$request->whatsapp;
             $tgl = Carbon::parse($request->tanggal_boyong);
             $validate['tanggal_boyong_hijriyah'] = isset($request->tanggal_boyong) ? str_replace('/', '-', $tgl->toHijri()->isoFormat('LL')) : '';
+            $validate['tanggal_lahir'] = sprintf('%04d-%02d-%02d', $request->tahun_lahir, $request->bulan_lahir, $request->tanggal_lahir);
+            unset($validate['bulan_lahir'], $validate['tahun_lahir']);
             $foto = $request->file('foto');
             if (isset($foto) == false) {
                 $user = User::create([
@@ -136,13 +138,8 @@ class synchronizationController extends Controller
                 if ($santri) {
                     WaliSantri::create([
                         'santri_id' => $santri->id,
-                        'nama' => $validate['nama_ayah'],
-                        'wali' => true,
-                    ]);
-                    WaliSantri::create([
-                        'santri_id' => $santri->id,
-                        'nama' => $validate['nama_ibu'],
-                        'wali' => false,
+                        'nama_ayah' => $validate['nama_ayah'],
+                        'nama_ibu' => $validate['nama_ibu'],
                     ]);
                 }
             } else {
@@ -153,10 +150,9 @@ class synchronizationController extends Controller
                     mkdir($path, 0777, true);
                 }
 
-                Image::make($foto->getRealPath())->resize(400, 400, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($foto->getRealPath())
+                    ->scaleDown(width: 400, height: 400)
+                    ->save($path.$filename);
 
                 // insert user login santri
                 $user = User::create([
@@ -173,13 +169,8 @@ class synchronizationController extends Controller
                 // insert wali santri
                 WaliSantri::create([
                     'santri_id' => $santri->id,
-                    'nama' => $validate['nama_ayah'],
-                    'wali' => true,
-                ]);
-                WaliSantri::create([
-                    'santri_id' => $santri->id,
-                    'nama' => $validate['nama_ibu'],
-                    'wali' => false,
+                    'nama_ayah' => $validate['nama_ayah'],
+                    'nama_ibu' => $validate['nama_ibu'],
                 ]);
             }
 

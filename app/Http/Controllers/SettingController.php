@@ -8,7 +8,7 @@ use App\Models\Setting;
 use App\Models\WhatsappMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 use Toastr;
 
 class SettingController extends Controller
@@ -33,10 +33,9 @@ class SettingController extends Controller
                 if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-                Image::make($logo->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($logo->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 $validate['logo'] = $filename;
             }
             $favicon = request()->file('favicon');
@@ -48,10 +47,9 @@ class SettingController extends Controller
                     mkdir($path, 0777, true);
                 }
 
-                Image::make($favicon->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($favicon->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 $validate['favicon'] = $filename;
             }
             $kts_master = request()->file('kts_master');
@@ -63,10 +61,9 @@ class SettingController extends Controller
                     mkdir($path, 0777, true);
                 }
 
-                Image::make($kts_master->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($kts_master->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 $validate['kts_master'] = $filename;
             }
             Setting::updateOrCreate($validate);
@@ -92,7 +89,7 @@ class SettingController extends Controller
         $validate = $request->validated();
         try {
             $validate['whatsapp_feature'] = $validate['whatsapp_feature'][0];
-            $validate['sender'] = Whatsapp::make($validate['sender']);
+            $validate['sender'] = Whatsapp::make($request->input('sender', $validate['sender'] ?? null));
             $logo = request()->file('logo');
             if (isset($logo) == true) {
                 $path = storage_path('app/public/uploads/setting/');
@@ -100,10 +97,9 @@ class SettingController extends Controller
                 if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-                Image::make($logo->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($logo->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 // delete old photo from storage
                 if ($setting->logo != null && file_exists($path.$setting->logo)) {
                     unlink($path.$setting->logo);
@@ -117,10 +113,9 @@ class SettingController extends Controller
                 if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-                Image::make($favicon->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($favicon->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 // delete old photo from storage
                 if ($setting->favicon != null && file_exists($path.$setting->favicon)) {
                     unlink($path.$setting->favicon);
@@ -134,10 +129,9 @@ class SettingController extends Controller
                 if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-                Image::make($kts_master->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($kts_master->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 // delete old photo from storage
                 if ($setting->kts_master != null && file_exists($path.$setting->kts_master)) {
                     unlink($path.$setting->kts_master);
