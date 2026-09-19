@@ -2,35 +2,84 @@
 
 namespace App\Observers;
 
-use App\Models\Kamar;
+use App\Models\KamarSantri;
 use App\Models\Santri;
+use App\Services\SantriRoomCounterService;
 
 class SantriObserver
 {
-    public function created(Santri $santri)
+    public function __construct(
+        protected SantriRoomCounterService $roomCounterService
+    ) {}
+
+    /**
+     * Handle the Santri "creating" event.
+     */
+    public function creating(Santri $santri): void
     {
-        $this->updateJumlahSantri($santri->kamar_id);
+        $userName = $santri->user?->name ?? 'Santri';
+        $activity = class_basename($santri).' '.$userName;
+        $santri->CreateLog("Creating $activity");
     }
 
-    public function updated(Santri $santri)
+    /**
+     * Handle the Santri "created" event.
+     */
+    public function created(Santri $santri): void
     {
-        if ($santri->isDirty('kamar_id')) {
-            // Jika kamar_id berubah, update jumlah_santri pada kamar lama dan baru
-            $this->updateJumlahSantri($santri->getOriginal('kamar_id'));
-            $this->updateJumlahSantri($santri->kamar_id);
+        $kamarId = $santri->kamar_id;
+        if ($kamarId) {
+            $kamarSantri = KamarSantri::firstOrCreate(
+                ['santri_id' => $santri->id],
+                ['kamar_id' => $kamarId]
+            );
+            $santri->setRelation('kamar_santri', $kamarSantri);
+            $this->roomCounterService->increment($kamarId);
+            $santri->resetKamarDirty();
         }
     }
 
-    public function deleted(Santri $santri)
+    /**
+     * Handle the Santri "updating" event.
+     */
+    public function updating(Santri $santri): void
     {
-        $this->updateJumlahSantri($santri->kamar_id);
+        $userName = $santri->user?->name ?? 'Santri';
+        $activity = class_basename($santri).' '.$userName;
+        $santri->CreateLog("Updating $activity");
+
+        if ($santri->isKamarDirty()) {
+            $oldKamarId = $santri->getOriginalKamarId();
+            $newKamarId = $santri->kamar_id;
+
+            if ($newKamarId) {
+                $kamarSantri = KamarSantri::updateOrCreate(
+                    ['santri_id' => $santri->id],
+                    ['kamar_id' => $newKamarId]
+                );
+                $santri->setRelation('kamar_santri', $kamarSantri);
+            } else {
+                $santri->kamar_santri()?->delete();
+                $santri->unsetRelation('kamar_santri');
+            }
+
+            $this->roomCounterService->syncTransition($oldKamarId, $newKamarId);
+            $santri->resetKamarDirty();
+        }
     }
 
-    protected function updateJumlahSantri($kamarId)
+    /**
+     * Handle the Santri "deleting" event.
+     */
+    public function deleting(Santri $santri): void
     {
+        $userName = $santri->user?->name ?? 'Santri';
+        $activity = class_basename($santri).' '.$userName;
+        $santri->CreateLog("Deleting $activity");
+
+        $kamarId = $santri->kamar_id;
         if ($kamarId) {
-            $jumlahSantri = Santri::where('kamar_id', $kamarId)->count();
-            Kamar::where('id', $kamarId)->update(['jumlah_santri' => $jumlahSantri]);
+            $this->roomCounterService->decrement($kamarId);
         }
     }
 }

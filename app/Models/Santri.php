@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Santri extends Model
 {
@@ -75,38 +76,102 @@ class Santri extends Model
         return $this->hasMany(Transfer::class, 'penerima_id');
     }
 
-    public static function boot()
+    /**
+     * Pending room ID for lifecycle event processing.
+     */
+    protected ?int $pendingKamarId = null;
+
+    /**
+     * Original room ID prior to pending mutation.
+     */
+    protected ?int $originalKamarId = null;
+
+    /**
+     * Get the room assigned to the student.
+     */
+    public function kamar(): HasOneThrough
     {
-        parent::boot();
-        self::creating(function ($santri) {
-            // buat log
-            $activity = class_basename($santri).' '.$santri->user->name;
-            $santri->CreateLog("Creating $activity");
-        });
+        return $this->hasOneThrough(
+            Kamar::class,
+            KamarSantri::class,
+            'santri_id',
+            'id',
+            'id',
+            'kamar_id'
+        );
+    }
 
-        self::updating(function ($santri) {
-            // buat log
-            $activity = class_basename($santri).' '.$santri->user->name;
-            $santri->CreateLog("Updating $activity");
-            // Saat pembaruan kamar_id, kurangkan dari kamar lama dan tambahkan ke kamar baru
-            if ($santri->isDirty('kamar_id')) {
-                // Kurangkan dari kamar lama
-                $oldKamar = Kamar::find($santri->getOriginal('kamar_id'));
-                if ($oldKamar) {
-                    $oldKamar->decrement('jumlah_santri');
-                }
-                // Tambahkan ke kamar baru
-                $newKamar = Kamar::find($santri->kamar_id);
-                if ($newKamar) {
-                    $newKamar->increment('jumlah_santri');
-                }
-            }
-        });
+    /**
+     * Get the student's assigned room ID.
+     */
+    public function getKamarIdAttribute(): ?int
+    {
+        if ($this->pendingKamarId !== null) {
+            return $this->pendingKamarId;
+        }
 
-        self::deleting(function ($santri) {
-            // buat log
-            $activity = class_basename($santri).' '.$santri->user->name;
-            $santri->CreateLog("Deleting $activity");
-        });
+        if (array_key_exists('kamar_id', $this->attributes) && $this->attributes['kamar_id'] !== null) {
+            return (int) $this->attributes['kamar_id'];
+        }
+
+        return $this->kamar_santri?->kamar_id;
+    }
+
+    /**
+     * Set the student's assigned room ID.
+     */
+    public function setKamarIdAttribute($value): void
+    {
+        $currentId = $this->getKamarIdAttribute();
+        if ($this->originalKamarId === null && $currentId !== null) {
+            $this->originalKamarId = $currentId;
+        }
+
+        $this->pendingKamarId = $value !== null ? (int) $value : null;
+
+        if ($this->exists) {
+            $this->updated_at = now()->addSecond();
+        }
+    }
+
+    /**
+     * Get original kamar ID before pending change.
+     */
+    public function getOriginalKamarId(): ?int
+    {
+        return $this->originalKamarId ?? $this->kamar_santri?->kamar_id;
+    }
+
+    /**
+     * Check if room assignment is dirty.
+     */
+    public function isKamarDirty(): bool
+    {
+        if ($this->pendingKamarId !== null) {
+            return $this->pendingKamarId !== $this->getOriginalKamarId();
+        }
+
+        return false;
+    }
+
+    /**
+     * Reset pending room state after persistence.
+     */
+    public function resetKamarDirty(): void
+    {
+        $this->originalKamarId = $this->kamar_santri?->kamar_id ?? $this->pendingKamarId;
+        $this->pendingKamarId = null;
+    }
+
+    /**
+     * Domain Helper: Assign or move student to a room.
+     */
+    public function assignKamar(int|Kamar $kamar): void
+    {
+        $kamarId = $kamar instanceof Kamar ? $kamar->id : $kamar;
+        $this->kamar_id = $kamarId;
+        if ($this->exists) {
+            $this->save();
+        }
     }
 }
