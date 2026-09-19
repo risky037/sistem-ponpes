@@ -181,3 +181,9 @@ All 14 historical reports were cleanly renamed and relocated:
 | `php artisan about` | Laravel 12.69.2, PHP 8.4.16 | Laravel 12.69.2, PHP 8.4.16 | **PASS** |
 | `php artisan test` | 107 passed (531 assertions) | 107 passed (531 assertions) | **PASS** |
 | Runtime Code Integrity | Zero changes to `app/`, `routes/`, `resources/views/`, `database/` | 0 modified application files | **PASS** |
+
+### 6.1. Empirical GitHub Actions Finding
+- **PHP 8.4 Runner:** Executed and passed completely (54s).
+- **PHP 8.2 Runner:** Failed during `composer install` because locked dependencies (`maennchen/zipstream-php 3.2.2`, `openspout/openspout v4.32.0`, `revolution/laravel-google-sheets 7.2.0`, `laravel/pint v1.32.1`, and Symfony 8.1 components) strictly require PHP ^8.3 or >=8.4.1.
+- **Conclusion:** Empirically confirms the assessment from Phase 5.8.1: PHP 8.2 cannot run the Laravel 12 locked dependency graph and will be formally transitioned in Phase 5.8.3.
+
