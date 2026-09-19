@@ -7,6 +7,8 @@ use App\Models\Santri;
 use App\Models\Tabungan;
 use App\Models\TransaksiTabungan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Toastr;
 
 class TransaksiController extends Controller
@@ -68,25 +70,39 @@ class TransaksiController extends Controller
             if ($validate['debit'] < 50000) {
                 Toastr::info('Minimal setoran Rp. 50.000');
             } else {
-                $santri = Santri::firstWhere('no_induk', $validate['santri_noinduk']);
-                $tabungan = Tabungan::firstWhere('santri_id', $santri->id);
-                $transaksi = TransaksiTabungan::create([
-                    'santri_id' => $santri->id,
-                    'tanggal_transaksi' => date('Y-m-d'),
-                    'jenis_transaksi' => $validate['jenis_transaksi'],
-                    'jumlah_transaksi' => $validate['debit'],
-                    'saldo_sebelumnya' => $tabungan->saldo,
-                    'saldo_saatini' => $tabungan->saldo + $validate['debit'],
-                ]);
-                $tabungan->update([
-                    'saldo' => $tabungan->saldo + $transaksi->jumlah_transaksi,
-                    'tanggal_setor' => date('Y-m-d'),
-                ]);
+                DB::transaction(function () use ($validate) {
+                    $santri = Santri::firstWhere('no_induk', $validate['santri_noinduk']);
+                    $tabungan = Tabungan::where('santri_id', $santri->id)->lockForUpdate()->firstOrFail();
+
+                    $saldoSebelumnya = $tabungan->saldo;
+                    $saldoSaatIni = $saldoSebelumnya + $validate['debit'];
+
+                    $transaksi = TransaksiTabungan::create([
+                        'santri_id' => $santri->id,
+                        'tanggal_transaksi' => date('Y-m-d'),
+                        'jenis_transaksi' => $validate['jenis_transaksi'],
+                        'jumlah_transaksi' => $validate['debit'],
+                        'saldo_sebelumnya' => $saldoSebelumnya,
+                        'saldo_saatini' => $saldoSaatIni,
+                    ]);
+
+                    $tabungan->update([
+                        'saldo' => $saldoSaatIni,
+                    ]);
+                });
+
                 Toastr::success('Berhasil menyimpan data');
             }
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('TransaksiController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menyimpan data');
 
             return redirect()->back()->withInput();
@@ -105,36 +121,62 @@ class TransaksiController extends Controller
                 Toastr::info('Minimal penarikan 10.000 atau diatasnya');
             } else {
                 $santri = Santri::firstWhere('no_induk', $validate['santri_noinduk']);
-                $tabungan = Tabungan::firstWhere('santri_id', $santri->id);
-                if ($tabungan->saldo == 0) {
-                    Toastr::info('Saldo tidak cukup, saldo saat ini '.$tabungan->saldo);
-                } else {
-                    $transaksi = new TransaksiTabungan;
-                    $tr_now = $transaksi->whereDate('tanggal_transaksi', now()->toDateString())->where('jenis_transaksi', 'Penarikan')->get();
+
+                $executed = DB::transaction(function () use ($validate, $santri) {
+                    $tabungan = Tabungan::where('santri_id', $santri->id)->lockForUpdate()->firstOrFail();
+
+                    if ($tabungan->saldo < $validate['kredit']) {
+                        Toastr::info('Saldo tidak cukup, saldo saat ini '.$tabungan->saldo);
+
+                        return false;
+                    }
+
+                    $tr_now = TransaksiTabungan::where('santri_id', $santri->id)
+                        ->whereDate('tanggal_transaksi', now()->toDateString())
+                        ->where('jenis_transaksi', 'Penarikan')
+                        ->get();
+
                     if (! $tr_now->isEmpty()) {
                         Toastr::info('Santri dengan nomor induk '."$santri->no_induk".' telah selesai melakukan penarikan');
-                    } else {
-                        $transaksi = TransaksiTabungan::create([
-                            'santri_id' => $santri->id,
-                            'tanggal_transaksi' => date('Y-m-d'),
-                            'jenis_transaksi' => $validate['jenis_transaksi'],
-                            'jumlah_transaksi' => $validate['kredit'],
-                            'saldo_saatini' => $tabungan->saldo - $validate['kredit'],
-                            'tujuan' => request()->get('tujuan') != null ? request()->get('tujuan') : 'Uang Jajan',
-                        ]);
 
-                        $tabungan->update([
-                            'saldo' => $tabungan->saldo - $transaksi->jumlah_transaksi,
-                            'tanggal_setor' => date('Y-m-d'),
-                        ]);
-                        $this->send_message($santri, 'Uang Jajan', number_format($validate['kredit']));
-                        Toastr::success('Berhasil menyimpan data');
+                        return false;
                     }
+
+                    $saldoSebelumnya = $tabungan->saldo;
+                    $saldoSaatIni = $saldoSebelumnya - $validate['kredit'];
+
+                    $transaksi = TransaksiTabungan::create([
+                        'santri_id' => $santri->id,
+                        'tanggal_transaksi' => date('Y-m-d'),
+                        'jenis_transaksi' => $validate['jenis_transaksi'],
+                        'jumlah_transaksi' => $validate['kredit'],
+                        'saldo_sebelumnya' => $saldoSebelumnya,
+                        'saldo_saatini' => $saldoSaatIni,
+                        'tujuan' => request()->get('tujuan') != null ? request()->get('tujuan') : 'Uang Jajan',
+                    ]);
+
+                    $tabungan->update([
+                        'saldo' => $saldoSaatIni,
+                    ]);
+
+                    return true;
+                });
+
+                if ($executed) {
+                    $this->send_message($santri, 'Uang Jajan', number_format($validate['kredit']));
+                    Toastr::success('Berhasil menyimpan data');
                 }
             }
 
             return redirect()->back()->withQuery(['jenis_transaksi' => 'Penarikan']);
         } catch (\Throwable $th) {
+            Log::error('TransaksiController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menyimpan data');
 
             return redirect()->back()->withInput();
