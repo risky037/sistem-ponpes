@@ -195,9 +195,12 @@ class DatabaseIntegrityConstraintsTest extends TestCase
 
     public function test_migration_rollback_and_reapply_integrity(): void
     {
-        // 1. Rollback the constraints migration
-        $rollbackExitCode = Artisan::call('migrate:rollback', ['--step' => 1]);
-        $this->assertEquals(0, $rollbackExitCode);
+        // 1. Rollback until the constraints migration is reverted
+        $targetMigration = '2024_05_22_000000_harden_financial_database_constraints';
+        while (DB::table('migrations')->where('migration', $targetMigration)->exists()) {
+            $rollbackExitCode = Artisan::call('migrate:rollback', ['--step' => 1]);
+            $this->assertEquals(0, $rollbackExitCode);
+        }
 
         // Assert that unique constraint was dropped and duplicate is permitted under old schema
         $santri = $this->createSantri('Santri Rollback Reapply', '12121212');
