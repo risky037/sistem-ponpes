@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Role;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Toastr;
 
@@ -42,7 +43,14 @@ class RoleController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            Toastr::success('Gagal menambah data');
+            Log::error('RoleController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal menambah data');
 
             return redirect()->back();
         }
@@ -59,7 +67,14 @@ class RoleController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            Toastr::success('Gagal memperbarui data');
+            Log::error('RoleController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal memperbarui data');
 
             return redirect()->back();
         }
@@ -73,7 +88,14 @@ class RoleController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            Toastr::success('Gagal menghapus data');
+            Log::error('RoleController destroy error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal menghapus data');
 
             return redirect()->back();
         }

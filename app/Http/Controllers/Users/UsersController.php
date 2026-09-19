@@ -50,6 +50,10 @@ class UsersController extends Controller
             return redirect()->back();
         } catch (\Throwable $th) {
             Log::error('UsersController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
                 'exception' => $th,
             ]);
             Toastr::error('Gagal menambah data');
@@ -80,6 +84,10 @@ class UsersController extends Controller
             return redirect()->back();
         } catch (\Throwable $th) {
             Log::error('UsersController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
                 'exception' => $th,
             ]);
             Toastr::error('Gagal memperbarui data');
@@ -96,7 +104,14 @@ class UsersController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            Toastr::success('Gagal menghapus data');
+            Log::error('UsersController destroy error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal menghapus data');
 
             return redirect()->back();
         }

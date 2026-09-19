@@ -63,14 +63,18 @@ class synchronizationController extends Controller
             ], 201);
         } catch (\Throwable $th) {
             Log::error('Synchronization API error on store_kelas: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
                 'exception' => $th,
             ]);
 
             return response()->json([
                 'status' => false,
-                'message' => 'error created data',
+                'message' => 'Internal server error',
                 'errors' => [
-                    'server' => [$th->getMessage()],
+                    'server' => ['Internal server error'],
                 ],
             ], 500);
         }
@@ -210,14 +214,18 @@ class synchronizationController extends Controller
             ], 201);
         } catch (\Throwable $th) {
             Log::error('Synchronization API error on store_santri: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
                 'exception' => $th,
             ]);
 
             return response()->json([
                 'status' => false,
-                'message' => 'error created data',
+                'message' => 'Internal server error',
                 'errors' => [
-                    'server' => [$th->getMessage()],
+                    'server' => ['Internal server error'],
                 ],
             ], 500);
         }
