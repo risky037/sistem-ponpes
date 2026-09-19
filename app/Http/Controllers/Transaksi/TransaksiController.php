@@ -24,7 +24,7 @@ class TransaksiController extends Controller
                 })->sum('saldo');
                 if (request()->get('jenis') == 'Penarikan') {
                     $tr = TransaksiTabungan::where('santri_id', $santri->santri->id)->whereDate('tanggal_transaksi', now()->toDateString())->where('jenis_transaksi', 'Penarikan')->get();
-                    if (!$tr->isEmpty()) {
+                    if (! $tr->isEmpty()) {
                         return response()->json(['message' => "Santri dengan nomor induk <strong> $noinduk </strong> telah melakukan penarikan"], 200);
                     } else {
                         $data = [
@@ -34,6 +34,7 @@ class TransaksiController extends Controller
                             'saldo' => number_format($saldo),
                             'foto' => $santri->santri->foto,
                         ];
+
                         return response()->json(['data' => $data], 200);
                     }
                 } else {
@@ -44,13 +45,15 @@ class TransaksiController extends Controller
                         'saldo' => number_format($saldo),
                         'foto' => $santri->santri->foto,
                     ];
+
                     return response()->json(['data' => $data], 200);
                 }
             }
 
-            return response()->json(['message' => 'Tidak ada data santri dengan nomor induk <strong>' . $noinduk . '</strong>'], 200);
+            return response()->json(['message' => 'Tidak ada data santri dengan nomor induk <strong>'.$noinduk.'</strong>'], 200);
         }
         $santri = Santri::with('user')->get(['no_induk as id', 'user_id']);
+
         return view('pages.transaksi.index', compact('santri'));
     }
 
@@ -81,13 +84,15 @@ class TransaksiController extends Controller
                 ]);
                 Toastr::success('Berhasil menyimpan data');
             }
+
             return redirect()->back();
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::error('Gagal menyimpan data');
+
             return redirect()->back()->withInput();
         }
     }
+
     public function update(Request $request)
     {
         $validate = $request->validate([
@@ -102,12 +107,12 @@ class TransaksiController extends Controller
                 $santri = Santri::firstWhere('no_induk', $validate['santri_noinduk']);
                 $tabungan = Tabungan::firstWhere('santri_id', $santri->id);
                 if ($tabungan->saldo == 0) {
-                    Toastr::info('Saldo tidak cukup, saldo saat ini ' . $tabungan->saldo);
+                    Toastr::info('Saldo tidak cukup, saldo saat ini '.$tabungan->saldo);
                 } else {
-                    $transaksi = new TransaksiTabungan();
+                    $transaksi = new TransaksiTabungan;
                     $tr_now = $transaksi->whereDate('tanggal_transaksi', now()->toDateString())->where('jenis_transaksi', 'Penarikan')->get();
-                    if (!$tr_now->isEmpty()) {
-                        Toastr::info('Santri dengan nomor induk ' . "$santri->no_induk" . ' telah selesai melakukan penarikan');
+                    if (! $tr_now->isEmpty()) {
+                        Toastr::info('Santri dengan nomor induk '."$santri->no_induk".' telah selesai melakukan penarikan');
                     } else {
                         $transaksi = TransaksiTabungan::create([
                             'santri_id' => $santri->id,
@@ -115,7 +120,7 @@ class TransaksiController extends Controller
                             'jenis_transaksi' => $validate['jenis_transaksi'],
                             'jumlah_transaksi' => $validate['kredit'],
                             'saldo_saatini' => $tabungan->saldo - $validate['kredit'],
-                            'tujuan' => request()->get('tujuan') != null ? request()->get('tujuan') : 'Uang Jajan'
+                            'tujuan' => request()->get('tujuan') != null ? request()->get('tujuan') : 'Uang Jajan',
                         ]);
 
                         $tabungan->update([
@@ -127,12 +132,15 @@ class TransaksiController extends Controller
                     }
                 }
             }
+
             return redirect()->back()->withQuery(['jenis_transaksi' => 'Penarikan']);
         } catch (\Throwable $th) {
             Toastr::error('Gagal menyimpan data');
+
             return redirect()->back()->withInput();
         }
     }
+
     public function send_message($santri, $tujuan, $nominal)
     {
         $sender = env('WA_SENDER_NUMBER', '6281234567890');
@@ -149,7 +157,7 @@ class TransaksiController extends Controller
         $pesan .= "Demikian pemberitahuan ini kami sampaikan terimakasih, dan mohon maaf telah mengganggu waktu anda.\n";
         $pesan .= "Sekian dari kami Wassalamualaikuk Wr. Wb.\n\n";
         $pesan .= "Hormat kami,\n";
-        $pesan .= "*Pengurus Pondok Pesantren Al-Ibrohimy*";
+        $pesan .= '*Pengurus Pondok Pesantren Al-Ibrohimy*';
         $params = [
             'api_key' => $apiKey,
             'sender' => $sender,
@@ -165,6 +173,7 @@ class TransaksiController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
+
         return $response;
     }
 }

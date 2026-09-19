@@ -19,6 +19,7 @@ class SaldoDebitController extends Controller
         $santri = Santri::all();
         if (request()->ajax()) {
             $tabungan = Tabungan::with('santri')->get();
+
             return DataTables::of($tabungan)
                 ->addIndexColumn()
                 ->addColumn('action', 'pages.saldo_debit.include.action')
@@ -30,6 +31,7 @@ class SaldoDebitController extends Controller
                 })
                 ->toJson();
         }
+
         return view('pages.saldo_debit.index');
     }
 
@@ -98,7 +100,6 @@ class SaldoDebitController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            //dd($th->getMessage());
             Toastr::error('Gagal menyimpan data');
 
             return redirect()->back();
@@ -108,13 +109,11 @@ class SaldoDebitController extends Controller
     public function export($id)
     {
         $santri = Santri::with('user')->where('id', $id)->first();
-        $filname = $santri->user->name . ' - ' . $santri->desa;
+        $filname = $santri->user->name.' - '.$santri->desa;
 
         $tabungan = TransaksiTabungan::with('santri')->where('santri_id', $id)->get();
 
-        return Excel::download(new TabunganExport($tabungan), $filname . '_Tabungan.xlsx');
-
-        return redirect()->back();
+        return Excel::download(new TabunganExport($tabungan), $filname.'_Tabungan.xlsx');
     }
 
     public function show($id)
