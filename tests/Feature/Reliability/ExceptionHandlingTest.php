@@ -7,6 +7,7 @@ use App\Models\Kelas;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -271,36 +272,29 @@ class ExceptionHandlingTest extends TestCase
     {
         $this->actingAs($this->admin);
 
-        $configFile = config_path('modules.php');
-        $originalContent = file_get_contents($configFile);
-
         Log::spy();
+        Cache::shouldReceive('forever')
+            ->once()
+            ->andThrow(new \RuntimeException('Cache write failure'));
 
-        try {
-            chmod($configFile, 0444);
+        $response = $this->postJson(route('sync.update'), [
+            'data' => ['data santri', '1/6/2024, 7:20:50 PM'],
+        ]);
 
-            $response = $this->postJson(route('sync.update'), [
-                'data' => ['data santri', '1/6/2024, 7:20:50 PM'],
-            ]);
+        $response->assertStatus(500);
+        $response->assertJson([
+            'success' => false,
+            'message' => 'Internal server error',
+        ]);
 
-            $response->assertStatus(500);
-            $response->assertJson([
-                'success' => false,
-                'message' => 'Internal server error',
-            ]);
-
-            Log::shouldHaveReceived('error')->withArgs(function ($message, $context) {
-                return str_contains($message, 'SinkronController update error')
-                    && array_key_exists('user_id', $context)
-                    && array_key_exists('request_uri', $context)
-                    && array_key_exists('method', $context)
-                    && array_key_exists('ip', $context)
-                    && array_key_exists('exception', $context);
-            });
-        } finally {
-            chmod($configFile, 0644);
-            file_put_contents($configFile, $originalContent);
-        }
+        Log::shouldHaveReceived('error')->withArgs(function ($message, $context) {
+            return str_contains($message, 'SinkronController update error')
+                && array_key_exists('user_id', $context)
+                && array_key_exists('request_uri', $context)
+                && array_key_exists('method', $context)
+                && array_key_exists('ip', $context)
+                && array_key_exists('exception', $context);
+        });
     }
 
     public function test_kelas_update_failure_logs_structured_context_and_redirects(): void

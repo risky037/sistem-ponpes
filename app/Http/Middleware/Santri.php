@@ -11,13 +11,14 @@ class Santri
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->roles->first()->name == 'Santri') {
+        if ($request->user()?->hasRole('Santri')) {
             return $next($request);
         }
+
         abort(401);
     }
 }
