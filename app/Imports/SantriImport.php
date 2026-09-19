@@ -2,16 +2,8 @@
 
 namespace App\Imports;
 
-use App\Models\AlamatSantri;
-use App\Models\Kabupaten;
-use App\Models\Kamar;
-use App\Models\Kecamatan;
-use App\Models\Kelas;
-use App\Models\Kelurahan;
-use App\Models\Provinsi;
 use App\Models\Santri;
 use App\Models\User;
-use App\Models\WaliSantri;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -45,7 +37,7 @@ class SantriImport implements ToModel, WithHeadingRow
             // save user santri
             $user = User::create([
                 'name' => $row['nama'],
-                'email' => Str::slug($row['nama']) . config('app.domain'),
+                'email' => Str::slug($row['nama']).config('app.domain'),
                 'password' => bcrypt('password'),
             ]);
             $user->assignRole('Santri');
@@ -59,12 +51,11 @@ class SantriImport implements ToModel, WithHeadingRow
                 'tahun_masuk' => $row['tahun_masuk'],
                 'tahun_masuk_hijriyah' => $tahun_masuk_hijriyah,
             ]);
-            if (!$santri) {
+            if (! $santri) {
                 $user->delete();
             }
             DB::commit();
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             DB::rollBack();
             Toastr::error('Gagal import data santri');
         }

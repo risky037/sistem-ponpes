@@ -33,7 +33,6 @@ class SantriController extends Controller
             'wali_santri',
         ])->select('id', 'no_induk', 'jenis_kelamin', 'tanggal_lahir', 'user_id', 'foto', 'status', 'tahun_masuk')
             ->orderBy('id', 'desc');
-        // dd($santri->paginate(1));
         if (request()->ajax()) {
             return DataTables::of($santri)
                 ->addIndexColumn()
@@ -323,8 +322,6 @@ class SantriController extends Controller
         $mime = Storage::mimeType('Format import data santri.xlsx');
 
         return response()->download(public_path('files/').'Format import data santri.xlsx', 'Format import data santri.xlsx', ['Content-Type' => $mime]);
-
-        return redirect()->back();
     }
 
     public function import(Request $request)
@@ -341,7 +338,6 @@ class SantriController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            // dd($th->getMessage());
             Toastr::error('Gagal import data santri');
 
             return redirect()->back();
@@ -350,13 +346,13 @@ class SantriController extends Controller
 
     public function export(Request $request)
     {
-        $santri = [];
-        if ($request->status[0] == 'Semua Santri') {
-            $santri = Santri::with('user', 'wali_santri', 'kamar', 'kelas')->get()->pluck('status');
+        $status = is_array($request->status) ? ($request->status[0] ?? 'Semua Santri') : ($request->status ?? 'Semua Santri');
+
+        if ($status == 'Semua Santri') {
+            $santri = Santri::with(['user', 'wali_santri', 'kamar_santri.kamar', 'kelas_santri.kelas'])->get();
         } else {
-            $santri = Santri::with('user', 'wali_santri', 'kamar', 'kelas')->where('status', $request->status)->get()->pluck('status');
+            $santri = Santri::with(['user', 'wali_santri', 'kamar_santri.kamar', 'kelas_santri.kelas'])->where('status', $status)->get();
         }
-        dd($request->status[0], $santri);
 
         return Excel::download(new SantriExport($santri), 'Export-data-santri.xlsx');
     }
