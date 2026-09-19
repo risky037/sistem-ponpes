@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TransferRequest extends FormRequest
@@ -17,14 +18,14 @@ class TransferRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'pengirim_id' => ['required', 'exists:santris,id'],
             'penerima_id' => ['required', 'exists:santris,id'],
-            'nominal' => ['required', 'numeric'],
+            'nominal' => ['required', 'numeric', 'gt:0'],
             'keterangan' => ['nullable', 'string'],
         ];
     }

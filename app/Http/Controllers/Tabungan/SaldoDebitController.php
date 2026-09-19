@@ -8,6 +8,8 @@ use App\Models\Santri;
 use App\Models\Tabungan;
 use App\Models\TransaksiTabungan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
@@ -52,22 +54,24 @@ class SaldoDebitController extends Controller
                 } else {
                     $santri = Santri::where('status', 'Santri Aktif')->get();
                     if (count($santri) > 0) {
-                        foreach ($santri as $key => $value) {
-                            $tabungan = Tabungan::create([
-                                'santri_id' => $value->id,
-                                'saldo' => 0,
-                                'keterangan' => null,
-                            ]);
-                            if ($tabungan->saldo > 0) {
-                                TransaksiTabungan::create([
-                                    'santri_id' => $tabungan->santri_id,
-                                    'tanggal_transaksi' => date('Y-m-d'),
-                                    'jenis_transaksi' => 'Setoran',
-                                    'jumlah_transaksi' => $tabungan->saldo,
-                                    'saldo_saatini' => $tabungan->saldo,
+                        DB::transaction(function () use ($santri) {
+                            foreach ($santri as $key => $value) {
+                                $tabungan = Tabungan::create([
+                                    'santri_id' => $value->id,
+                                    'saldo' => 0,
+                                    'keterangan' => null,
                                 ]);
+                                if ($tabungan->saldo > 0) {
+                                    TransaksiTabungan::create([
+                                        'santri_id' => $tabungan->santri_id,
+                                        'tanggal_transaksi' => date('Y-m-d'),
+                                        'jenis_transaksi' => 'Setoran',
+                                        'jumlah_transaksi' => $tabungan->saldo,
+                                        'saldo_saatini' => $tabungan->saldo,
+                                    ]);
+                                }
                             }
-                        }
+                        });
                         Toastr::success('Berhasil menambahkan semua santri');
 
                         return redirect()->back();
@@ -84,22 +88,31 @@ class SaldoDebitController extends Controller
                 if (Santri::firstWhere('id', $validate['santri_id'])->status == 'Santri Alumni') {
                     Toastr::info('Santri sudah menjadi alumni');
                 } else {
-                    $tabungan = Tabungan::create($validate);
-                    if ($tabungan->saldo > 0) {
-                        TransaksiTabungan::create([
-                            'santri_id' => $tabungan->santri_id,
-                            'tanggal_transaksi' => date('Y-m-d'),
-                            'jenis_transaksi' => 'Setoran',
-                            'jumlah_transaksi' => $tabungan->saldo,
-                            'saldo_saatini' => $tabungan->saldo,
-                        ]);
-                    }
+                    DB::transaction(function () use ($validate) {
+                        $tabungan = Tabungan::create($validate);
+                        if ($tabungan->saldo > 0) {
+                            TransaksiTabungan::create([
+                                'santri_id' => $tabungan->santri_id,
+                                'tanggal_transaksi' => date('Y-m-d'),
+                                'jenis_transaksi' => 'Setoran',
+                                'jumlah_transaksi' => $tabungan->saldo,
+                                'saldo_saatini' => $tabungan->saldo,
+                            ]);
+                        }
+                    });
                     Toastr::success('Berhasil menyimpan data');
                 }
             }
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('SaldoDebitController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menyimpan data');
 
             return redirect()->back();
@@ -126,12 +139,22 @@ class SaldoDebitController extends Controller
     public function destroy(Tabungan $tabungan)
     {
         try {
-            $tabungan->delete();
-            TransaksiTabungan::where('santri_id', $tabungan->santri_id)->delete();
+            DB::transaction(function () use ($tabungan) {
+                $santriId = $tabungan->santri_id;
+                $tabungan->delete();
+                TransaksiTabungan::where('santri_id', $santriId)->delete();
+            });
             Toastr::success('Berhasil menghapus data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('SaldoDebitController destroy error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menghapus data');
 
             return redirect()->back();
