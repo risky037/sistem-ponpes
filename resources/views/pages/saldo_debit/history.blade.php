@@ -16,7 +16,7 @@
                                 <div class="toolbar hidden-print">
                                     <div class="row">
                                         <div class="col text-start">
-                                            <h4>Riwayat Transaksi-{{ isset($data) ? $data[0]->santri->user->name : '' }}
+                                            <h4>Riwayat Transaksi-{{ isset($data) && $data->isNotEmpty() ? $data->first()?->santri?->user?->name : '' }}
                                             </h4>
                                         </div>
                                         <div class="col text-end">

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\JenisSurat;
 use App\Models\Kabupaten;
 use App\Models\Kamar;
 use App\Models\Kecamatan;
@@ -11,7 +10,6 @@ use App\Models\Kelurahan;
 use App\Models\Provinsi;
 use App\Models\Santri;
 use App\Models\Setting;
-use App\Models\WhatsappMessage;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Role;
 
@@ -48,8 +46,8 @@ class ViewServiceProvider extends ServiceProvider
             $roles = Role::all();
             $view->with('roles', $roles);
         });
-        view()->composer('pages.transfer.*', function ($view) {
-            $santris = Santri::whereHas('tabungan')->get();
+        view()->composer('pages.transfer.index', function ($view) {
+            $santris = Santri::whereHas('tabungan')->with('user')->get();
             $view->with('santris', $santris);
         });
         view()->composer('pages.mapel.index', function ($view) {
@@ -64,8 +62,8 @@ class ViewServiceProvider extends ServiceProvider
             $roles = Role::all();
             $view->with('roles', $roles);
         });
-        view()->composer('pages.saldo_debit.*', function ($view) {
-            $santri = Santri::all();
+        view()->composer('pages.saldo_debit.index', function ($view) {
+            $santri = Santri::with('user')->get();
             $view->with('santri', $santri);
         });
         view()->composer('layouts.*', function ($view) {

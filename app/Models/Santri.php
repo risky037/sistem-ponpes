@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use App\Traits\LogActivity;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Toastr;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Santri extends Model
 {
@@ -18,54 +18,69 @@ class Santri extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function wali_santri()
     {
         return $this->hasOne(WaliSantri::class);
     }
+
     public function kelas_santri()
     {
         return $this->hasOne(KelasSantri::class);
     }
+
     public function kamar_santri()
     {
         return $this->hasOne(KamarSantri::class);
     }
-    public function tabungan()
+
+    /**
+     * Get the student's savings account.
+     */
+    public function tabungan(): HasOne
     {
-        return $this->hasMany(Tabungan::class);
+        return $this->hasOne(Tabungan::class);
     }
-    public function transaksi_tabungan()
+
+    /**
+     * Get all savings transactions for the student.
+     */
+    public function transaksi_tabungan(): HasMany
     {
         return $this->hasMany(TransaksiTabungan::class);
     }
+
     public function setWhatsAppAttribute($value)
     {
         $phoneNumber = preg_replace('/[^0-9]/', '', $value);
         if (substr($phoneNumber, 0, 1) === '0') {
-            $this->attributes['whatsapp'] = '62' . substr($phoneNumber, 1);
+            $this->attributes['whatsapp'] = '62'.substr($phoneNumber, 1);
         } else {
             $this->attributes['whatsapp'] = $phoneNumber;
         }
     }
+
     public function alamat_santri()
     {
         return $this->hasOne(AlamatSantri::class);
     }
-    public function pengiriman()
+
+    public function pengiriman(): HasMany
     {
         return $this->hasMany(Transfer::class, 'pengirim_id');
     }
 
-    public function penerimaan()
+    public function penerimaan(): HasMany
     {
         return $this->hasMany(Transfer::class, 'penerima_id');
     }
+
     public static function boot()
     {
         parent::boot();
         self::creating(function ($santri) {
             // buat log
-            $activity = class_basename($santri) . ' ' . $santri->user->name;
+            $activity = class_basename($santri).' '.$santri->user->name;
             $santri->CreateLog("Creating $activity");
             // Saat pembuatan santri baru, tambahkan jumlah_santri
             if ($santri->kamar_id) {
@@ -78,7 +93,7 @@ class Santri extends Model
 
         self::updating(function ($santri) {
             // buat log
-            $activity = class_basename($santri) . ' ' . $santri->user->name;
+            $activity = class_basename($santri).' '.$santri->user->name;
             $santri->CreateLog("Updating $activity");
             // Saat pembaruan kamar_id, kurangkan dari kamar lama dan tambahkan ke kamar baru
             if ($santri->isDirty('kamar_id')) {
@@ -97,7 +112,7 @@ class Santri extends Model
 
         self::deleting(function ($santri) {
             // buat log
-            $activity = class_basename($santri) . ' ' . $santri->user->name;
+            $activity = class_basename($santri).' '.$santri->user->name;
             $santri->CreateLog("Deleting $activity");
             // Saat santri dihapus, kurangkan jumlah_santri di kamar terkait
             $kamar = Kamar::find($santri->kamar_id);
