@@ -13,24 +13,6 @@ class TransaksiTabungan extends Model
 
     protected $guarded = ['id'];
 
-    public static function boot()
-    {
-        parent::boot();
-        self::creating(function ($transaksi_tabungan) {
-            $activity = class_basename($transaksi_tabungan).' '.$transaksi_tabungan->santri->user->name.' '.$transaksi_tabungan->jenis_transaksi.' '.$transaksi_tabungan->jumlah_transaksi;
-            $transaksi_tabungan->CreateLog('Creating '.$activity);
-        });
-
-        self::updating(function ($transaksi_tabungan) {
-            $activity = class_basename($transaksi_tabungan).' '.$transaksi_tabungan->santri->user->name.' '.$transaksi_tabungan->jenis_transaksi.' '.$transaksi_tabungan->jumlah_transaksi;
-            $transaksi_tabungan->CreateLog('Updating '.$activity);
-        });
-        self::deleting(function ($transaksi_tabungan) {
-            $activity = class_basename($transaksi_tabungan).' '.$transaksi_tabungan->santri->user->name.' '.$transaksi_tabungan->jenis_transaksi.' '.$transaksi_tabungan->jumlah_transaksi;
-            $transaksi_tabungan->CreateLog('Deleting '.$activity);
-        });
-    }
-
     /**
      * Get the student associated with the savings transaction.
      */

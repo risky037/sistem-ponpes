@@ -15,6 +15,7 @@ use App\Observers\KelasObserver;
 use App\Observers\SantriObserver;
 use App\Observers\SettingObserver;
 use App\Observers\TabunganObserver;
+use App\Observers\TransaksiTabunganActivityObserver;
 use App\Observers\TransaksiTabunganObserver;
 use App\Observers\TransferObserver;
 use App\Observers\UserObserver;
@@ -50,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         Tabungan::observe(TabunganObserver::class);
         Transfer::observe(TransferObserver::class);
         Santri::observe(SantriObserver::class);
+        TransaksiTabungan::observe(TransaksiTabunganActivityObserver::class);
         TransaksiTabungan::observe(TransaksiTabunganObserver::class);
 
         Gate::policy(User::class, UserPolicy::class);
