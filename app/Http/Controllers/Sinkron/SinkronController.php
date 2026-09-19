@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sinkron;
 use App\Http\Controllers\Controller;
 use App\Models\Santri;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Ping;
 use Revolution\Google\Sheets\Facades\Sheets;
@@ -14,6 +15,15 @@ class SinkronController extends Controller
     public function index()
     {
         $data = config('modules.modules');
+        if (is_array($data)) {
+            foreach ($data as $key => &$module) {
+                $syncedAt = Cache::get("modules.sync.{$key}");
+                if ($syncedAt !== null) {
+                    $module[1] = $syncedAt;
+                }
+            }
+            unset($module);
+        }
 
         return view('pages.sinkronisasi.index', compact('data'));
     }
@@ -23,7 +33,7 @@ class SinkronController extends Controller
         try {
             $condition = Ping::to();
             if ($condition == true) {
-                $sheet_id = env('SPREDSHEET_ID');
+                $sheet_id = env('SPREADSHEET_ID', env('SPREDSHEET_ID'));
                 if ($sheet_id) {
                     $aktif = Sheets::spreadsheet($sheet_id)->sheet('Santri Aktif')->get()->toArray();
                     if (count($aktif) > 0) {
@@ -100,7 +110,9 @@ class SinkronController extends Controller
     public function update(Request $request)
     {
         try {
-            \Config::write('modules.modules.santri', $request->data);
+            $data = $request->input('data');
+            $timestamp = is_array($data) ? ($data[1] ?? '') : $data;
+            Cache::forever('modules.sync.santri', $timestamp);
 
             return response()->json(['success' => true, 'message' => 'Berhasil mengubah data']);
         } catch (\Throwable $th) {

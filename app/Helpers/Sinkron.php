@@ -9,7 +9,10 @@ class Sinkron
     {
         $condition = Ping::to();
         if ($condition == true) {
-            $sheet_id = env('SPREDSHEET_ID');
+            $sheet_id = env('SPREADSHEET_ID', env('SPREDSHEET_ID'));
+            if (! $sheet_id) {
+                return response()->json(['success' => false, 'message' => 'Silahkan isi ID Spreadsheet terlebih dahulu'], 200);
+            }
             $alumni = Sheets::spreadsheet($sheet_id)->sheet('Santri Alumni')->get()->toArray();
             if (count($alumni) > 0) {
                 if (count($alumni) == 1) {
@@ -23,7 +26,7 @@ class Sinkron
                         $santri_alumni_valid[] = array_values($val);
                     }
 
-                    Sheets::spreadsheet('YOUR_SPREADSHEET_ID')->sheet('Santri Alumni')->append($santri_alumni_valid);
+                    Sheets::spreadsheet($sheet_id)->sheet('Santri Alumni')->append($santri_alumni_valid);
                 } else {
                     // validating data from database local with data from google sheets
                     $santri_alumni = Santri::select('no_induk', 'name', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'dusun', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'bulan_lahir', 'tahun_lahir', 'nik', 'kk', 'tahun_masuk', 'tahun_masuk_hijriyah', 'tanggal_boyong', 'tanggal_boyong_hijriyah')
@@ -65,13 +68,10 @@ class Sinkron
     {
         $condition = Ping::to();
         if ($condition == true) {
-            $sheet_id = env('SPREDSHEET_ID');
+            $sheet_id = env('SPREADSHEET_ID', env('SPREDSHEET_ID'));
             if ($sheet_id) {
                 $aktif = Sheets::spreadsheet($sheet_id)->sheet('Santri Aktif')->get()->toArray();
                 if (count($aktif) > 0) {
-                    // $header = ['No Induk', 'Nama Lengkap', 'Provinsi', 'Kabupaten', 'Kecamatan', 'Desa / Kelurahan', 'Dusun', 'Jenis Kelamin', 'Tempat', 'Tanggal', 'Bulan', 'Tahun Lahir', 'NIK', 'KK', 'Kamar', 'Blok', 'Tingkat', 'Kelas', 'Tahun Masuk', 'Tahun Masuk Hijriyah'];
-                    // Sheets::spreadsheet('YOUR_SPREADSHEET_ID')->sheet('Santri Aktif')->append([$header]);
-
                     if (count($aktif) == 1) {
                         $santri_aktif = Santri::select('no_induk', 'name', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'dusun', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'bulan_lahir', 'tahun_lahir', 'nik', 'kk', 'kamars.nama', 'kamars.blok', 'kelas.tingkatan', 'kelas.kelas', 'tahun_masuk', 'tahun_masuk_hijriyah')
                             ->join('users', 'santris.user_id', '=', 'users.id')
@@ -85,7 +85,7 @@ class Sinkron
                             $santri_aktif_valid[] = array_values($val);
                         }
 
-                        Sheets::spreadsheet('YOUR_SPREADSHEET_ID')->sheet('Santri Aktif')->append($santri_aktif_valid);
+                        Sheets::spreadsheet($sheet_id)->sheet('Santri Aktif')->append($santri_aktif_valid);
                     } else {
                         $santri_aktif = Santri::select('no_induk', 'name', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'dusun', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'bulan_lahir', 'tahun_lahir', 'nik', 'kk', 'kamars.nama', 'kamars.blok', 'kelas.tingkatan', 'kelas.kelas', 'tahun_masuk', 'tahun_masuk_hijriyah')
                             ->join('users', 'santris.user_id', '=', 'users.id')
@@ -115,7 +115,7 @@ class Sinkron
                         // Reset kembali indeks array
                         $santri_aktif = array_values($santri_aktif_valid);
 
-                        Sheets::spreadsheet('YOUR_SPREADSHEET_ID')->sheet('Santri Aktif')->append($santri_aktif);
+                        Sheets::spreadsheet($sheet_id)->sheet('Santri Aktif')->append($santri_aktif);
                     }
                 }
 

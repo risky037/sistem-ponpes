@@ -1,7 +1,19 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
+use App\Providers\EventServiceProvider;
+use App\Providers\RouteServiceProvider;
+use App\Providers\ViewServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageServiceProvider;
+use Milon\Barcode\BarcodeServiceProvider;
+use Milon\Barcode\Facades\DNS1DFacade;
+use Milon\Barcode\Facades\DNS2DFacade;
+use Spatie\Permission\PermissionServiceProvider;
+use Yajra\DataTables\DataTablesServiceProvider;
 
 return [
 
@@ -165,17 +177,16 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+        AppServiceProvider::class,
+        AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        App\Providers\ViewServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
-        Milon\Barcode\BarcodeServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
-        October\Rain\Config\ServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
+        EventServiceProvider::class,
+        RouteServiceProvider::class,
+        ViewServiceProvider::class,
+        ImageServiceProvider::class,
+        BarcodeServiceProvider::class,
+        PermissionServiceProvider::class,
+        DataTablesServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
     ])->toArray(),
 
@@ -191,9 +202,9 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Image' => Intervention\Image\Facades\Image::class,
-        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
-        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+        'Image' => Image::class,
+        'DNS1D' => DNS1DFacade::class,
+        'DNS2D' => DNS2DFacade::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

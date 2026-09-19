@@ -16,7 +16,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div id="invoice">
-                                <a href="https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?usp=sharing"
+                                <a href="https://docs.google.com/spreadsheets/d/{{ env('SPREADSHEET_ID', env('SPREDSHEET_ID', 'YOUR_SPREADSHEET_ID')) }}/edit?usp=sharing"
                                     target="_blank" role="button" class="btn btn-primary btn-sm mb-2">Data Santri</a>
                             </div>
                             <div class="row mb-2">
@@ -77,7 +77,7 @@
             table.buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
         });
 
-        var modules = @json(config('modules.modules'));
+        var modules = @json($data);
         $(document).ready(function() {
             var sync_santri = $('#btn-sync-0');
             var icon_sync = $('#icon-sync');
