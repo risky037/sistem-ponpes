@@ -19,6 +19,7 @@ A comprehensive, role-based management information system tailored for **Pondok 
 5. [Security Guidelines](#5-security-guidelines)
 6. [Open Source Attribution](#6-open-source-attribution)
 7. [License](#7-license)
+8. [Architecture & Migration Reports](docs/reports/README.md)
 
 ---
 
@@ -245,3 +246,13 @@ For full historical lineage, original copyright notices, and license acknowledge
 ## 7. License
 
 Distributed under the **MIT License**. See [LICENSE](LICENSE) and [docs/OPEN_SOURCE_NOTICE.md](docs/OPEN_SOURCE_NOTICE.md) for details.
+
+---
+
+## 8. Architecture & Migration Reports
+
+Comprehensive historical technical documentation, audit reports, and framework upgrade assessments are cataloged in the [Technical Reports Directory](docs/reports/README.md):
+- **Laravel 11 Architecture & Dependency Upgrade:** [docs/reports/laravel11/](docs/reports/laravel11/)
+- **Laravel 12 Core Upgrade, Stabilization & Security Hardening:** [docs/reports/laravel12/](docs/reports/laravel12/)
+- **Domain Assessments (Financial Transactions, Image v3, Debug Cleanup):** [docs/reports/domain-assessments/](docs/reports/domain-assessments/)
+
