@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b008c69cc8b3f4c164563a87fa7c57f9",
+    "content-hash": "f1183d47a5d7e3c5556c0328577bce15",
     "packages": [
         {
             "name": "brick/math",
@@ -2858,20 +2858,21 @@
         },
         {
             "name": "milon/barcode",
-            "version": "v10.0.1",
+            "version": "v11.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/milon/barcode.git",
-                "reference": "e643a713466f0109aa3ad7d29dae4900444187a5"
+                "reference": "3eb073d2d63c27b2e900d543ad7683be34ca14f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/milon/barcode/zipball/e643a713466f0109aa3ad7d29dae4900444187a5",
-                "reference": "e643a713466f0109aa3ad7d29dae4900444187a5",
+                "url": "https://api.github.com/repos/milon/barcode/zipball/3eb073d2d63c27b2e900d543ad7683be34ca14f7",
+                "reference": "3eb073d2d63c27b2e900d543ad7683be34ca14f7",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^7.0|^8.0|^9.0|^10.0",
+                "ext-gd": "*",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0 | ^11.0",
                 "php": "^7.3 | ^8.0"
             },
             "type": "library",
@@ -2916,7 +2917,7 @@
             ],
             "support": {
                 "issues": "https://github.com/milon/barcode/issues",
-                "source": "https://github.com/milon/barcode/tree/v10.0.1"
+                "source": "https://github.com/milon/barcode/tree/v11.0.1"
             },
             "funding": [
                 {
@@ -2928,7 +2929,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-16T13:03:37+00:00"
+            "time": "2025-01-06T18:45:34+00:00"
         },
         {
             "name": "monolog/monolog",
