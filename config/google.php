@@ -1,5 +1,7 @@
 <?php
 
+use Google\Service\Sheets;
+
 return [
     /*
     |----------------------------------------------------------------------------
@@ -20,7 +22,7 @@ return [
     'client_id' => env('GOOGLE_CLIENT_ID', ''),
     'client_secret' => env('GOOGLE_CLIENT_SECRET', ''),
     'redirect_uri' => env('GOOGLE_REDIRECT', ''),
-    'scopes' => [\Google\Service\Sheets::DRIVE, \Google\Service\Sheets::SPREADSHEETS],
+    'scopes' => [Sheets::DRIVE, Sheets::SPREADSHEETS],
     'access_type' => 'online',
     'approval_prompt' => 'auto',
 
@@ -71,4 +73,18 @@ return [
     |
     */
     'config' => [],
+
+    /*
+    |----------------------------------------------------------------------------
+    | Google Sheets Spreadsheet ID
+    |----------------------------------------------------------------------------
+    |
+    | The spreadsheet ID used by the synchronization module.
+    |
+    | Note: The legacy typo key (SPREDSHEET_ID) is used as a fallback to maintain
+    | backward compatibility with existing deployment environments.
+    |
+    */
+    'spreadsheet_id' => env('SPREADSHEET_ID', env('SPREDSHEET_ID', '')),
+
 ];

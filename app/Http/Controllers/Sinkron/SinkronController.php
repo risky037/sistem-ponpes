@@ -33,7 +33,7 @@ class SinkronController extends Controller
         try {
             $condition = Ping::to();
             if ($condition == true) {
-                $sheet_id = env('SPREADSHEET_ID', env('SPREDSHEET_ID'));
+                $sheet_id = config('google.spreadsheet_id');
                 if ($sheet_id) {
                     $aktif = Sheets::spreadsheet($sheet_id)->sheet('Santri Aktif')->get()->toArray();
                     if (count($aktif) > 0) {

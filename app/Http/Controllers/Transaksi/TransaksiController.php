@@ -175,9 +175,9 @@ class TransaksiController extends Controller
 
     public function send_message($santri, $tujuan, $nominal)
     {
-        $sender = env('WA_SENDER_NUMBER', '6281234567890');
+        $sender = config('whatsapp.sender_number');
         $number = isset($santri->whatsapp) ? $santri->whatsapp : '';
-        $apiKey = env('WA_API_KEY', 'YOUR_WA_API_KEY');
+        $apiKey = config('whatsapp.api_key');
         $tanggal = now('Asia/Jakarta')->format('d-F-Y H:i:s');
         $pesan = "*Assalamualaikum Wr. Wb.*\n\n";
         $pesan .= "Hormat Kami,\n";
