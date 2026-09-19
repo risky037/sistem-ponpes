@@ -17,39 +17,29 @@ class TransaksiController extends Controller
     {
         if (request()->ajax()) {
             $noinduk = request()->get('no_induk');
-            $santri = Tabungan::with('santri', 'santri.user')->whereHas('santri', function ($query) use ($noinduk) {
-                $query->where('no_induk', $noinduk);
-            })->first();
+            $santri = Santri::with(['user', 'tabungan'])->where('no_induk', $noinduk)->first();
             if ($santri) {
-                $saldo = Tabungan::whereHas('santri', function ($query) use ($noinduk) {
-                    $query->where('no_induk', $noinduk);
-                })->sum('saldo');
+                $saldo = $santri->tabungan?->saldo ?? 0;
                 if (request()->get('jenis') == 'Penarikan') {
-                    $tr = TransaksiTabungan::where('santri_id', $santri->santri->id)->whereDate('tanggal_transaksi', now()->toDateString())->where('jenis_transaksi', 'Penarikan')->get();
-                    if (! $tr->isEmpty()) {
+                    $hasWithdrawnToday = $santri->transaksi_tabungan()
+                        ->whereDate('tanggal_transaksi', now()->toDateString())
+                        ->where('jenis_transaksi', 'Penarikan')
+                        ->exists();
+
+                    if ($hasWithdrawnToday) {
                         return response()->json(['message' => "Santri dengan nomor induk <strong> $noinduk </strong> telah melakukan penarikan"], 200);
-                    } else {
-                        $data = [
-                            'santri_id' => $santri->santri->id,
-                            'no_induk' => $santri->santri->no_induk,
-                            'name' => $santri->santri->user->name,
-                            'saldo' => number_format($saldo),
-                            'foto' => $santri->santri->foto,
-                        ];
-
-                        return response()->json(['data' => $data], 200);
                     }
-                } else {
-                    $data = [
-                        'santri_id' => $santri->santri->id,
-                        'no_induk' => $santri->santri->no_induk,
-                        'name' => $santri->santri->user->name,
-                        'saldo' => number_format($saldo),
-                        'foto' => $santri->santri->foto,
-                    ];
-
-                    return response()->json(['data' => $data], 200);
                 }
+
+                $data = [
+                    'santri_id' => $santri->id,
+                    'no_induk' => $santri->no_induk,
+                    'name' => $santri->user->name,
+                    'saldo' => number_format($saldo),
+                    'foto' => $santri->foto,
+                ];
+
+                return response()->json(['data' => $data], 200);
             }
 
             return response()->json(['message' => 'Tidak ada data santri dengan nomor induk <strong>'.$noinduk.'</strong>'], 200);

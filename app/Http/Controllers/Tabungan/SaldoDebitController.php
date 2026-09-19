@@ -18,9 +18,8 @@ class SaldoDebitController extends Controller
 {
     public function index()
     {
-        $santri = Santri::all();
         if (request()->ajax()) {
-            $tabungan = Tabungan::with('santri')->get();
+            $tabungan = Tabungan::with('santri.user')->get();
 
             return DataTables::of($tabungan)
                 ->addIndexColumn()
@@ -82,26 +81,25 @@ class SaldoDebitController extends Controller
                     }
                 }
             }
-            if (Tabungan::firstWhere('santri_id', $validate['santri_id'])) {
+            $santriTarget = Santri::with('tabungan')->find($validate['santri_id']);
+            if ($santriTarget?->tabungan) {
                 Toastr::info('Santri sudah memiliki tabungan');
+            } elseif ($santriTarget?->status == 'Santri Alumni') {
+                Toastr::info('Santri sudah menjadi alumni');
             } else {
-                if (Santri::firstWhere('id', $validate['santri_id'])->status == 'Santri Alumni') {
-                    Toastr::info('Santri sudah menjadi alumni');
-                } else {
-                    DB::transaction(function () use ($validate) {
-                        $tabungan = Tabungan::create($validate);
-                        if ($tabungan->saldo > 0) {
-                            TransaksiTabungan::create([
-                                'santri_id' => $tabungan->santri_id,
-                                'tanggal_transaksi' => date('Y-m-d'),
-                                'jenis_transaksi' => 'Setoran',
-                                'jumlah_transaksi' => $tabungan->saldo,
-                                'saldo_saatini' => $tabungan->saldo,
-                            ]);
-                        }
-                    });
-                    Toastr::success('Berhasil menyimpan data');
-                }
+                DB::transaction(function () use ($validate) {
+                    $tabungan = Tabungan::create($validate);
+                    if ($tabungan->saldo > 0) {
+                        TransaksiTabungan::create([
+                            'santri_id' => $tabungan->santri_id,
+                            'tanggal_transaksi' => date('Y-m-d'),
+                            'jenis_transaksi' => 'Setoran',
+                            'jumlah_transaksi' => $tabungan->saldo,
+                            'saldo_saatini' => $tabungan->saldo,
+                        ]);
+                    }
+                });
+                Toastr::success('Berhasil menyimpan data');
             }
 
             return redirect()->back();
@@ -131,7 +129,7 @@ class SaldoDebitController extends Controller
 
     public function show($id)
     {
-        $data = TransaksiTabungan::where('santri_id', $id)->get();
+        $data = TransaksiTabungan::with('santri.user')->where('santri_id', $id)->get();
 
         return view('pages.saldo_debit.history', compact('data'));
     }

@@ -16,7 +16,7 @@ class TransferController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = Transfer::with('pengirim', 'pengirim.user', 'penerima', 'penerima.user')->get();
+            $data = Transfer::with(['pengirim.user', 'penerima.user'])->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -31,8 +31,8 @@ class TransferController extends Controller
     {
         $validated = $request->validated();
         try {
-            $pengirim = Santri::findOrFail($validated['pengirim_id']);
-            $penerima = Santri::findOrFail($validated['penerima_id']);
+            $pengirim = Santri::with('tabungan')->findOrFail($validated['pengirim_id']);
+            $penerima = Santri::with('tabungan')->findOrFail($validated['penerima_id']);
             $jumlah = $validated['nominal'];
             $keterangan = $validated['keterangan'];
             if ($pengirim->id == $penerima->id) {
@@ -41,14 +41,14 @@ class TransferController extends Controller
                 return redirect()->back();
             }
 
-            $pengirimTabungan = Tabungan::firstWhere('santri_id', $pengirim->id);
+            $pengirimTabungan = $pengirim->tabungan;
             if (! $pengirimTabungan || $pengirimTabungan->saldo < $jumlah) {
                 Toastr::error('Saldo tidak mencukupi.');
 
                 return redirect()->back();
             }
 
-            $this->transfer($penerima->load('tabungan'), $pengirim->load('tabungan'), $jumlah, $keterangan);
+            $this->transfer($penerima, $pengirim, $jumlah, $keterangan);
             Toastr::success('Transfer berhasil.');
 
             return redirect()->back();
