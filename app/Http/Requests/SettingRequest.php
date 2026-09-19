@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SettingRequest extends FormRequest
@@ -17,7 +18,7 @@ class SettingRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -26,6 +27,7 @@ class SettingRequest extends FormRequest
             'favicon' => ['required', 'mimes:png,jpg', 'max:5020'],
             'whatsapp_api_key' => ['required', 'string', 'min:32', 'max:32'],
             'whatsapp_feature' => ['required'],
+            'sender' => ['nullable'],
             'log_activity' => ['required'],
         ];
     }

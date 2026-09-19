@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
@@ -104,10 +104,9 @@ class SantriController extends Controller
                     mkdir($path, 0777, true);
                 }
 
-                Image::make($foto->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($foto->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 $validate['foto'] = $filename;
             } else {
                 $validate['foto'] = 'santri.png';
@@ -200,10 +199,9 @@ class SantriController extends Controller
                 if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-                Image::make($foto->getRealPath())->resize(240, 295, function ($constraint) {
-                    $constraint->upsize();
-                    $constraint->aspectRatio();
-                })->save($path.$filename);
+                Image::read($foto->getRealPath())
+                    ->scaleDown(width: 240, height: 295)
+                    ->save($path.$filename);
                 $validate['foto'] = $filename;
             } else {
                 $validate['foto'] = $santri->foto;

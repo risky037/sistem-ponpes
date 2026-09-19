@@ -7,8 +7,7 @@ use App\Providers\RouteServiceProvider;
 use App\Providers\ViewServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
-use Intervention\Image\Facades\Image;
-use Intervention\Image\ImageServiceProvider;
+use Intervention\Image\Laravel\Facades\Image;
 use Milon\Barcode\BarcodeServiceProvider;
 use Milon\Barcode\Facades\DNS1DFacade;
 use Milon\Barcode\Facades\DNS2DFacade;
@@ -183,7 +182,6 @@ return [
         EventServiceProvider::class,
         RouteServiceProvider::class,
         ViewServiceProvider::class,
-        ImageServiceProvider::class,
         BarcodeServiceProvider::class,
         PermissionServiceProvider::class,
         DataTablesServiceProvider::class,
