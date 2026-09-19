@@ -1,6 +1,7 @@
 {
     "preset": "laravel",
     "exclude": [
-        "database/migrations"
+        "database/migrations",
+        "docs/archive"
     ]
 }

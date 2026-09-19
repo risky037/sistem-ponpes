@@ -3,7 +3,6 @@
 use App\Models\Santri;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,16 +14,11 @@ return new class extends Migration
     {
         Schema::create('tabungans', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Santri::class)->unique()->constrained('santris')->restrictOnDelete();
+            $table->foreignIdFor(Santri::class)->constrained()->cascadeOnDelete();
             $table->bigInteger('saldo')->default(0);
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });
-
-        $driver = Schema::getConnection()->getDriverName();
-        if (in_array($driver, ['mysql', 'mariadb'])) {
-            DB::statement('ALTER TABLE tabungans ADD CONSTRAINT chk_tabungans_saldo CHECK (saldo >= 0)');
-        }
     }
 
     /**

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Kelas;
 use App\Models\Santri;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,10 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wali_kelas', function (Blueprint $table) {
+        Schema::create('transfers', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Kelas::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Santri::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Santri::class, 'pengirim_id')->constrained('santris')->cascadeOnDelete();
+            $table->foreignIdFor(Santri::class, 'penerima_id')->constrained('santris')->cascadeOnDelete();
+            $table->bigInteger('jumlah_transfer');
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wali_kelas');
+        Schema::dropIfExists('transfers');
     }
 };

@@ -14,19 +14,13 @@ return new class extends Migration
     {
         Schema::create('transaksi_tabungans', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Santri::class)->constrained('santris')->restrictOnDelete();
-            // NOTE:
-            // Keep PHP evaluated default for SQLite CI compatibility.
-            $table->date('tanggal_transaksi')->default(now()->format('Y-m-d'));
+            $table->foreignIdFor(Santri::class)->constrained()->cascadeOnDelete();
+            $table->date('tanggal_transaksi')->default(date('Y-m-d'));
             $table->enum('jenis_transaksi', ['Setoran', 'Penarikan']);
             $table->string('tujuan')->nullable();
             $table->bigInteger('jumlah_transaksi')->default(0);
-            $table->bigInteger('saldo_sebelumnya')->nullable();
             $table->bigInteger('saldo_saatini')->default(0);
-            $table->string('keterangan')->nullable();
             $table->timestamps();
-
-            $table->index(['santri_id', 'tanggal_transaksi', 'jenis_transaksi'], 'idx_transaksi_santri_tgl_jenis');
         });
     }
 
