@@ -14,24 +14,6 @@ class Tabungan extends Model
 
     protected $guarded = ['id'];
 
-    public static function boot()
-    {
-        parent::boot();
-        self::creating(function ($tabungan) {
-            $activity = class_basename($tabungan).' '.$tabungan->santri->user->name;
-            $tabungan->CreateLog('Creating '.$activity);
-        });
-
-        self::updating(function ($tabungan) {
-            $activity = class_basename($tabungan).' '.$tabungan->santri->user->name;
-            $tabungan->CreateLog('Updating '.$activity);
-        });
-        self::deleting(function ($tabungan) {
-            $activity = class_basename($tabungan).' '.$tabungan->santri->user->name;
-            $tabungan->CreateLog('Deleting '.$activity);
-        });
-    }
-
     /**
      * Get the student that owns the savings account.
      */

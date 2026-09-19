@@ -2,11 +2,22 @@
 
 namespace App\Providers;
 
+use App\Models\Kamar;
+use App\Models\Kelas;
 use App\Models\Santri;
+use App\Models\Setting;
+use App\Models\Tabungan;
 use App\Models\TransaksiTabungan;
+use App\Models\Transfer;
 use App\Models\User;
+use App\Observers\KamarObserver;
+use App\Observers\KelasObserver;
 use App\Observers\SantriObserver;
+use App\Observers\SettingObserver;
+use App\Observers\TabunganObserver;
 use App\Observers\TransaksiTabunganObserver;
+use App\Observers\TransferObserver;
+use App\Observers\UserObserver;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -32,6 +43,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+        User::observe(UserObserver::class);
+        Setting::observe(SettingObserver::class);
+        Kelas::observe(KelasObserver::class);
+        Kamar::observe(KamarObserver::class);
+        Tabungan::observe(TabunganObserver::class);
+        Transfer::observe(TransferObserver::class);
         Santri::observe(SantriObserver::class);
         TransaksiTabungan::observe(TransaksiTabunganObserver::class);
 

@@ -28,22 +28,4 @@ class Transfer extends Model
     {
         return $this->belongsTo(Santri::class, 'penerima_id');
     }
-
-    public static function boot()
-    {
-        parent::boot();
-        self::creating(function ($transfer) {
-            $activity = class_basename($transfer).' '.$transfer->jumlah_transfer;
-            $transfer->CreateLog('Creating '.$activity);
-        });
-
-        self::updating(function ($transfer) {
-            $activity = class_basename($transfer).' '.$transfer->jumlah_transfer;
-            $transfer->CreateLog('Updating '.$activity);
-        });
-        self::deleting(function ($transfer) {
-            $activity = class_basename($transfer).' '.$transfer->jumlah_transfer;
-            $transfer->CreateLog('Deleting '.$activity);
-        });
-    }
 }
