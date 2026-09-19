@@ -49,6 +49,10 @@ class KamarController extends Controller
             return redirect()->back();
         } catch (\Throwable $th) {
             Log::error('KamarController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
                 'exception' => $th,
             ]);
             Toastr::error('Gagal menambah data');
@@ -71,6 +75,13 @@ class KamarController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('KamarController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal merubah data');
 
             return redirect()->back()->withInput();
@@ -89,6 +100,13 @@ class KamarController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('KamarController destroy error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menghapus data');
 
             return redirect()->back();

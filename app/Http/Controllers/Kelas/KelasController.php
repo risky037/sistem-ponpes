@@ -46,6 +46,10 @@ class KelasController extends Controller
             return redirect()->back();
         } catch (\Throwable $th) {
             Log::error('KelasController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
                 'exception' => $th,
             ]);
             Toastr::error('Gagal menambah data');
@@ -67,6 +71,13 @@ class KelasController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('KelasController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal merubah data');
 
             return redirect()->back()->withInput();
@@ -81,6 +92,13 @@ class KelasController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('KelasController destroy error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menghapus data');
 
             return redirect()->back();

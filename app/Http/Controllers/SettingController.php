@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Whatsapp;
-use Toastr;
-use App\Models\Setting;
-use Illuminate\Http\Request;
 use App\Http\Requests\SettingRequest;
+use App\Models\Setting;
 use App\Models\WhatsappMessage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
+use Toastr;
 
 class SettingController extends Controller
 {
@@ -16,8 +17,10 @@ class SettingController extends Controller
     {
         $setting = Setting::first();
         $whatsapp = WhatsappMessage::first();
+
         return view('pages.setting.index', compact('setting', 'whatsapp'));
     }
+
     public function store(SettingRequest $request)
     {
         $validate = $request->validated();
@@ -27,13 +30,13 @@ class SettingController extends Controller
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $logo->hashName();
 
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
                 Image::make($logo->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 $validate['logo'] = $filename;
             }
             $favicon = request()->file('favicon');
@@ -41,14 +44,14 @@ class SettingController extends Controller
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $favicon->hashName();
 
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
 
                 Image::make($favicon->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 $validate['favicon'] = $filename;
             }
             $kts_master = request()->file('kts_master');
@@ -56,24 +59,34 @@ class SettingController extends Controller
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $kts_master->hashName();
 
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
 
                 Image::make($kts_master->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 $validate['kts_master'] = $filename;
             }
             Setting::updateOrCreate($validate);
             Toastr::success('Berhasil menyimpan data setting!');
+
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('SettingController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menyimpan data setting!');
+
             return redirect()->back();
         }
     }
+
     public function update(SettingRequest $request, Setting $setting)
     {
         $validate = $request->validated();
@@ -84,16 +97,16 @@ class SettingController extends Controller
             if (isset($logo) == true) {
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $logo->hashName();
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
                 Image::make($logo->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 // delete old photo from storage
-                if ($setting->logo != null && file_exists($path . $setting->logo)) {
-                    unlink($path . $setting->logo);
+                if ($setting->logo != null && file_exists($path.$setting->logo)) {
+                    unlink($path.$setting->logo);
                 }
                 $validate['logo'] = $filename;
             }
@@ -101,16 +114,16 @@ class SettingController extends Controller
             if (isset($favicon) == true) {
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $favicon->hashName();
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
                 Image::make($favicon->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 // delete old photo from storage
-                if ($setting->favicon != null && file_exists($path . $setting->favicon)) {
-                    unlink($path . $setting->favicon);
+                if ($setting->favicon != null && file_exists($path.$setting->favicon)) {
+                    unlink($path.$setting->favicon);
                 }
                 $validate['favicon'] = $filename;
             }
@@ -118,27 +131,37 @@ class SettingController extends Controller
             if (isset($kts_master) == true) {
                 $path = storage_path('app/public/uploads/setting/');
                 $filename = $kts_master->hashName();
-                if (!file_exists($path)) {
+                if (! file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
                 Image::make($kts_master->getRealPath())->resize(240, 295, function ($constraint) {
                     $constraint->upsize();
                     $constraint->aspectRatio();
-                })->save($path . $filename);
+                })->save($path.$filename);
                 // delete old photo from storage
-                if ($setting->kts_master != null && file_exists($path . $setting->kts_master)) {
-                    unlink($path . $setting->kts_master);
+                if ($setting->kts_master != null && file_exists($path.$setting->kts_master)) {
+                    unlink($path.$setting->kts_master);
                 }
                 $validate['kts_master'] = $filename;
             }
             $setting->update($validate);
             Toastr::success('Berhasil merubah data setting!');
+
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('SettingController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal merubah data setting!');
+
             return redirect()->back();
         }
     }
+
     public function whatsapp(Request $request)
     {
         try {
@@ -149,9 +172,18 @@ class SettingController extends Controller
                 WhatsappMessage::create($request->all());
             }
             Toastr::success('Berhasil menyimpan data');
+
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('SettingController whatsapp error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menyimpan data');
+
             return redirect()->back();
         }
     }

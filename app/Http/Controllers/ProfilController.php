@@ -7,6 +7,7 @@ use App\Http\Requests\Profil\BiodataRequest;
 use App\Models\AlamatSantri;
 use App\Models\Santri;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Toastr;
 
@@ -30,7 +31,13 @@ class ProfilController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            \Log::error('Gagal merubah data akun: '.$th->getMessage());
+            Log::error('ProfilController account error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal merubah data');
 
             return redirect()->back();
@@ -80,7 +87,13 @@ class ProfilController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            \Log::error('Gagal merubah biodata: '.$th->getMessage());
+            Log::error('ProfilController biodata error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal merubah data');
 
             return redirect()->back();
