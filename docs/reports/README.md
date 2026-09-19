@@ -55,6 +55,8 @@ Ongoing infrastructure modernization:
 1. **[Laravel 12 CI & Repository Modernization Assessment](laravel12/Laravel12_CI_Repository_Modernization_Assessment.md):** Assessment of GitHub Actions CI matrix, PHP 8.2 retirement evaluation, migration consolidation plan, seeder refactoring plan, and hardcoded domain value audit.
 2. **[Repository Hygiene & Documentation Cleanup Implementation](laravel12/Laravel12_Repository_Hygiene_Implementation_Report.md):** Deletion of obsolete `qodana.yaml` tooling, migration reports restructuring into `docs/reports/`, and `CHANGELOG.md` baseline updates.
 3. **[CI Pipeline Modernization Implementation](laravel12/Laravel12_CI_Modernization_Report.md):** Retirement of failing PHP 8.2 runner, PHP 8.4 CI baseline standardization, concurrency control, manual workflow dispatch, and standardized validation steps.
+4. **[Database Migration Cleanup & Consolidation Assessment](domain-assessments/Laravel12_Migration_Cleanup_Assessment.md):** Detailed analysis of 27 migrations, duplicate alterations, and pre-production consolidation blueprint.
+5. **[Database Migration & Seeder Refinement Assessment](domain-assessments/Laravel12_Database_Refinement_Assessment.md):** Master assessment covering seeder decoupling, credential standardization, schema verification, and migration consolidation decision.
 
 ---
 
@@ -82,5 +84,7 @@ docs/reports/
 └── domain-assessments/
     ├── debug_cleanup_implementation_plan.md
     ├── financial_transaction_reliability_assessment.md
-    └── intervention_image_migration_assessment.md
+    ├── intervention_image_migration_assessment.md
+    ├── Laravel12_Migration_Cleanup_Assessment.md
+    └── Laravel12_Database_Refinement_Assessment.md
 ```
