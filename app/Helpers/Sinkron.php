@@ -9,7 +9,7 @@ class Sinkron
     {
         $condition = Ping::to();
         if ($condition == true) {
-            $sheet_id = env('SPREADSHEET_ID', env('SPREDSHEET_ID'));
+            $sheet_id = config('google.spreadsheet_id');
             if (! $sheet_id) {
                 return response()->json(['success' => false, 'message' => 'Silahkan isi ID Spreadsheet terlebih dahulu'], 200);
             }
@@ -68,7 +68,7 @@ class Sinkron
     {
         $condition = Ping::to();
         if ($condition == true) {
-            $sheet_id = env('SPREADSHEET_ID', env('SPREDSHEET_ID'));
+            $sheet_id = config('google.spreadsheet_id');
             if ($sheet_id) {
                 $aktif = Sheets::spreadsheet($sheet_id)->sheet('Santri Aktif')->get()->toArray();
                 if (count($aktif) > 0) {
