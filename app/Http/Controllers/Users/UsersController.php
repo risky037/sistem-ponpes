@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -71,8 +72,17 @@ class UsersController extends Controller
         ]);
 
         try {
-            $roleId = $validate['role_id'];
+            $roleId = (int) $validate['role_id'];
             unset($validate['role_id']);
+
+            if (auth()->id() === $user->id && $user->hasRole('Administrator')) {
+                $adminRole = Role::where('name', 'Administrator')->where('guard_name', 'web')->first();
+                if ($adminRole && $roleId !== (int) $adminRole->id) {
+                    Toastr::error('Tidak dapat menurunkan role Administrator pada akun Anda sendiri');
+
+                    return redirect()->back();
+                }
+            }
 
             DB::transaction(function () use ($user, $validate, $roleId) {
                 $user->update($validate);
@@ -98,6 +108,18 @@ class UsersController extends Controller
 
     public function destroy(User $user)
     {
+        if (auth()->id() === $user->id) {
+            Toastr::error('Tidak dapat menghapus akun Anda sendiri');
+
+            return redirect()->back();
+        }
+
+        if ($user->hasRole('Administrator') && User::role('Administrator')->count() <= 1) {
+            Toastr::error('Tidak dapat menghapus satu-satunya akun Administrator');
+
+            return redirect()->back();
+        }
+
         try {
             $user->delete();
             Toastr::success('Berhasil menghapus data');

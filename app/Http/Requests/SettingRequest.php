@@ -22,9 +22,12 @@ class SettingRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = $this->isMethod('patch') || $this->isMethod('put');
+
         return [
-            'logo' => ['required', 'mimes:png,jpg', 'max:5020'],
-            'favicon' => ['required', 'mimes:png,jpg', 'max:5020'],
+            'logo' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
+            'favicon' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
+            'kts_master' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
             'whatsapp_api_key' => ['required', 'string', 'min:32', 'max:32'],
             'whatsapp_feature' => ['required'],
             'sender' => ['nullable'],

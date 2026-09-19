@@ -12,6 +12,11 @@ trait CreatesApplication
      */
     public function createApplication(): Application
     {
+        $cachedConfig = __DIR__.'/../bootstrap/cache/config.php';
+        if (file_exists($cachedConfig)) {
+            @unlink($cachedConfig);
+        }
+
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();

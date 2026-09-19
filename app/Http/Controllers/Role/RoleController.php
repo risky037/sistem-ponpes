@@ -82,6 +82,14 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        $protectedRoles = config('permission.protected_roles', ['Administrator', 'Keuangan', 'Santri']);
+
+        if (in_array($role->name, $protectedRoles, true)) {
+            Toastr::error('Role sistem default tidak dapat dihapus');
+
+            return redirect()->back();
+        }
+
         try {
             $role->delete();
             Toastr::success('Berhasil menghapus data');
