@@ -57,6 +57,7 @@ Ongoing infrastructure modernization:
 3. **[CI Pipeline Modernization Implementation](laravel12/Laravel12_CI_Modernization_Report.md):** Retirement of failing PHP 8.2 runner, PHP 8.4 CI baseline standardization, concurrency control, manual workflow dispatch, and standardized validation steps.
 4. **[Database Migration Cleanup & Consolidation Assessment](domain-assessments/Laravel12_Migration_Cleanup_Assessment.md):** Detailed analysis of 27 migrations, duplicate alterations, and pre-production consolidation blueprint.
 5. **[Database Migration & Seeder Refinement Assessment](domain-assessments/Laravel12_Database_Refinement_Assessment.md):** Master assessment covering seeder decoupling, credential standardization, schema verification, and migration consolidation decision.
+6. **[Seeder Modularization Implementation Report](domain-assessments/Laravel12_Seeder_Modularization_Implementation.md):** Decoupled, idempotent seeder pipeline with standard development credentials (`admin@gmail.com` / `password`).
 
 ---
 
@@ -86,5 +87,6 @@ docs/reports/
     ├── financial_transaction_reliability_assessment.md
     ├── intervention_image_migration_assessment.md
     ├── Laravel12_Migration_Cleanup_Assessment.md
-    └── Laravel12_Database_Refinement_Assessment.md
+    ├── Laravel12_Database_Refinement_Assessment.md
+    └── Laravel12_Seeder_Modularization_Implementation.md
 ```
