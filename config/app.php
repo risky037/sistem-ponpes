@@ -1,5 +1,8 @@
 <?php
 
+use App\Helpers\Helper;
+use App\Helpers\Ping;
+use App\Helpers\Sinkron;
 use App\Providers\AppServiceProvider;
 use App\Providers\ViewServiceProvider;
 use Illuminate\Support\Facades\Facade;
@@ -189,6 +192,9 @@ return [
         'Image' => Image::class,
         'DNS1D' => DNS1DFacade::class,
         'DNS2D' => DNS2DFacade::class,
+        'Helper' => Helper::class,
+        'Ping' => Ping::class,
+        'Sinkron' => Sinkron::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

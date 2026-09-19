@@ -1,17 +1,20 @@
 <?php
 
+namespace App\Helpers;
+
+use Illuminate\Support\Facades\Http;
+
 class Ping
 {
-    public static function to()
+    /**
+     * Check network/internet connectivity using HTTP client.
+     */
+    public static function to(string $url = 'https://www.google.com'): bool
     {
-        $condition = false;
-        exec('ping -c 3 google.com', $output, $result);
-        if ($result == 0) {
-            $condition = true;
-        } else {
-            $condition = false;
+        try {
+            return Http::timeout(3)->get($url)->successful();
+        } catch (\Throwable) {
+            return false;
         }
-
-        return $condition;
     }
 }

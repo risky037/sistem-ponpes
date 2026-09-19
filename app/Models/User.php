@@ -22,9 +22,17 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-        'password' => 'hashed',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
 
     public static function boot()
     {

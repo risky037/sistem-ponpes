@@ -7,6 +7,7 @@ use App\Http\Requests\Profil\BiodataRequest;
 use App\Models\AlamatSantri;
 use App\Models\Santri;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Laravel\Facades\Image;
 use Toastr;
@@ -15,7 +16,7 @@ class ProfilController extends Controller
 {
     public function show(User $user)
     {
-        $this->authorize('view', $user);
+        Gate::authorize('view', $user);
         $user->load('santri');
 
         return view('pages.profil.index', compact('user'));
@@ -23,7 +24,7 @@ class ProfilController extends Controller
 
     public function account(AccountRequest $request, User $user)
     {
-        $this->authorize('updateAccount', $user);
+        Gate::authorize('updateAccount', $user);
 
         try {
             $user->update($request->validated());
@@ -46,7 +47,7 @@ class ProfilController extends Controller
 
     public function biodata(BiodataRequest $request, User $user)
     {
-        $this->authorize('updateBiodata', $user);
+        Gate::authorize('updateBiodata', $user);
 
         try {
             $validated = $request->validated();

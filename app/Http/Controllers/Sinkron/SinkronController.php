@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Sinkron;
 
+use App\Helpers\Ping;
 use App\Http\Controllers\Controller;
 use App\Models\Santri;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Ping;
 use Revolution\Google\Sheets\Facades\Sheets;
 
 class SinkronController extends Controller

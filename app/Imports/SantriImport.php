@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Helpers\Helper;
 use App\Models\Santri;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -31,7 +32,7 @@ class SantriImport implements ToModel, WithHeadingRow
                     'tahun_masuk' => $row['tahun_masuk'],
                     'gender' => $row['jenis_kelamin'],
                 ];
-                $no_induk = \Helper::make_noinduk($params);
+                $no_induk = Helper::make_noinduk($params);
                 $tahun_masuk_hijriyah = str_replace('/', '-', $date->toHijri()->isoFormat('L'));
             }
             // save user santri

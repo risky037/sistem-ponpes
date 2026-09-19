@@ -39,10 +39,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/ToastrHelper.php",
-            "app/Helpers/Helper.php",
-            "app/Helpers/Ping.php",
-            "app/Helpers/Sinkron.php"
+            "app/Helpers/ToastrHelper.php"
         ]
     },
     "autoload-dev": {

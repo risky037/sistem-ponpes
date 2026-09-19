@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Santri;
 
 use App\Exports\SantriExport;
+use App\Helpers\Helper;
 use App\Helpers\Whatsapp;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SantriRequest;
@@ -13,7 +14,6 @@ use App\Models\KelasSantri;
 use App\Models\Santri;
 use App\Models\User;
 use App\Models\WaliSantri;
-use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;

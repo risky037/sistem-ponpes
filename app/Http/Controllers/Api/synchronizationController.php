@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\SyncKelasRequest;
 use App\Http\Requests\Api\SyncSantriRequest;
@@ -12,7 +13,6 @@ use App\Models\Santri;
 use App\Models\User;
 use App\Models\WaliSantri;
 use Carbon\Carbon;
-use Helper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;

@@ -8,9 +8,7 @@ use App\Models\User;
 use App\Observers\SantriObserver;
 use App\Observers\TransaksiTabunganObserver;
 use App\Policies\UserPolicy;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
@@ -25,8 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $loader = AliasLoader::getInstance();
-        $loader->alias('Debugbar', Debugbar::class);
+        //
     }
 
     /**

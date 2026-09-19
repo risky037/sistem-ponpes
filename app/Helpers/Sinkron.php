@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Helpers;
+
 use App\Models\Santri;
 use Revolution\Google\Sheets\Facades\Sheets;
 
