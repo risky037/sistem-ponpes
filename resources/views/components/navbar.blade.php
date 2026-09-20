@@ -101,6 +101,26 @@
                     <div class="menu-title">Presensi Kelas</div>
                 </a>
             </li>
+            @hasanyrole('Administrator|Pengurus')
+            <li class="{{ request()->routeIs('assessment.*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon icon-color-5"><i class="bx bx-clipboard"></i>
+                    </div>
+                    <div class="menu-title">Penilaian</div>
+                </a>
+                <ul>
+                    <li class="{{ request()->routeIs('assessment.definition.*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('assessment.definition.index') }}"><i class="bx bx-right-arrow-alt"></i>Definisi Nilai</a>
+                    </li>
+                    <li class="{{ request()->routeIs('assessment.component.*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('assessment.component.index') }}"><i class="bx bx-right-arrow-alt"></i>Komponen Nilai</a>
+                    </li>
+                    <li class="{{ request()->routeIs('assessment.score.*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('assessment.score.index') }}"><i class="bx bx-right-arrow-alt"></i>Input Nilai</a>
+                    </li>
+                </ul>
+            </li>
+            @endhasanyrole
             <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-4"><i class="bx bx-user"></i>

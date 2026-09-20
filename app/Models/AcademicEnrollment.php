@@ -75,4 +75,14 @@ class AcademicEnrollment extends Model
     {
         return $this->hasMany(AttendanceRecord::class, 'academic_enrollment_id');
     }
+
+    public function studentAssessmentScores(): HasMany
+    {
+        return $this->hasMany(StudentAssessmentScore::class, 'academic_enrollment_id');
+    }
+
+    public function student_assessment_scores(): HasMany
+    {
+        return $this->hasMany(StudentAssessmentScore::class, 'academic_enrollment_id');
+    }
 }

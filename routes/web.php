@@ -3,6 +3,7 @@
 use App\Http\Controllers\Academic\AcademicCalendarEventController;
 use App\Http\Controllers\Academic\AcademicEnrollmentController;
 use App\Http\Controllers\Academic\AcademicYearController;
+use App\Http\Controllers\Academic\AssessmentController;
 use App\Http\Controllers\Academic\AttendanceController;
 use App\Http\Controllers\Academic\ClassScheduleController;
 use App\Http\Controllers\Academic\MapelController;
@@ -134,6 +135,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/attendance/{teachingSession}/manage', 'manage')->name('manage');
             Route::post('/attendance/{teachingSession}', 'store')->name('store');
             Route::match(['put', 'patch'], '/attendance/record/{attendanceRecord}', 'update')->name('update');
+        });
+        // assessment (penilaian akademik)
+        Route::controller(AssessmentController::class)->as('assessment.')->group(function () {
+            Route::get('/assessment/definition', 'indexDefinition')->name('definition.index');
+            Route::post('/assessment/definition', 'storeDefinition')->name('definition.store');
+            Route::match(['put', 'patch'], '/assessment/definition/{assessmentDefinition}', 'updateDefinition')->name('definition.update');
+            Route::delete('/assessment/definition/{assessmentDefinition}', 'destroyDefinition')->name('definition.destroy');
+
+            Route::get('/assessment/component', 'indexComponent')->name('component.index');
+            Route::post('/assessment/component', 'storeComponent')->name('component.store');
+            Route::delete('/assessment/component/{assessmentComponent}', 'destroyComponent')->name('component.destroy');
+
+            Route::get('/assessment/score', 'indexScore')->name('score.index');
+            Route::get('/assessment/score/{assessmentComponent}/manage', 'manageScore')->name('score.manage');
+            Route::post('/assessment/score/{assessmentComponent}', 'storeScore')->name('score.store');
+            Route::match(['put', 'patch'], '/assessment/score/record/{studentAssessmentScore}', 'updateScore')->name('score.update');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {

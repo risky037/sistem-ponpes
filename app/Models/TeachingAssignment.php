@@ -74,4 +74,14 @@ class TeachingAssignment extends Model
     {
         return $this->hasMany(TeachingSession::class);
     }
+
+    public function assessmentComponents(): HasMany
+    {
+        return $this->hasMany(AssessmentComponent::class);
+    }
+
+    public function assessment_components(): HasMany
+    {
+        return $this->hasMany(AssessmentComponent::class);
+    }
 }

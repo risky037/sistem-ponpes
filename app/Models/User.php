@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Traits\LogActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -47,5 +48,15 @@ class User extends Authenticatable
     public function teaching_assignments()
     {
         return $this->hasMany(TeachingAssignment::class);
+    }
+
+    public function gradedScores(): HasMany
+    {
+        return $this->hasMany(StudentAssessmentScore::class, 'graded_by');
+    }
+
+    public function graded_scores(): HasMany
+    {
+        return $this->hasMany(StudentAssessmentScore::class, 'graded_by');
     }
 }
