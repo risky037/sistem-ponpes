@@ -19,11 +19,11 @@
                                             <div class="mb-md-0 mb-3">
                                                 @isset($user->santri->foto)
                                                     @if ($user->santri->foto === 'santri.png' || $user->santri->foto === '')
-                                                        <img src="{{ url('assets/images/avatars/avatar-1.png') }}"
+                                                        <img src="{{ url('assets/images/avatars/avatar-1.png') }}" loading="lazy"
                                                             class="rounded-circle shadow" width="130" height="130"
                                                             alt="santri.png" />
                                                     @else
-                                                        <img src="{{ url("storage/uploads/santri/{$user->santri->foto}") }}"
+                                                        <img src="{{ url("storage/uploads/santri/{$user->santri->foto}") }}" loading="lazy"
                                                             class="rounded-circle shadow" width="70" alt="santri.png" />
                                                     @endif
                                                 @endisset

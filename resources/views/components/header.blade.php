@@ -16,7 +16,7 @@
                                     <p class="user-name mb-0">{{ ucfirst(auth()->user()->name) }}</p>
                                     <p class="designattion mb-0">Online</p>
                                 </div>
-                                <img src="{{ url('assets/images/avatars/avatar-1.png') }}" class="user-img"
+                                <img src="{{ url('assets/images/avatars/avatar-1.png') }}" class="user-img" loading="lazy"
                                     alt="user avatar">
                             </div>
                         </a>
