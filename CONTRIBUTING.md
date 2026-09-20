@@ -24,7 +24,7 @@ We follow a structured GitFlow-adapted branching model:
 All commits must strictly follow the **Conventional Commits** standard:
 
 ```text
-<type>(<scope>): <subject>
+<type>(<scope>): <subject> 6 words maximum
 
 [optional body]
 
