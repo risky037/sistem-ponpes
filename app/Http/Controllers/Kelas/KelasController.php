@@ -92,6 +92,24 @@ class KelasController extends Controller
             return redirect()->back();
         }
 
+        if ($kelas->mapels()->exists()) {
+            Toastr::error('Tidak dapat menghapus kelas yang memiliki data mata pelajaran.');
+
+            return redirect()->back();
+        }
+
+        if ($kelas->wali_kelas_assignments()->exists()) {
+            Toastr::error('Tidak dapat menghapus kelas yang memiliki data penugasan wali kelas.');
+
+            return redirect()->back();
+        }
+
+        if ($kelas->teaching_assignments()->exists()) {
+            Toastr::error('Tidak dapat menghapus kelas yang memiliki data penugasan mengajar.');
+
+            return redirect()->back();
+        }
+
         try {
             $kelas->delete();
             Toastr::success('Berhasil menghapus data');

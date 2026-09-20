@@ -138,6 +138,18 @@ class AcademicYearController extends Controller
             return redirect()->route('academic-year.index');
         }
 
+        if ($academicYear->wali_kelas_assignments()->exists()) {
+            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data penugasan wali kelas.');
+
+            return redirect()->route('academic-year.index');
+        }
+
+        if ($academicYear->teaching_assignments()->exists()) {
+            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data penugasan mengajar.');
+
+            return redirect()->route('academic-year.index');
+        }
+
         try {
             $academicYear->delete();
             Toastr::success('Berhasil menghapus tahun ajaran');

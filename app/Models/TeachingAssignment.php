@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class TeachingAssignment extends Model
+{
+    use HasFactory;
+
+    public const STATUS_AKTIF = 'Aktif';
+
+    public const STATUS_NONAKTIF = 'Nonaktif';
+
+    public const ALLOWED_STATUSES = [
+        self::STATUS_AKTIF,
+        self::STATUS_NONAKTIF,
+    ];
+
+    protected $table = 'teaching_assignments';
+
+    protected $guarded = ['id'];
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', self::STATUS_AKTIF);
+    }
+
+    public function kelas(): BelongsTo
+    {
+        return $this->belongsTo(Kelas::class);
+    }
+
+    public function mapel(): BelongsTo
+    {
+        return $this->belongsTo(Mapel::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function academic_year(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
+    }
+}

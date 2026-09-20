@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Academic\AcademicEnrollmentController;
 use App\Http\Controllers\Academic\AcademicYearController;
+use App\Http\Controllers\Academic\MapelController;
 use App\Http\Controllers\Academic\StudentBatchController;
+use App\Http\Controllers\Academic\TeachingAssignmentController;
+use App\Http\Controllers\Academic\WaliKelasAssignmentController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Kamar\KamarController;
@@ -86,6 +89,27 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/academic-enrollment', 'store')->name('store');
             Route::patch('/academic-enrollment/{academicEnrollment}', 'update')->name('update');
             Route::delete('/academic-enrollment/{academicEnrollment}', 'destroy')->name('destroy');
+        });
+        // mapel (mata pelajaran)
+        Route::controller(MapelController::class)->as('mapel.')->group(function () {
+            Route::get('/mapel', 'index')->name('index');
+            Route::post('/mapel', 'store')->name('store');
+            Route::patch('/mapel/{mapel}', 'update')->name('update');
+            Route::delete('/mapel/{mapel}', 'destroy')->name('destroy');
+        });
+        // wali kelas assignment
+        Route::controller(WaliKelasAssignmentController::class)->as('wali-kelas-assignment.')->group(function () {
+            Route::get('/wali-kelas-assignment', 'index')->name('index');
+            Route::post('/wali-kelas-assignment', 'store')->name('store');
+            Route::patch('/wali-kelas-assignment/{waliKelasAssignment}', 'update')->name('update');
+            Route::delete('/wali-kelas-assignment/{waliKelasAssignment}', 'destroy')->name('destroy');
+        });
+        // teaching assignment (penugasan mengajar)
+        Route::controller(TeachingAssignmentController::class)->as('teaching-assignment.')->group(function () {
+            Route::get('/teaching-assignment', 'index')->name('index');
+            Route::post('/teaching-assignment', 'store')->name('store');
+            Route::patch('/teaching-assignment/{teachingAssignment}', 'update')->name('update');
+            Route::delete('/teaching-assignment/{teachingAssignment}', 'destroy')->name('destroy');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {

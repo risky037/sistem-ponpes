@@ -38,4 +38,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Santri::class);
     }
+
+    public function wali_kelas_assignments()
+    {
+        return $this->hasMany(WaliKelasAssignment::class);
+    }
+
+    public function teaching_assignments()
+    {
+        return $this->hasMany(TeachingAssignment::class);
+    }
 }

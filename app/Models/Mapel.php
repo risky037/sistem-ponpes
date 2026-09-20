@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class AcademicYear extends Model
+class Mapel extends Model
 {
     use HasFactory;
+
+    protected $table = 'mapels';
 
     protected $guarded = ['id'];
 
@@ -21,8 +24,6 @@ class AcademicYear extends Model
     protected function casts(): array
     {
         return [
-            'start_date' => 'date',
-            'end_date' => 'date',
             'is_active' => 'boolean',
         ];
     }
@@ -32,18 +33,18 @@ class AcademicYear extends Model
         return $query->where('is_active', true);
     }
 
-    public function academic_enrollments(): HasMany
+    public function kelas(): BelongsTo
     {
-        return $this->hasMany(AcademicEnrollment::class);
-    }
-
-    public function wali_kelas_assignments(): HasMany
-    {
-        return $this->hasMany(WaliKelasAssignment::class);
+        return $this->belongsTo(Kelas::class);
     }
 
     public function teaching_assignments(): HasMany
     {
         return $this->hasMany(TeachingAssignment::class);
+    }
+
+    public function teachingAssignments(): HasMany
+    {
+        return $this->hasMany(TeachingAssignment::class, 'mapel_id');
     }
 }

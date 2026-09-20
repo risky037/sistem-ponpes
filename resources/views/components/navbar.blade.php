@@ -59,6 +59,27 @@
                     <div class="menu-title">Pendaftaran Akademik</div>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('wali-kelas-assignment.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('wali-kelas-assignment.index') }}">
+                    <div class="parent-icon icon-color-7"> <i class="bx bx-user-pin"></i>
+                    </div>
+                    <div class="menu-title">Wali Kelas</div>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('mapel.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('mapel.index') }}">
+                    <div class="parent-icon icon-color-8"> <i class="bx bx-book-bookmark"></i>
+                    </div>
+                    <div class="menu-title">Mata Pelajaran</div>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('teaching-assignment.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('teaching-assignment.index') }}">
+                    <div class="parent-icon icon-color-9"> <i class="bx bx-chalkboard"></i>
+                    </div>
+                    <div class="menu-title">Penugasan Mengajar</div>
+                </a>
+            </li>
             <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-4"><i class="bx bx-user"></i>

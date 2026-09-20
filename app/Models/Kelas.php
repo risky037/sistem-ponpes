@@ -17,4 +17,19 @@ class Kelas extends Model
     {
         return $this->hasMany(AcademicEnrollment::class);
     }
+
+    public function wali_kelas_assignments(): HasMany
+    {
+        return $this->hasMany(WaliKelasAssignment::class);
+    }
+
+    public function mapels(): HasMany
+    {
+        return $this->hasMany(Mapel::class);
+    }
+
+    public function teaching_assignments(): HasMany
+    {
+        return $this->hasMany(TeachingAssignment::class);
+    }
 }
