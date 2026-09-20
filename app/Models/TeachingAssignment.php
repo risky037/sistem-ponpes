@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TeachingAssignment extends Model
 {
@@ -52,5 +53,25 @@ class TeachingAssignment extends Model
     public function academicYear(): BelongsTo
     {
         return $this->belongsTo(AcademicYear::class, 'academic_year_id');
+    }
+
+    public function classSchedules(): HasMany
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
+
+    public function class_schedules(): HasMany
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
+
+    public function teachingSessions(): HasMany
+    {
+        return $this->hasMany(TeachingSession::class);
+    }
+
+    public function teaching_sessions(): HasMany
+    {
+        return $this->hasMany(TeachingSession::class);
     }
 }

@@ -110,6 +110,12 @@ class KelasController extends Controller
             return redirect()->back();
         }
 
+        if ($kelas->classSchedules()->exists()) {
+            Toastr::error('Tidak dapat menghapus kelas yang memiliki data jadwal pelajaran.');
+
+            return redirect()->back();
+        }
+
         try {
             $kelas->delete();
             Toastr::success('Berhasil menghapus data');

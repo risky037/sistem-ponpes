@@ -46,4 +46,24 @@ class AcademicYear extends Model
     {
         return $this->hasMany(TeachingAssignment::class);
     }
+
+    public function classSchedules(): HasMany
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
+
+    public function class_schedules(): HasMany
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
+
+    public function calendarEvents(): HasMany
+    {
+        return $this->hasMany(AcademicCalendarEvent::class);
+    }
+
+    public function calendar_events(): HasMany
+    {
+        return $this->hasMany(AcademicCalendarEvent::class);
+    }
 }

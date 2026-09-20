@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Academic\AcademicCalendarEventController;
 use App\Http\Controllers\Academic\AcademicEnrollmentController;
 use App\Http\Controllers\Academic\AcademicYearController;
+use App\Http\Controllers\Academic\ClassScheduleController;
 use App\Http\Controllers\Academic\MapelController;
 use App\Http\Controllers\Academic\StudentBatchController;
 use App\Http\Controllers\Academic\TeachingAssignmentController;
@@ -110,6 +112,20 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/teaching-assignment', 'store')->name('store');
             Route::patch('/teaching-assignment/{teachingAssignment}', 'update')->name('update');
             Route::delete('/teaching-assignment/{teachingAssignment}', 'destroy')->name('destroy');
+        });
+        // class schedule (jadwal pelajaran)
+        Route::controller(ClassScheduleController::class)->as('class-schedule.')->group(function () {
+            Route::get('/class-schedule', 'index')->name('index');
+            Route::post('/class-schedule', 'store')->name('store');
+            Route::match(['put', 'patch'], '/class-schedule/{classSchedule}', 'update')->name('update');
+            Route::delete('/class-schedule/{classSchedule}', 'destroy')->name('destroy');
+        });
+        // academic calendar event (kalender akademik)
+        Route::controller(AcademicCalendarEventController::class)->as('academic-calendar-event.')->group(function () {
+            Route::get('/academic-calendar-event', 'index')->name('index');
+            Route::post('/academic-calendar-event', 'store')->name('store');
+            Route::match(['put', 'patch'], '/academic-calendar-event/{academicCalendarEvent}', 'update')->name('update');
+            Route::delete('/academic-calendar-event/{academicCalendarEvent}', 'destroy')->name('destroy');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {

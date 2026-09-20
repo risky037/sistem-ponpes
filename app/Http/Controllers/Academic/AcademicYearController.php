@@ -150,6 +150,18 @@ class AcademicYearController extends Controller
             return redirect()->route('academic-year.index');
         }
 
+        if ($academicYear->classSchedules()->exists()) {
+            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data jadwal pelajaran.');
+
+            return redirect()->route('academic-year.index');
+        }
+
+        if ($academicYear->calendarEvents()->exists()) {
+            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data agenda kalender akademik.');
+
+            return redirect()->route('academic-year.index');
+        }
+
         try {
             $academicYear->delete();
             Toastr::success('Berhasil menghapus tahun ajaran');

@@ -32,4 +32,14 @@ class Kelas extends Model
     {
         return $this->hasMany(TeachingAssignment::class);
     }
+
+    public function classSchedules(): HasMany
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
+
+    public function class_schedules(): HasMany
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
 }

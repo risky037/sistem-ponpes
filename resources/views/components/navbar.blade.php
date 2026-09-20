@@ -80,6 +80,20 @@
                     <div class="menu-title">Penugasan Mengajar</div>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('class-schedule.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('class-schedule.index') }}">
+                    <div class="parent-icon icon-color-1"> <i class="bx bx-time-five"></i>
+                    </div>
+                    <div class="menu-title">Jadwal Pelajaran</div>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('academic-calendar-event.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('academic-calendar-event.index') }}">
+                    <div class="parent-icon icon-color-2"> <i class="bx bx-calendar-event"></i>
+                    </div>
+                    <div class="menu-title">Kalender Akademik</div>
+                </a>
+            </li>
             <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-4"><i class="bx bx-user"></i>
