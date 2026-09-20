@@ -38,6 +38,11 @@ return [
             'assessment.score.store',
             'assessment.score.update',
         ],
+        'performance' => [
+            'performance.index',
+            'performance.show',
+            'performance.generate',
+        ],
         'rapor' => ['rapor index', 'rapor view', 'rapor store', 'rapor update', 'rapor destroy'],
         'tabungan' => ['tabungan index', 'tabungan view', 'tabungan store', 'tabungan update', 'tabungan destroy'],
         'transaksi' => ['transaksi index', 'transaksi view', 'transaksi store', 'transaksi update', 'transaksi destroy'],
@@ -72,6 +77,11 @@ return [
             'assessment.score.index',
             'assessment.score.store',
             'assessment.score.update',
+        ],
+        'performance' => [
+            'performance.index',
+            'performance.show',
+            'performance.generate',
         ],
         'rapor' => ['rapor index', 'rapor view', 'rapor store', 'rapor update', 'rapor destroy'],
         'jenis_surat' => ['jenis_surat index', 'jenis_surat view', 'jenis_surat store', 'jenis_surat update', 'jenis_surat destroy'],

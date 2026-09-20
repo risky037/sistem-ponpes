@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AcademicEnrollment extends Model
 {
@@ -84,5 +85,15 @@ class AcademicEnrollment extends Model
     public function student_assessment_scores(): HasMany
     {
         return $this->hasMany(StudentAssessmentScore::class, 'academic_enrollment_id');
+    }
+
+    public function performanceSummary(): HasOne
+    {
+        return $this->hasOne(AcademicPerformanceSummary::class, 'academic_enrollment_id');
+    }
+
+    public function performance_summary(): HasOne
+    {
+        return $this->hasOne(AcademicPerformanceSummary::class, 'academic_enrollment_id');
     }
 }

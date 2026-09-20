@@ -120,6 +120,13 @@
                     </li>
                 </ul>
             </li>
+            <li class="{{ request()->routeIs('academic.performance.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('academic.performance.index') }}">
+                    <div class="parent-icon icon-color-6"><i class="bx bx-bar-chart-alt-2"></i>
+                    </div>
+                    <div class="menu-title">Performa Akademik</div>
+                </a>
+            </li>
             @endhasanyrole
             <li>
                 <a class="has-arrow" href="javascript:;">

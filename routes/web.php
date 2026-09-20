@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Academic\AcademicCalendarEventController;
 use App\Http\Controllers\Academic\AcademicEnrollmentController;
+use App\Http\Controllers\Academic\AcademicPerformanceController;
 use App\Http\Controllers\Academic\AcademicYearController;
 use App\Http\Controllers\Academic\AssessmentController;
 use App\Http\Controllers\Academic\AttendanceController;
@@ -151,6 +152,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/assessment/score/{assessmentComponent}/manage', 'manageScore')->name('score.manage');
             Route::post('/assessment/score/{assessmentComponent}', 'storeScore')->name('score.store');
             Route::match(['put', 'patch'], '/assessment/score/record/{studentAssessmentScore}', 'updateScore')->name('score.update');
+        });
+        // academic performance (rekap & agregasi performa akademik)
+        Route::controller(AcademicPerformanceController::class)->prefix('academic/performance')->as('academic.performance.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{enrollment}', 'show')->name('show');
+            Route::post('/{enrollment}/generate', 'store')->name('generate');
+            Route::post('/year/{year}/generate-all', 'bulkGenerate')->name('bulk-generate');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {
