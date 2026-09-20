@@ -30,8 +30,8 @@
     <button data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $model->id }}" class="btn btn-sm btn-danger">
         <span class="bx bx-trash"> </span>
     </button>
-    <x-delete-modal title='Hapus data' id="{{ $model->id }}" fn="{{ route('users.destroy', $model->id) }}"
-        method="POST">
+    <x-delete-modal title='Hapus Pengguna' id="{{ $model->id }}" fn="{{ route('users.destroy', $model->id) }}"
+        entity="Pengguna: {{ $model->name }} ({{ $model->email }})" method="POST">
         @csrf
         @method('DELETE')
     </x-delete-modal>

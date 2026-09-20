@@ -12,26 +12,19 @@
                     <x-breadcrumb url="{{ route('dashboard') }}" attribute="required" path='Riwayat'></x-breadcrumb>
                     <div class="card">
                         <div class="card-body">
-                            <div id="invoice">
-                                <div class="toolbar hidden-print">
-                                    <div class="text-end">
-                                        {{-- action data --}}
-                                    </div>
-                                    <hr />
-                                </div>
-                            </div>
+                            <x-card-toolbar title="Log Aktivitas Sistem"></x-card-toolbar>
                             <div class="row mb-2">
                                 <div class="col">
                                     <div class="table-responsive">
-                                        <table class="table table-striped dataTable" style="width:100%" role="grid"
+                                        <table class="table table-striped table-bordered align-middle dataTable" style="width:100%" role="grid"
                                             id="table">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>User</th>
-                                                    <th>Riwayat</th>
-                                                    <th>Created_at</th>
-                                                    <th>Updated_at</th>
+                                                    <th style="width: 5%">#</th>
+                                                    <th>Pengguna</th>
+                                                    <th>Aktivitas</th>
+                                                    <th>Waktu Kejadian</th>
+                                                    <th>Pembaruan</th>
                                                 </tr>
                                             </thead>
                                         </table>

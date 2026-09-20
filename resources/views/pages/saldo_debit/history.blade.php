@@ -12,22 +12,11 @@
                     <x-breadcrumb url="{{ route('dashboard') }}" attribute="required" path='Tabungan'></x-breadcrumb>
                     <div class="card">
                         <div class="card-body">
-                            <div id="invoice">
-                                <div class="toolbar hidden-print">
-                                    <div class="row">
-                                        <div class="col text-start">
-                                            <h4>Riwayat Transaksi-{{ isset($data) && $data->isNotEmpty() ? $data->first()?->santri?->user?->name : '' }}
-                                            </h4>
-                                        </div>
-                                        <div class="col text-end">
-                                            <a href="{{ route('saldo_debit.index') }}" class="btn btn-primary">
-                                                <i class="bx bx-arrow-back"></i>
-                                                Kembali
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <x-card-toolbar title="Riwayat Transaksi {{ isset($data) && $data->isNotEmpty() ? '- ' . $data->first()?->santri?->user?->name : '' }}">
+                            <a href="{{ route('saldo_debit.index') }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bx bx-arrow-back"></i> Kembali
+                            </a>
+                        </x-card-toolbar>
                             <div class="row mb-2">
                                 <div class="col">
                                     <div class="table-responsive">

@@ -1,78 +1,91 @@
 @extends('layouts.app')
 
-@section('title', 'Setting | DIGITREN')
+@section('title', 'Pengaturan Aplikasi | DIGITREN')
 
 @section('content')
-    <div>
-        <!--page-wrapper-->
-        <div class="page-wrapper">
-            <!--page-content-wrapper-->
-            <div class="page-content-wrapper">
-                <div class="page-content">
-                    <x-breadcrumb url="{{ route('setting.index') }}" attribute="required" path='Setting'></x-breadcrumb>
-                    <div class="card">
-                        <div class="card-body">
-                            @if (isset($setting))
-                                <form action="{{ route('setting.update', $setting->id) }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    @method('patch')
-                                    <div class="form-group mt-3">
-                                        @isset($setting)
-                                            <div class="row mb-2">
-                                                <div class="col">
+    <div class="page-wrapper">
+        <div class="page-content-wrapper">
+            <div class="page-content">
+                <x-breadcrumb url="{{ route('setting.index') }}" path='Pengaturan Aplikasi'></x-breadcrumb>
+                <div class="card radius-15 border shadow-sm">
+                    <div class="card-body">
+                        <x-card-toolbar title="Pengaturan Identitas & Fitur Sistem"></x-card-toolbar>
+
+                        @if (isset($setting))
+                            <form action="{{ route('setting.update', $setting->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PATCH')
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <div class="card bg-light border p-3">
+                                            <h6 class="font-weight-bold font-14 mb-3">Logo Aplikasi</h6>
+                                            @if ($setting->logo)
+                                                <div class="mb-3">
                                                     <img src="{{ url('/storage/uploads/setting/', $setting->logo) }}"
-                                                        alt="logo" width="50" class="img-fluid">
+                                                        alt="logo" class="img-fluid border rounded p-1 bg-white" style="max-height: 80px;">
                                                 </div>
-                                            </div>
-                                        @endisset
-                                        <x-input type="file" id="logo" name="logo" label="Logo" />
+                                            @endif
+                                            <x-input type="file" id="logo" name="logo" label="Ganti Logo (PNG, JPG, max 5MB)" />
+                                        </div>
                                     </div>
-                                    <div class="form-group mt-3">
-                                        @isset($setting)
-                                            <div class="row mb-2">
-                                                <div class="col">
+
+                                    <div class="col-12 col-md-6">
+                                        <div class="card bg-light border p-3">
+                                            <h6 class="font-weight-bold font-14 mb-3">Favicon Aplikasi</h6>
+                                            @if ($setting->favicon)
+                                                <div class="mb-3">
                                                     <img src="{{ url('/storage/uploads/setting/', $setting->favicon) }}"
-                                                        alt="favicon" width="50" class="img-fluid">
+                                                        alt="favicon" class="img-fluid border rounded p-1 bg-white" style="max-height: 48px;">
                                                 </div>
+                                            @endif
+                                            <x-input type="file" id="favicon" name="favicon" label="Ganti Favicon (PNG, JPG, max 5MB)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="card bg-light border p-3">
+                                            <h6 class="font-weight-bold font-14 mb-2">Audit & Log Aktivitas Pengguna</h6>
+                                            <p class="text-muted font-13 mb-3">Mencatat seluruh aksi masuk (login), perubahan data, dan transaksi keuangan demi akuntabilitas sistem.</p>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="log_activity"
+                                                    id="log_activity_active" value="1"
+                                                    {{ $setting->log_activity ? 'checked' : '' }}>
+                                                <label class="form-check-label font-weight-bold" for="log_activity_active">Aktif (Direkomendasikan)</label>
                                             </div>
-                                        @endisset
-                                        <x-input type="file" id="favicon" name="favicon" label="Favicon" />
-                                    </div>
-                                    <div class="form-group mt-3">
-                                        <label for="Aktif">Fitur Rekam Aktifitas Pengguna</label>
-                                        <div class="form-check mt-2">
-                                            <input class="form-check-input" type="radio" name="log_activity[]"
-                                                id="Aktif" value="1"
-                                                {{ isset($setting) ? ($setting->log_activity == true ? 'checked' : '') : '' }}>
-                                            <label class="form-check-label" for="Aktif">Aktif</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="log_activity[]"
-                                                id="Tidak Aktif" value="0"
-                                                {{ isset($setting) ? ($setting->log_activity == false ? 'checked' : '') : '' }}>
-                                            <label class="form-check-label" for="Tidak Aktif">Tidak Aktif</label>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="log_activity"
+                                                    id="log_activity_inactive" value="0"
+                                                    {{ ! $setting->log_activity ? 'checked' : '' }}>
+                                                <label class="form-check-label text-muted" for="log_activity_inactive">Tidak Aktif</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group mt-2">
-                                        <button class="btn btn-info">Update</button>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bx bx-save me-1"></i> Simpan Pengaturan
+                                    </button>
+                                </div>
+                            </form>
+                        @else
+                            <form action="{{ route('setting.store') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <x-input type="file" id="logo" name="logo" label="Logo Aplikasi" />
                                     </div>
-                                </form>
-                            @else
-                                <form action="{{ route('setting.store') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-group mt-3">
-                                        <x-input type="file" id="logo" name="logo" label="Logo" />
+                                    <div class="col-12 col-md-6">
+                                        <x-input type="file" id="favicon" name="favicon" label="Favicon Aplikasi" />
                                     </div>
-                                    <div class="form-group mt-3">
-                                        <x-input type="file" id="favicon" name="favicon" label="Favicon" />
-                                    </div>
-                                    <div class="form-group mt-2">
-                                        <button class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                            @endif
-                        </div>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bx bx-save me-1"></i> Simpan
+                                    </button>
+                                </div>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>

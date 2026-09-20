@@ -52,20 +52,13 @@
         <script src="{{ url('assets/plugins/metismenu/js/metisMenu.min.js') }}"></script>
         <script src="{{ url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
         <script src="{{ url('assets/plugins/apexcharts-bundle/js/apexcharts.min.js') }}"></script>
-        @if (request()->routeIs('dashboard'))
-            {{-- <script src="{{ url('assets/js/index.js') }}"></script> --}}
-            <script type="module">
-                new PerfectScrollbar('.dashboard-social-list');
-                new PerfectScrollbar('.dashboard-top-countries');
-            </script>
-        @endif
         <script src="{{ url('assets/js/app.js') }}"></script>
         <script src="{{ url('assets/plugins/notifications/js/lobibox.min.js') }}"></script>
         <script src="{{ url('assets/plugins/notifications/js/notifications.min.js') }}"></script>
         <script src="{{ url('assets/plugins/notifications/js/notification-custom-script.js') }}"></script>
         <script src="{{ url('assets/plugins/datatable/js/jquery.dataTables.min.js') }}" attribute="required"></script>
         <script src="{{ url('assets/plugins/select2/js/select2.min.js') }}"></script>
-        <script src="https://momentjs.com/downloads/moment.js"></script>
+        <script src="{{ url('assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js') }}"></script>
         @if (flash()->message)
             <script>
                 Lobibox.notify("{{ flash()->class }}", {

@@ -38,7 +38,7 @@
     </button>
 
     <x-delete-modal title='Hapus Tahun Ajaran' id="{{ $model->id }}" fn="{{ route('academic-year.destroy', $model->id) }}"
-        method="POST">
+        entity="Tahun Ajaran: {{ $model->name }} (Semester {{ $model->semester }})" method="POST">
         @csrf
         @method('DELETE')
     </x-delete-modal>

@@ -17,13 +17,10 @@
             <span class="bx bx-trash"> </span>
         </button>
 
-        <x-delete-modal title='Hapus data' id="{{ $model->id }}" fn="{{ route('santri.destroy', $model->id) }}"
-            method="POST">
+        <x-delete-modal title='Hapus Data Santri' id="{{ $model->id }}" fn="{{ route('santri.destroy', $model->id) }}"
+            entity="Santri: {{ $model->user->name }} (NIS: {{ $model->no_induk }})" method="POST">
             @csrf
             @method('DELETE')
         </x-delete-modal>
     </div>
 </div>
-<script>
-    console.log("{{ $model->wali_santri }}");
-</script>

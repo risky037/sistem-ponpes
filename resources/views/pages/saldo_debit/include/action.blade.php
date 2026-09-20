@@ -3,8 +3,8 @@
         <span class="bx bx-trash"> </span>
     </button>
 
-    <x-delete-modal title='Hapus data' id="{{ $model->id }}" fn="{{ route('saldo_debit.destroy', $model->id) }}"
-        method="POST">
+    <x-delete-modal title='Hapus Rekening Tabungan' id="{{ $model->id }}" fn="{{ route('saldo_debit.destroy', $model->id) }}"
+        entity="Tabungan Santri: {{ $model->santri?->user?->name }} (NIS: {{ $model->santri?->no_induk }})" method="POST">
         @csrf
         @method('DELETE')
     </x-delete-modal>

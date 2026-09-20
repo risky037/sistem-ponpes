@@ -1,304 +1,198 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard | DIGITREN')
+@section('title', 'Dashboard | DIGITREN - Sistem Informasi Pondok Pesantren Fatimah Az-Zahra')
 
 @section('content')
-    <div>
-        <!--page-wrapper-->
-        <div class="page-wrapper">
-            <!--page-content-wrapper-->
-            <div class="page-content-wrapper">
-                <div class="page-content">
-                    <div class="row">
-                        <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                            <div class="card radius-15 w-100">
-                                <div class="card-body">
-                                    <div class="row row-cols-1 row-cols-md-3 g-3">
-                                        <div class="col">
-                                            <div class="card radius-15 mb-0 shadow-none border">
-                                                <div class="card-body text-center">
-                                                    <div class="widgets-icons mx-auto rounded-circle bg-info text-white">
-                                                        <i class='bx bx-time'></i>
-                                                    </div>
-                                                    <h4 class="mb-0 font-weight-bold mt-3">{{ $santri_aktif }}</h4>
-                                                    <p class="mb-0">Santri Aktif</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="card radius-15 mb-0 shadow-none border">
-                                                <div class="card-body text-center">
-                                                    <div class="widgets-icons mx-auto bg-wall text-white rounded-circle">
-                                                        <i class='bx bx-bookmark-alt'></i>
-                                                    </div>
-                                                    <h4 class="mb-0 font-weight-bold mt-3">{{ $santri_alumni }}</h4>
-                                                    <p class="mb-0">Santri Alumni</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="card radius-15 mb-0 shadow-none border">
-                                                <div class="card-body text-center">
-                                                    <div class="widgets-icons mx-auto bg-rose rounded-circle text-white">
-                                                        <i class='bx bx-bulb'></i>
-                                                    </div>
-                                                    <h4 class="mb-0 font-weight-bold mt-3">{{ $pengurus }}</h4>
-                                                    <p class="mb-0">Pengurus</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="card radius-15 mb-0 shadow-none border">
-                                                <div class="card-body text-center">
-                                                    <div class="widgets-icons mx-auto rounded-circle bg-danger text-white">
-                                                        <i class='bx bx-line-chart'></i>
-                                                    </div>
-                                                    <h4 class="mb-0 font-weight-bold mt-3">{{ $putra }}</h4>
-                                                    <p class="mb-0">Santri Aktif Putra</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="card radius-15 mb-0 shadow-none border">
-                                                <div class="card-body text-center">
-                                                    <div class="widgets-icons mx-auto bg-success text-white rounded-circle">
-                                                        <i class='bx bx-cloud-download'></i>
-                                                    </div>
-                                                    <h4 class="mb-0 font-weight-bold mt-3">{{ $putri }}</h4>
-                                                    <p class="mb-0">Santri Aktif Putri</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="card radius-15 mb-0 shadow-none border">
-                                                <div class="card-body text-center">
-                                                    <div class="widgets-icons mx-auto bg-primary rounded-circle text-white">
-                                                        <i class='bx bx-group'></i>
-                                                    </div>
-                                                    <h4 class="mb-0 font-weight-bold mt-3">{{ $total_santri }}</h4>
-                                                    <p class="mb-0">Total Santri</p>
-                                                </div>
-                                            </div>
-                                        </div>
+    <div class="page-wrapper">
+        <div class="page-content-wrapper">
+            <div class="page-content">
+                <!-- Welcome Banner -->
+                <div class="card radius-15 border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #157347 0%, #0f5132 100%); color: #fff;">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div>
+                                <h4 class="mb-1 text-white font-weight-bold">Selamat Datang di Sistem Informasi Pesantren</h4>
+                                <p class="mb-0 text-white-50">Pondok Pesantren Fatimah Az-Zahra — Pusat Pengelolaan Data Akademik, Santri & Keuangan</p>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-light text-dark px-3 py-2 font-13">
+                                    <i class="bx bx-calendar align-middle me-1"></i> {{ \Illuminate\Support\Carbon::now()->translatedFormat('l, d F Y') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Statistics Grid -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-4">
+                    <!-- Total Santri -->
+                    <div class="col">
+                        <div class="card radius-15 mb-0 shadow-sm border">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Total Terdaftar</p>
+                                        <h3 class="mb-0 font-weight-bold text-dark">{{ number_format($total_santri) }}</h3>
+                                        <small class="text-muted">Seluruh Santri Terdata</small>
+                                    </div>
+                                    <div class="widgets-icons ms-auto rounded-circle text-white" style="background-color: var(--pesantren-primary, #157347);">
+                                        <i class='bx bx-group'></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {{-- <div class="row">
-                        <div class="col-12 col-lg-4">
-                            <div class="card radius-15 overflow-hidden">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div>
-                                            <p class="mb-0 font-weight-bold">Sessions</p>
-                                            <h2 class="mb-0">501</h2>
-                                        </div>
-                                        <div class="ms-auto align-self-end">
-                                            <p class="mb-0 font-14 text-primary"><i class='bx bxs-up-arrow-circle'></i>
-                                                <span>1.01% 31 days ago</span>
-                                            </p>
-                                        </div>
+                    <!-- Santri Aktif -->
+                    <div class="col">
+                        <div class="card radius-15 mb-0 shadow-sm border">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Santri Aktif</p>
+                                        <h3 class="mb-0 font-weight-bold text-success">{{ number_format($santri_aktif) }}</h3>
+                                        <small class="text-muted">Mukim di Pesantren</small>
                                     </div>
-                                    <div id="chart1"></div>
+                                    <div class="widgets-icons ms-auto rounded-circle bg-success text-white">
+                                        <i class='bx bx-user-check'></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-4">
-                            <div class="card radius-15 overflow-hidden">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div>
-                                            <p class="mb-0 font-weight-bold">Visitors</p>
-                                            <h2 class="mb-0">409</h2>
-                                        </div>
-                                        <div class="ms-auto align-self-end">
-                                            <p class="mb-0 font-14 text-success"><i class='bx bxs-up-arrow-circle'></i>
-                                                <span>0.49% 31 days ago</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="chart2"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-4">
-                            <div class="card radius-15 overflow-hidden">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div>
-                                            <p class="mb-0 font-weight-bold">Page Views</p>
-                                            <h2 class="mb-0">2,346</h2>
-                                        </div>
-                                        <div class="ms-auto align-self-end">
-                                            <p class="mb-0 font-14 text-danger"><i class='bx bxs-down-arrow-circle'></i>
-                                                <span>130.68% 31 days
-                                                    ago</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div id="chart3"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
+                    </div>
 
-                    {{-- <div class="row row-cols-1 row-cols-lg-3">
-                        <div class="col d-flex">
-                            <div class="card radius-15 w-100">
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <h5 class="mb-0">Santri Putra Sering Keluar </h5>
+                    <!-- Santri Alumni -->
+                    <div class="col">
+                        <div class="card radius-15 mb-0 shadow-sm border">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Santri Alumni</p>
+                                        <h3 class="mb-0 font-weight-bold text-secondary">{{ number_format($santri_alumni) }}</h3>
+                                        <small class="text-muted">Telah Boyong / Lulus</small>
                                     </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/chrome.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">587</h6>
-                                            <p class="mb-0">Chrome</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">24.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/firefox.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">358</h6>
-                                            <p class="mb-0">Firefox</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">12.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/edge.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">867</h6>
-                                            <p class="mb-0">Edge</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">24.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/opera.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">752</h6>
-                                            <p class="mb-0">Opera</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">27.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/safari.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">586</h6>
-                                            <p class="mb-0">Safari</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">14.5%</p>
+                                    <div class="widgets-icons ms-auto rounded-circle bg-secondary text-white">
+                                        <i class='bx bx-user-pin'></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col d-flex">
-                            <div class="card radius-15 w-100">
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <h5 class="mb-0">Santri Putri Sering Keluar </h5>
+                    </div>
+
+                    <!-- Santri Putra Aktif -->
+                    <div class="col">
+                        <div class="card radius-15 mb-0 shadow-sm border">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Santri Aktif Putra</p>
+                                        <h3 class="mb-0 font-weight-bold text-primary">{{ number_format($putra) }}</h3>
+                                        <small class="text-muted">Asrama Putra</small>
                                     </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/chrome.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">587</h6>
-                                            <p class="mb-0">Chrome</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">24.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/firefox.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">358</h6>
-                                            <p class="mb-0">Firefox</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">12.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/edge.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">867</h6>
-                                            <p class="mb-0">Edge</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">24.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/opera.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">752</h6>
-                                            <p class="mb-0">Opera</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">27.3%</p>
-                                    </div>
-                                    <hr />
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div>
-                                            <img src="assets/images/icons/safari.png" width="35" height="35"
-                                                alt="" />
-                                        </div>
-                                        <div class="">
-                                            <h6 class="mb-0">586</h6>
-                                            <p class="mb-0">Safari</p>
-                                        </div>
-                                        <p class="mb-0 ms-auto">14.5%</p>
+                                    <div class="widgets-icons ms-auto rounded-circle bg-primary text-white">
+                                        <i class='bx bx-user'></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col d-flex">
-                            <div class="card radius-15 w-100">
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <h5 class="mb-0">Pengunjung Berdasarkan Jenis Kelamin </h5>
+                    </div>
+
+                    <!-- Santri Putri Aktif -->
+                    <div class="col">
+                        <div class="card radius-15 mb-0 shadow-sm border">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Santri Aktif Putri</p>
+                                        <h3 class="mb-0 font-weight-bold" style="color: #0d9488;">{{ number_format($putri) }}</h3>
+                                        <small class="text-muted">Asrama Putri</small>
                                     </div>
-                                    <hr />
-                                    <div id="chart6"></div>
+                                    <div class="widgets-icons ms-auto rounded-circle text-white" style="background-color: #0d9488;">
+                                        <i class='bx bx-user'></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
+
+                    <!-- Pengurus -->
+                    <div class="col">
+                        <div class="card radius-15 mb-0 shadow-sm border">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Pengurus</p>
+                                        <h3 class="mb-0 font-weight-bold text-dark">{{ number_format($pengurus) }}</h3>
+                                        <small class="text-muted">Staf & Dewan Asatidz</small>
+                                    </div>
+                                    <div class="widgets-icons ms-auto rounded-circle text-white" style="background-color: #b45309;">
+                                        <i class='bx bx-badge-check'></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Akses Cepat (Quick Actions) Section -->
+                <div class="card radius-15 border shadow-sm">
+                    <div class="card-header bg-transparent border-bottom-0 pt-3 pb-0">
+                        <h6 class="mb-0 font-weight-bold text-dark"><i class="bx bx-grid-alt me-1 text-success"></i> Menu Pintasan & Akses Cepat</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row row-cols-2 row-cols-md-4 g-3">
+                            <div class="col">
+                                <a href="{{ route('santri.index') }}" class="card radius-15 border mb-0 text-decoration-none text-center p-3 h-100 hover-shadow">
+                                    <div class="widgets-icons mx-auto rounded-circle bg-light-success text-success mb-2">
+                                        <i class='bx bx-user-plus'></i>
+                                    </div>
+                                    <div class="font-weight-bold text-dark font-14">Data Santri</div>
+                                    <small class="text-muted">Kelola profil santri</small>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a href="{{ route('academic-year.index') }}" class="card radius-15 border mb-0 text-decoration-none text-center p-3 h-100 hover-shadow">
+                                    <div class="widgets-icons mx-auto rounded-circle bg-light-primary text-primary mb-2">
+                                        <i class='bx bx-calendar'></i>
+                                    </div>
+                                    <div class="font-weight-bold text-dark font-14">Tahun Ajaran</div>
+                                    <small class="text-muted">Semester & kalender</small>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a href="{{ route('kamar.index') }}" class="card radius-15 border mb-0 text-decoration-none text-center p-3 h-100 hover-shadow">
+                                    <div class="widgets-icons mx-auto rounded-circle bg-light-info text-info mb-2">
+                                        <i class='bx bx-home'></i>
+                                    </div>
+                                    <div class="font-weight-bold text-dark font-14">Data Kamar</div>
+                                    <small class="text-muted">Kapasitas & asrama</small>
+                                </a>
+                            </div>
+                            @hasanyrole('Administrator|Keuangan')
+                            <div class="col">
+                                <a href="{{ route('saldo_debit.index') }}" class="card radius-15 border mb-0 text-decoration-none text-center p-3 h-100 hover-shadow">
+                                    <div class="widgets-icons mx-auto rounded-circle bg-light-warning text-warning mb-2">
+                                        <i class='bx bx-wallet'></i>
+                                    </div>
+                                    <div class="font-weight-bold text-dark font-14">Tabungan Santri</div>
+                                    <small class="text-muted">Mutasi & saldo</small>
+                                </a>
+                            </div>
+                            @else
+                            <div class="col">
+                                <a href="{{ route('kelas.index') }}" class="card radius-15 border mb-0 text-decoration-none text-center p-3 h-100 hover-shadow">
+                                    <div class="widgets-icons mx-auto rounded-circle bg-light-warning text-warning mb-2">
+                                        <i class='bx bx-book'></i>
+                                    </div>
+                                    <div class="font-weight-bold text-dark font-14">Data Kelas</div>
+                                    <small class="text-muted">Tingkatan & kelas</small>
+                                </a>
+                            </div>
+                            @endhasanyrole
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!--end page-content-wrapper-->
         </div>
-        <!--end page-wrapper-->
     </div>
 @endsection

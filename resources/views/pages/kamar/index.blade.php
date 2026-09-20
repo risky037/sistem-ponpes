@@ -12,23 +12,16 @@
                     <x-breadcrumb url="{{ route('dashboard') }}" path='Kamar'></x-breadcrumb>
                     <div class="card">
                         <div class="card-body">
-                            <div id="invoice">
-                                <div class="toolbar hidden-print">
-                                    <div class="text-end">
-                                        <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                            data-bs-target="#importexport">
-                                            <i class="bx bx-file"></i>
-                                            Export
-                                        </button>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal">
-                                            <i class="bx bx-plus"></i>
-                                            Tambah Data
-                                        </button>
-                                    </div>
-                                    <hr />
-                                </div>
-                            </div>
+                            <x-card-toolbar title="Data Kamar Asrama">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#importexport">
+                                    <i class="bx bx-file"></i> Export
+                                </button>
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <i class="bx bx-plus"></i> Tambah Kamar
+                                </button>
+                            </x-card-toolbar>
                             <div class="row">
                                 <div class="col">
                                     <div class="table-responsive">
@@ -80,8 +73,8 @@
                 <a href="{{ route('santri.download') }}">Download format import</a>
             </div>
             <div class="col text-end">
-                <a href="{{ route('kamar.download') }}" role="button" style="color: #673ab7">Export
-                    data santri</a>
+                <a href="{{ route('kamar.download') }}" role="button" class="btn btn-sm btn-outline-primary">Export
+                    data kamar</a>
             </div>
         </div>
         <div class="row my-2">

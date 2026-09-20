@@ -1,4 +1,18 @@
 
+:root {
+	--pesantren-primary: #157347;
+	--pesantren-primary-hover: #115c38;
+	--pesantren-primary-subtle: #eaf5ee;
+	--pesantren-primary-focus: rgba(21, 115, 71, 0.25);
+	--pesantren-surface: #ffffff;
+	--pesantren-background: #f8f9fa;
+	--pesantren-border: #e2e8f0;
+	--pesantren-text-dark: #1e293b;
+	--pesantren-text-muted: #64748b;
+	--bs-primary: #157347;
+	--bs-primary-rgb: 21, 115, 71;
+}
+
 /*
 Template Name: Syndash Admin
 Author: codervent
@@ -58,7 +72,7 @@ body {
 
 a {
     text-decoration: none;
-	color: #673ab7;
+	color: #157347;
 }
 
 a:hover {
@@ -415,7 +429,7 @@ a:hover {
 
 	color: #fff;
 
-	background-color: #673ab7;
+	background-color: #157347;
 
 	display: flex;
 
@@ -473,7 +487,7 @@ a:hover {
 
 	height: 13px;
 
-	background: #673ab7;
+	background: #157347;
 
 	position: absolute;
 
@@ -483,9 +497,9 @@ a:hover {
 
 	transform: rotate(45deg);
 
-	border-top: 1px solid #673ab7;
+	border-top: 1px solid #157347;
 
-	border-left: 1px solid #673ab7;
+	border-left: 1px solid #157347;
 
 }
 
@@ -661,7 +675,7 @@ a:hover {
 
 	border-bottom: 0px solid #ededed;
 
-	background: #673ab7;
+	background: #157347;
 
 	text-align: center;
 
@@ -691,7 +705,7 @@ a:hover {
 
 	padding: .72rem 1.2rem;
 
-	color: #673ab7;
+	color: #157347;
 
 	border-top: 1px solid #ededed;
 
@@ -978,7 +992,7 @@ sup {
 
 .lis-bg-primary {
 
-	background-color: #673ab7
+	background-color: #157347
 
 }
 
@@ -1170,11 +1184,11 @@ sup {
 
 .sidebar-wrapper .metismenu .mm-active>a {
 
-	color: #673ab7;
+	color: #157347;
 
 	text-decoration: none;
 
-	background: rgb(103 58 183 / 10%);
+	background: rgb(21 115 71 / 10%);
 
 }
 
@@ -1388,26 +1402,26 @@ input::placeholder {
 
 
 .form-check-input:checked {
-	background-color: #673ab7;
-    border-color: #673ab7;
+	background-color: #157347;
+    border-color: #157347;
 }
 
 
 .form-check-input[type=checkbox]:indeterminate {
-	background-color: rgba(104, 58, 183, 0.5);
-	border-color: rgba(104, 58, 183, 0.5);
+	background-color: rgba(21, 115, 71, 0.5);
+	border-color: rgba(21, 115, 71, 0.5);
 }
 
 
 .form-range:focus::-webkit-slider-thumb {
-	box-shadow: 0 0 0 1px #fff, 0 0 0 .25rem rgba(104, 58, 183, 0.25);
+	box-shadow: 0 0 0 1px #fff, 0 0 0 .25rem rgba(21, 115, 71, 0.25);
 }
 .form-range:focus::-moz-range-thumb {
-	box-shadow: 0 0 0 1px #fff, 0 0 0 .25rem rgba(104, 58, 183, 0.25);
+	box-shadow: 0 0 0 1px #fff, 0 0 0 .25rem rgba(21, 115, 71, 0.25);
 }
 
 .form-range::-moz-range-thumb {
-	background-color: #673ab7;
+	background-color: #157347;
 }
 
 .invalid-feedback {
@@ -1654,39 +1668,39 @@ input::placeholder {
 
 .btn-primary {
     color: #fff;
-    background-color: #673ab7;
-    border-color: #673ab7;
+    background-color: #157347;
+    border-color: #157347;
 }
 
 
 .btn-primary {
 	color: #fff;
-	background-color: #673ab7;
-	border-color: #673ab7
+	background-color: #157347;
+	border-color: #157347
 }
 .btn-primary:hover {
 	color: #fff;
-	background-color: #5930a1;
-	border-color: #5930a1
+	background-color: #115c38;
+	border-color: #115c38
 }
 .btn-check:focus+.btn-primary, .btn-primary:focus {
 	color: #fff;
-	background-color: #5930a1;
-	border-color: #5930a1;
-	box-shadow: 0 0 0 .25rem rgba(89, 48, 161, 0.5)
+	background-color: #115c38;
+	border-color: #115c38;
+	box-shadow: 0 0 0 .25rem rgba(21, 115, 71, 0.5)
 }
 .btn-check:active+.btn-primary, .btn-check:checked+.btn-primary, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle {
 	color: #fff;
-	background-color: #5930a1;
-	border-color: #5930a1
+	background-color: #115c38;
+	border-color: #115c38
 }
 .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
-	box-shadow: 0 0 0 .25rem rgba(89, 48, 161, 0.5)
+	box-shadow: 0 0 0 .25rem rgba(21, 115, 71, 0.5)
 }
 .btn-primary.disabled, .btn-primary:disabled {
 	color: #fff;
-	background-color: #673ab7;
-	border-color: #673ab7
+	background-color: #157347;
+	border-color: #157347
 }
 
 
@@ -1816,27 +1830,27 @@ input::placeholder {
 
 
 .btn-outline-primary {
-	color: #673ab7;
-	border-color: #673ab7
+	color: #157347;
+	border-color: #157347
 }
 .btn-outline-primary:hover {
 	color: #fff;
-	background-color: #673ab7;
-	border-color: #673ab7
+	background-color: #157347;
+	border-color: #157347
 }
 .btn-check:focus+.btn-outline-primary, .btn-outline-primary:focus {
-	box-shadow: 0 0 0 .25rem rgba(89, 48, 161, 0.5)
+	box-shadow: 0 0 0 .25rem rgba(21, 115, 71, 0.5)
 }
 .btn-check:active+.btn-outline-primary, .btn-check:checked+.btn-outline-primary, .btn-outline-primary.active, .btn-outline-primary.dropdown-toggle.show, .btn-outline-primary:active {
 	color: #fff;
-	background-color: #673ab7;
-	border-color: #673ab7
+	background-color: #157347;
+	border-color: #157347
 }
 .btn-check:active+.btn-outline-primary:focus, .btn-check:checked+.btn-outline-primary:focus, .btn-outline-primary.active:focus, .btn-outline-primary.dropdown-toggle.show:focus, .btn-outline-primary:active:focus {
-	box-shadow: 0 0 0 .25rem rgba(89, 48, 161, 0.5)
+	box-shadow: 0 0 0 .25rem rgba(21, 115, 71, 0.5)
 }
 .btn-outline-primary.disabled, .btn-outline-primary:disabled {
-	color: #673ab7;
+	color: #157347;
 	background-color: transparent
 }
 
@@ -1921,50 +1935,50 @@ input::placeholder {
 
 
 .accordion-button:not(.collapsed) {
-    color: #673ab7;
-    background-color: rgb(103 58 183 / 12%);
+    color: #157347;
+    background-color: rgb(21 115 71 / 12%);
     box-shadow: inset 0 -1px 0 rgb(0 0 0 / 13%);
 }
 
 
 .accordion-button:focus {
-	border-color: #673ab7;
-	box-shadow: 0 0 0 0.25rem rgb(103 58 183 / 25%);
+	border-color: #157347;
+	box-shadow: 0 0 0 0.25rem rgb(21 115 71 / 25%);
 }
 
 .list-group-item.active {
-	background-color: #673ab7;
-    border-color: #673ab7;
+	background-color: #157347;
+    border-color: #157347;
 }
 
 
 .nav-link {
-	color: #673ab7;
+	color: #157347;
 }
 
 .page-link {
-	color: #673ab7;
+	color: #157347;
 }
 
 .page-link:focus {
 	z-index: 3;
-	color: #673ab7;
+	color: #157347;
 	background-color: #e9ecef;
 	outline: 0;
-	box-shadow: 0 0 0 .25rem rgba(104, 58, 183, 0.5)
+	box-shadow: 0 0 0 .25rem rgba(21, 115, 71, 0.5)
 }
 
 .page-item.active .page-link {
-	background-color: #673ab7;
-    border-color: #673ab7;
+	background-color: #157347;
+    border-color: #157347;
 }
 
 .progress-bar {
-	background-color: #673ab7;
+	background-color: #157347;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-	background-color: #673ab7;
+	background-color: #157347;
 }
 
 .btn i {
@@ -1991,11 +2005,11 @@ input::placeholder {
 
 .btn-light-primary {
 
-	color: #673ab7;
+	color: #157347;
 
-	background-color: rgb(103 58 183 / 30%);
+	background-color: rgb(21 115 71 / 30%);
 
-	border-color: rgb(103 58 183 / 30%);
+	border-color: rgb(21 115 71 / 30%);
 
 }
 
@@ -2271,7 +2285,7 @@ input::placeholder {
 
 
 .bg-primary {
-    background-color: #673ab7 !important;
+    background-color: #157347 !important;
 }
 .bg-secondary {
     background-color: #5a7684 !important;
@@ -2409,7 +2423,7 @@ input::placeholder {
 
 .bg-light-primary {
 
-	background-color: rgb(103 58 183 / 15%)!important;
+	background-color: rgb(21 115 71 / 15%)!important;
 
 }
 
@@ -2502,7 +2516,7 @@ input::placeholder {
 /*Text Colors*/
 
 .text-primary {
-    color: #673ab7 !important;
+    color: #157347 !important;
 }
 
 .text-danger {
@@ -2605,7 +2619,7 @@ input::placeholder {
 
 .border-lg-top-primary {
 
-	border-top: 4px solid #673ab7;
+	border-top: 4px solid #157347;
 
 }
 
@@ -2934,7 +2948,7 @@ input::placeholder {
 
 .fm-menu .list-group a:hover {
 
-	background: #673ab7;
+	background: #157347;
 
 	color: #ffffff;
 
@@ -3064,7 +3078,7 @@ input::placeholder {
 
 	margin-bottom: 20px;
 
-	border-bottom: 1px solid #673ab7
+	border-bottom: 1px solid #157347
 
 }
 
@@ -3112,7 +3126,7 @@ input::placeholder {
 
 	margin-top: 0;
 
-	color: #673ab7
+	color: #157347
 
 }
 
@@ -3136,7 +3150,7 @@ input::placeholder {
 
 	padding-left: 6px;
 
-	border-left: 6px solid #673ab7;
+	border-left: 6px solid #157347;
 
 	background: #e7f2ff;
 
@@ -3190,7 +3204,7 @@ input::placeholder {
 
 	font-weight: 400;
 
-	color: #673ab7;
+	color: #157347;
 
 	font-size: 1.2em
 
@@ -3214,7 +3228,7 @@ input::placeholder {
 
 	font-size: 1.6em;
 
-	background: #673ab7
+	background: #157347
 
 }
 
@@ -3226,7 +3240,7 @@ input::placeholder {
 
 .invoice table .total {
 
-	background: #673ab7;
+	background: #157347;
 
 	color: #fff
 
@@ -3264,11 +3278,11 @@ input::placeholder {
 
 .invoice table tfoot tr:last-child td {
 
-	color: #673ab7;
+	color: #157347;
 
 	font-size: 1.4em;
 
-	border-top: 1px solid #673ab7
+	border-top: 1px solid #157347
 
 }
 
@@ -3556,7 +3570,7 @@ input::placeholder {
 
 .chat-tab-menu .nav-pills .show>.nav-link {
 
-	color: #673ab7;
+	color: #157347;
 
 	background-color: rgb(0 123 255 / 0%);
 
@@ -3606,13 +3620,13 @@ input::placeholder {
 
 	border: 1px solid rgb(0 0 0 / 0%);
 
-	background-color: rgb(103 58 183 / 15%);
+	background-color: rgb(21 115 71 / 15%);
 
 }
 
 .chat-list .list-group-item.active {
 
-	background-color: rgb(103 58 183 / 15%);
+	background-color: rgb(21 115 71 / 15%);
 
 }
 
@@ -3868,17 +3882,17 @@ input::placeholder {
 
 .email-navigation a.list-group-item:hover {
 
-	background-color: rgb(103 58 183 / 12%);
+	background-color: rgb(21 115 71 / 12%);
 
 }
 
 .email-navigation a.list-group-item.active {
 
-	color: #673ab7;
+	color: #157347;
 
 	font-weight: 600;
 
-	background-color: rgb(103 58 183 / 12%);
+	background-color: rgb(21 115 71 / 12%);
 
 }
 
@@ -4274,7 +4288,7 @@ ul.icons li {
 
 ul.icons li i {
 
-	color: #673ab7;
+	color: #157347;
 
 	width: 30px;
 
@@ -4378,7 +4392,7 @@ ul.icons li span {
 
 .pByfF i {
 
-	color: #673ab7;
+	color: #157347;
 
 	font-size: 36px;
 
@@ -4506,7 +4520,7 @@ ul.icons li span {
 
 	font-size: 30px;
 
-	color: #673ab7;
+	color: #157347;
 
 }
 
@@ -4618,7 +4632,7 @@ ul.icons li span {
 
 	float: right;
 
-	color: #673ab7;
+	color: #157347;
 
 }
 
@@ -4782,7 +4796,7 @@ ul.icons li span {
 
 	right: 12px;
 
-	background-color: #673ab7;
+	background-color: #157347;
 
 	z-index: 10000;
 

@@ -28,8 +28,8 @@
         <span class="bx bx-trash"> </span>
     </button>
 
-    <x-delete-modal title='Hapus data' id="{{ $model->id }}" fn="{{ route('kamar.destroy', $model->id) }}"
-        method="POST">
+    <x-delete-modal title='Hapus Data Kamar' id="{{ $model->id }}" fn="{{ route('kamar.destroy', $model->id) }}"
+        entity="Kamar: {{ $model->nama }} (Blok {{ $model->blok }})" method="POST">
         @csrf
         @method('DELETE')
     </x-delete-modal>

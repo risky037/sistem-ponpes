@@ -12,18 +12,12 @@
                     <x-breadcrumb url="{{ route('dashboard') }}" path='Kelas'></x-breadcrumb>
                     <div class="card">
                         <div class="card-body">
-                            <div id="invoice">
-                                <div class="toolbar hidden-print">
-                                    <div class="text-end">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal">
-                                            <i class="bx bx-plus"></i>
-                                            Tambah Data
-                                        </button>
-                                    </div>
-                                    <hr />
-                                </div>
-                            </div>
+                            <x-card-toolbar title="Data Kelas">
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <i class="bx bx-plus"></i> Tambah Kelas
+                                </button>
+                            </x-card-toolbar>
                             <div class="row">
                                 <div class="col">
                                     <div class="table-responsive">

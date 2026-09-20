@@ -56,7 +56,17 @@ class SantriController extends Controller
 
     public function show(Santri $santri)
     {
-        $santri->load('user', 'wali_santri', 'kamar_santri', 'kelas_santri', 'alamat_santri');
+        $santri->load([
+            'user',
+            'wali_santri',
+            'kamar_santri.kamar',
+            'kelas_santri.kelas',
+            'alamat_santri',
+            'student_batch.academicYear',
+            'academic_enrollments.academicYear',
+            'academic_enrollments.kelas',
+            'tabungan',
+        ]);
 
         return view('pages.santri.detail', [
             'item' => $santri,

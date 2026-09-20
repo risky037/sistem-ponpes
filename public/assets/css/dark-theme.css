@@ -135,9 +135,9 @@ html.dark-theme .top-header .navbar .dropdown-menu::after {
 	border-left: 1px solid #5c636b;
 }
 html.dark-theme .top-header .navbar .dropdown-lg .dropdown-menu::after {
-	background: #673ab7;
-	border-top: 1px solid #673ab7;
-	border-left: 1px solid #673ab7;
+	background: #157347;
+	border-top: 1px solid #157347;
+	border-left: 1px solid #157347;
 }
 html.dark-theme .highcharts-background {
 	fill: rgb(255 255 255 / 0%);

@@ -12,30 +12,24 @@
                     <x-breadcrumb url="{{ route('dashboard') }}" path='Pengguna'></x-breadcrumb>
                     <div class="card">
                         <div class="card-body">
-                            <div id="invoice">
-                                <div class="toolbar hidden-print">
-                                    <div class="text-end">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal">
-                                            <i class="bx bx-plus"></i>
-                                            Tambah Data
-                                        </button>
-                                    </div>
-                                    <hr />
-                                </div>
-                            </div>
+                            <x-card-toolbar title="Manajemen Pengguna">
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <i class="bx bx-plus"></i> Tambah Pengguna
+                                </button>
+                            </x-card-toolbar>
                             <div class="row">
                                 <div class="col">
                                     <div class="table-responsive">
-                                        <table class="table table-striped dataTable" style="width:100%" role="grid"
+                                        <table class="table table-striped table-bordered align-middle dataTable" style="width:100%" role="grid"
                                             id="table">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Name</th>
-                                                    <th>email</th>
-                                                    <th>Role</th>
-                                                    <th>Action</th>
+                                                    <th style="width: 5%">#</th>
+                                                    <th>Nama Pengguna</th>
+                                                    <th>Email</th>
+                                                    <th>Hak Akses (Role)</th>
+                                                    <th style="width: 15%">Aksi</th>
                                                 </tr>
                                             </thead>
                                         </table>
