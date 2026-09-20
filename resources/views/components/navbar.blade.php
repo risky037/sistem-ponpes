@@ -127,6 +127,20 @@
                     <div class="menu-title">Performa Akademik</div>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('academic.administration.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('academic.administration.index') }}">
+                    <div class="parent-icon icon-color-1"><i class="bx bx-grid-alt"></i>
+                    </div>
+                    <div class="menu-title">Admin Akademik</div>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('academic.export.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('academic.export.index') }}">
+                    <div class="parent-icon icon-color-7"><i class="bx bx-download"></i>
+                    </div>
+                    <div class="menu-title">Ekspor Data</div>
+                </a>
+            </li>
             @endhasanyrole
             <li>
                 <a class="has-arrow" href="javascript:;">

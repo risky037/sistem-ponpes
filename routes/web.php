@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Academic\AcademicAdministrationController;
 use App\Http\Controllers\Academic\AcademicCalendarEventController;
 use App\Http\Controllers\Academic\AcademicEnrollmentController;
+use App\Http\Controllers\Academic\AcademicExportController;
 use App\Http\Controllers\Academic\AcademicPerformanceController;
 use App\Http\Controllers\Academic\AcademicYearController;
 use App\Http\Controllers\Academic\AssessmentController;
@@ -159,6 +161,19 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{enrollment}', 'show')->name('show');
             Route::post('/{enrollment}/generate', 'store')->name('generate');
             Route::post('/year/{year}/generate-all', 'bulkGenerate')->name('bulk-generate');
+        });
+        // academic administration (pusat administrasi akademik)
+        Route::controller(AcademicAdministrationController::class)->prefix('academic/administration')->as('academic.administration.')->group(function () {
+            Route::get('/', 'index')->name('index')->middleware('can:export.index');
+        });
+        // academic export (ekspor & cetak data akademik)
+        Route::controller(AcademicExportController::class)->prefix('academic/export')->as('academic.export.')->group(function () {
+            Route::get('/', 'index')->name('index')->middleware('can:export.index');
+            Route::match(['get', 'post'], '/enrollment', 'exportEnrollment')->name('enrollment')->middleware('can:export.enrollment');
+            Route::match(['get', 'post'], '/teaching-assignment', 'exportTeachingAssignment')->name('teaching-assignment')->middleware('can:export.teaching_assignment');
+            Route::match(['get', 'post'], '/attendance', 'exportAttendance')->name('attendance')->middleware('can:export.attendance');
+            Route::match(['get', 'post'], '/assessment', 'exportAssessment')->name('assessment')->middleware('can:export.assessment');
+            Route::match(['get', 'post'], '/performance', 'exportPerformance')->name('performance')->middleware('can:export.performance');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {

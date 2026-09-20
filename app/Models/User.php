@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->hasMany(TeachingAssignment::class);
     }
 
+    public function teachingAssignments(): HasMany
+    {
+        return $this->hasMany(TeachingAssignment::class);
+    }
+
     public function gradedScores(): HasMany
     {
         return $this->hasMany(StudentAssessmentScore::class, 'graded_by');
