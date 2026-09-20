@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -39,11 +40,18 @@ class AcademicYearController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('academic_years')->where(fn ($query) => $query->where('semester', $request->input('semester'))),
+            ],
             'semester' => 'required|string|in:Ganjil,Genap',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'is_active' => 'nullable|boolean',
+        ], [
+            'name.unique' => 'Tahun ajaran dengan semester tersebut sudah terdaftar.',
         ]);
 
         try {
@@ -82,11 +90,20 @@ class AcademicYearController extends Controller
     public function update(Request $request, AcademicYear $academicYear)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('academic_years')
+                    ->where(fn ($query) => $query->where('semester', $request->input('semester')))
+                    ->ignore($academicYear->id),
+            ],
             'semester' => 'required|string|in:Ganjil,Genap',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'is_active' => 'nullable|boolean',
+        ], [
+            'name.unique' => 'Tahun ajaran dengan semester tersebut sudah terdaftar.',
         ]);
 
         try {
@@ -115,6 +132,12 @@ class AcademicYearController extends Controller
 
     public function destroy(AcademicYear $academicYear)
     {
+        if ($academicYear->academic_enrollments()->exists()) {
+            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data riwayat pendaftaran santri.');
+
+            return redirect()->route('academic-year.index');
+        }
+
         try {
             $academicYear->delete();
             Toastr::success('Berhasil menghapus tahun ajaran');

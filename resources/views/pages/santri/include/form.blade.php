@@ -1,15 +1,29 @@
 <div class="row mb-2">
-    <div class="col">
+    <div class="col-md-4">
         <div class="mb-2">
             <x-input type='text' name='no_induk' id="no_induk" label='No Induk' placeholder='No Induk'
                 attribute='readonly'
                 value="{{ isset($item) ? $item->no_induk : 'No induk otomatis sesuai tahun masuk' }}"></x-input>
         </div>
     </div>
-    <div class="col">
-        <div>
+    <div class="col-md-4">
+        <div class="mb-2">
             <x-input type="date" label='Tahun masuk' id="tahun_masuk" name='tahun_masuk' placeholder='Tahun masuk'
                 value="{{ isset($item) ? $item->tahun_masuk : old('tahun_masuk') }}" attribute="required"></x-input>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-2">
+            <label class="form-label font-weight-bold" for="student_batch_id">Angkatan Santri</label>
+            <select name="student_batch_id" id="student_batch_id" class="form-select">
+                <option value="">-- Pilih Angkatan (Opsional) --</option>
+                @foreach ($studentBatches ?? [] as $batch)
+                    <option value="{{ $batch->id }}"
+                        {{ (old('student_batch_id') == $batch->id) || (isset($item) && $item->student_batch_id == $batch->id) ? 'selected' : '' }}>
+                        {{ $batch->name }} ({{ $batch->year }})
+                    </option>
+                @endforeach
+            </select>
         </div>
     </div>
 </div>

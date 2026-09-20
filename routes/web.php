@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Academic\AcademicEnrollmentController;
 use App\Http\Controllers\Academic\AcademicYearController;
+use App\Http\Controllers\Academic\StudentBatchController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Kamar\KamarController;
@@ -69,6 +71,21 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/academic-year/{academicYear}/edit', 'edit')->name('edit');
             Route::patch('/academic-year/{academicYear}', 'update')->name('update');
             Route::delete('/academic-year/{academicYear}', 'destroy')->name('destroy');
+        });
+        // student batch (angkatan santri)
+        Route::controller(StudentBatchController::class)->as('student-batch.')->group(function () {
+            Route::get('/student-batch', 'index')->name('index');
+            Route::post('/student-batch', 'store')->name('store');
+            Route::get('/student-batch/{studentBatch}/edit', 'edit')->name('edit');
+            Route::patch('/student-batch/{studentBatch}', 'update')->name('update');
+            Route::delete('/student-batch/{studentBatch}', 'destroy')->name('destroy');
+        });
+        // academic enrollment (pendaftaran & penempatan akademik)
+        Route::controller(AcademicEnrollmentController::class)->as('academic-enrollment.')->group(function () {
+            Route::get('/academic-enrollment', 'index')->name('index');
+            Route::post('/academic-enrollment', 'store')->name('store');
+            Route::patch('/academic-enrollment/{academicEnrollment}', 'update')->name('update');
+            Route::delete('/academic-enrollment/{academicEnrollment}', 'destroy')->name('destroy');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {

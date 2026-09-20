@@ -34,7 +34,7 @@ class AcademicFoundationSeeder extends Seeder
         StudentBatch::firstOrCreate(
             ['name' => 'Angkatan 2023'],
             [
-                'year' => '2023',
+                'year' => 2023,
                 'description' => 'Santri angkatan masuk tahun 2023',
             ]
         );
@@ -42,7 +42,7 @@ class AcademicFoundationSeeder extends Seeder
         StudentBatch::firstOrCreate(
             ['name' => 'Angkatan 2024'],
             [
-                'year' => '2024',
+                'year' => 2024,
                 'description' => 'Santri angkatan masuk tahun 2024',
             ]
         );

@@ -62,8 +62,8 @@ class SantriController extends Controller
             'kamar_santri.kamar',
             'kelas_santri.kelas',
             'alamat_santri',
-            'student_batch.academicYear',
-            'academic_enrollments.academicYear',
+            'student_batch',
+            'academic_enrollments.academic_year',
             'academic_enrollments.kelas',
             'tabungan',
         ]);
@@ -95,7 +95,7 @@ class SantriController extends Controller
     public function edit(Santri $santri)
     {
         return view('pages.santri.edit', [
-            'item' => $santri->load('user', 'wali_santri', 'kamar_santri', 'kelas_santri', 'alamat_santri'),
+            'item' => $santri->load('user', 'wali_santri', 'kamar_santri', 'kelas_santri', 'alamat_santri', 'student_batch'),
         ]);
     }
 

@@ -86,6 +86,12 @@ class KelasController extends Controller
 
     public function destroy(Kelas $kelas)
     {
+        if ($kelas->academic_enrollments()->exists()) {
+            Toastr::error('Tidak dapat menghapus kelas yang memiliki riwayat akademik pendaftaran santri.');
+
+            return redirect()->back();
+        }
+
         try {
             $kelas->delete();
             Toastr::success('Berhasil menghapus data');

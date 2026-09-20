@@ -21,6 +21,11 @@ class Santri extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function getNamaLengkapAttribute(): ?string
+    {
+        return $this->user?->name;
+    }
+
     public function wali_santri()
     {
         return $this->hasOne(WaliSantri::class);

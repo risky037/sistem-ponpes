@@ -243,9 +243,11 @@ class AcademicFoundationTest extends TestCase
     {
         $batch = StudentBatch::create([
             'name' => 'Angkatan 2026',
-            'year' => '2026',
+            'year' => 2026,
             'description' => 'Angkatan Masuk 2026',
         ]);
+
+        $this->assertIsInt($batch->fresh()->year);
 
         $santri = $this->createSantri();
         $santri->student_batch_id = $batch->id;
@@ -291,5 +293,123 @@ class AcademicFoundationTest extends TestCase
             'kelas_id' => $kelas2->id,
             'status' => 'Aktif',
         ]);
+    }
+
+    public function test_academic_year_unique_name_and_semester_constraint(): void
+    {
+        AcademicYear::create([
+            'name' => '2026/2027',
+            'semester' => 'Ganjil',
+            'start_date' => '2026-07-15',
+            'end_date' => '2026-12-20',
+            'is_active' => true,
+        ]);
+
+        $this->expectException(QueryException::class);
+
+        AcademicYear::create([
+            'name' => '2026/2027',
+            'semester' => 'Ganjil',
+            'start_date' => '2026-07-15',
+            'end_date' => '2026-12-20',
+            'is_active' => false,
+        ]);
+    }
+
+    public function test_student_batch_unique_year_constraint(): void
+    {
+        StudentBatch::create([
+            'name' => 'Angkatan 2026 Pertama',
+            'year' => 2026,
+        ]);
+
+        $this->expectException(QueryException::class);
+
+        StudentBatch::create([
+            'name' => 'Angkatan 2026 Kedua',
+            'year' => 2026,
+        ]);
+    }
+
+    public function test_kelas_deletion_is_restricted_when_academic_enrollments_exist(): void
+    {
+        $santri = $this->createSantri();
+        $kelas = Kelas::create([
+            'kode' => 'KLS-7A',
+            'tingkatan' => 'Tsanawiyah',
+            'kelas' => '7-A',
+        ]);
+        $academicYear = AcademicYear::create([
+            'name' => '2026/2027',
+            'semester' => 'Ganjil',
+            'start_date' => '2026-07-15',
+            'end_date' => '2026-12-20',
+            'is_active' => true,
+        ]);
+
+        AcademicEnrollment::create([
+            'academic_year_id' => $academicYear->id,
+            'santri_id' => $santri->id,
+            'kelas_id' => $kelas->id,
+            'status' => 'Aktif',
+        ]);
+
+        // Controller guard blocks deletion
+        $response = $this->actingAs($this->admin)->delete(route('kelas.destroy', $kelas));
+        $this->assertDatabaseHas('kelas', ['id' => $kelas->id]);
+
+        // DB level restrictOnDelete also blocks raw deletion
+        $this->expectException(QueryException::class);
+        $kelas->delete();
+    }
+
+    public function test_academic_year_deletion_is_blocked_when_enrollments_exist(): void
+    {
+        $santri = $this->createSantri();
+        $kelas = Kelas::create([
+            'kode' => 'KLS-7A',
+            'tingkatan' => 'Tsanawiyah',
+            'kelas' => '7-A',
+        ]);
+        $academicYear = AcademicYear::create([
+            'name' => '2026/2027',
+            'semester' => 'Ganjil',
+            'start_date' => '2026-07-15',
+            'end_date' => '2026-12-20',
+            'is_active' => true,
+        ]);
+
+        AcademicEnrollment::create([
+            'academic_year_id' => $academicYear->id,
+            'santri_id' => $santri->id,
+            'kelas_id' => $kelas->id,
+            'status' => 'Aktif',
+        ]);
+
+        $response = $this->actingAs($this->admin)->delete(route('academic-year.destroy', $academicYear));
+        $response->assertRedirect(route('academic-year.index'));
+        $this->assertDatabaseHas('academic_years', ['id' => $academicYear->id]);
+    }
+
+    public function test_scope_active_filters_correctly(): void
+    {
+        AcademicYear::create([
+            'name' => '2025/2026',
+            'semester' => 'Genap',
+            'start_date' => '2026-01-05',
+            'end_date' => '2026-06-20',
+            'is_active' => false,
+        ]);
+        $activeYear = AcademicYear::create([
+            'name' => '2026/2027',
+            'semester' => 'Ganjil',
+            'start_date' => '2026-07-15',
+            'end_date' => '2026-12-20',
+            'is_active' => true,
+        ]);
+
+        $activeYears = AcademicYear::active()->get();
+        $this->assertCount(1, $activeYears);
+        $this->assertEquals($activeYear->id, $activeYears->first()->id);
     }
 }

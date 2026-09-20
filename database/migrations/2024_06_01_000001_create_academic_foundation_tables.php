@@ -23,23 +23,25 @@ return new class extends Migration
             $table->date('end_date');
             $table->boolean('is_active')->default(false);
             $table->timestamps();
+
+            $table->unique(['name', 'semester']);
         });
 
         Schema::create('student_batches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('year');
+            $table->unsignedSmallInteger('year')->unique();
             $table->text('description')->nullable();
             $table->timestamps();
         });
 
         Schema::create('academic_enrollments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(AcademicYear::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(AcademicYear::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(Santri::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Kelas::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Kelas::class)->constrained()->restrictOnDelete();
             $table->string('status')->default('Aktif');
-            $table->date('enrolled_at')->nullable();
+            $table->date('enrolled_at')->useCurrent();
             $table->text('notes')->nullable();
             $table->timestamps();
 
@@ -47,7 +49,7 @@ return new class extends Migration
         });
 
         Schema::table('santris', function (Blueprint $table) {
-            $table->foreignIdFor(StudentBatch::class)->nullable()->after('user_id')->constrained()->nullOnDelete();
+            $table->foreignIdFor(StudentBatch::class)->nullable()->after('user_id')->constrained()->restrictOnDelete();
         });
     }
 

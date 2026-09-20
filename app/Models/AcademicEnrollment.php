@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AcademicEnrollment extends Model
 {
     use HasFactory;
+
+    public const STATUS_AKTIF = 'Aktif';
+
+    public const STATUS_NONAKTIF = 'Nonaktif';
+
+    public const STATUS_LULUS = 'Lulus';
+
+    public const STATUS_PINDAH = 'Pindah';
+
+    public const ALLOWED_STATUSES = [
+        self::STATUS_AKTIF,
+        self::STATUS_NONAKTIF,
+        self::STATUS_LULUS,
+        self::STATUS_PINDAH,
+    ];
 
     protected $guarded = ['id'];
 
@@ -24,9 +40,19 @@ class AcademicEnrollment extends Model
         ];
     }
 
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', self::STATUS_AKTIF);
+    }
+
     public function academic_year(): BelongsTo
     {
         return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
     }
 
     public function santri(): BelongsTo

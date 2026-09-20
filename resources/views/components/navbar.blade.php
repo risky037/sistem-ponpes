@@ -45,6 +45,20 @@
                     <div class="menu-title">Tahun Ajaran</div>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('student-batch.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('student-batch.index') }}">
+                    <div class="parent-icon icon-color-5"> <i class="bx bx-group"></i>
+                    </div>
+                    <div class="menu-title">Angkatan Santri</div>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('academic-enrollment.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('academic-enrollment.index') }}">
+                    <div class="parent-icon icon-color-6"> <i class="bx bx-book-reader"></i>
+                    </div>
+                    <div class="menu-title">Pendaftaran Akademik</div>
+                </a>
+            </li>
             <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-4"><i class="bx bx-user"></i>

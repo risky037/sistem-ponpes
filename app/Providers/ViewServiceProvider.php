@@ -6,6 +6,7 @@ use App\Models\Kamar;
 use App\Models\Kelas;
 use App\Models\Santri;
 use App\Models\Setting;
+use App\Models\StudentBatch;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Role;
 
@@ -29,6 +30,8 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('classes', $kelas);
             $kamar = Kamar::all();
             $view->with('badroom', $kamar);
+            $batches = StudentBatch::orderBy('year', 'desc')->get();
+            $view->with('studentBatches', $batches);
         });
         view()->composer('pages.users.index', function ($view) {
             $roles = Role::all();

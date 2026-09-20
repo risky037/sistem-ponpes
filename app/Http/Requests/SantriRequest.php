@@ -23,6 +23,7 @@ class SantriRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'student_batch_id' => 'nullable|exists:student_batches,id',
             'kelas' => 'required|exists:kelas,id',
             'kamar' => 'required|exists:kamars,id',
             'nama_lengkap' => 'required|string|min:3|max:225',
