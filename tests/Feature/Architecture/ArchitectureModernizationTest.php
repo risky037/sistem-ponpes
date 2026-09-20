@@ -3,12 +3,9 @@
 namespace Tests\Feature\Architecture;
 
 use App\Helpers\Helper;
-use App\Helpers\Ping;
-use App\Helpers\Sinkron;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\Santri\SantriController;
-use App\Http\Controllers\Sinkron\SinkronController;
 use App\Http\Controllers\Tabungan\SaldoDebitController;
 use App\Http\Controllers\Transaksi\TransaksiController;
 use App\Http\Controllers\TransferController;
@@ -16,9 +13,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use ReflectionClass;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -86,7 +81,6 @@ class ArchitectureModernizationTest extends TestCase
             TransferController::class,
             SaldoDebitController::class,
             TransaksiController::class,
-            SinkronController::class,
         ];
 
         foreach ($controllers as $controllerClass) {
@@ -158,13 +152,9 @@ class ArchitectureModernizationTest extends TestCase
     {
         // PSR-4 classes
         $this->assertTrue(class_exists(Helper::class));
-        $this->assertTrue(class_exists(Ping::class));
-        $this->assertTrue(class_exists(Sinkron::class));
 
         // Aliases
         $this->assertTrue(class_exists('Helper'));
-        $this->assertTrue(class_exists('Ping'));
-        $this->assertTrue(class_exists('Sinkron'));
 
         // Test helper method execution
         $noInduk = Helper::make_noinduk([
@@ -185,45 +175,6 @@ class ArchitectureModernizationTest extends TestCase
         ]);
         $this->assertIsString($noIndukViaAlias);
         $this->assertSame(8, strlen($noIndukViaAlias));
-    }
-
-    /**
-     * 6. Verify Ping Helper returns true on successful HTTP 200 response.
-     */
-    public function test_ping_helper_returns_true_on_success(): void
-    {
-        Http::fake([
-            '*' => Http::response('OK', 200),
-        ]);
-
-        $this->assertTrue(Ping::to(), 'Ping::to() should return true on HTTP 200.');
-        $this->assertTrue(\Ping::to(), 'Global Ping alias should behave identically.');
-    }
-
-    /**
-     * 7. Verify Ping Helper returns false on HTTP server error.
-     */
-    public function test_ping_helper_returns_false_on_http_error(): void
-    {
-        Http::fake([
-            '*' => Http::response('Internal Server Error', 500),
-        ]);
-
-        $this->assertFalse(Ping::to(), 'Ping::to() should return false on HTTP 500.');
-    }
-
-    /**
-     * 8. Verify Ping Helper returns false on connection failure / exception.
-     */
-    public function test_ping_helper_returns_false_on_connection_exception(): void
-    {
-        Http::fake([
-            '*' => function () {
-                throw new ConnectionException('Network unreachable');
-            },
-        ]);
-
-        $this->assertFalse(Ping::to(), 'Ping::to() should catch connection exceptions and return false.');
     }
 
     /**

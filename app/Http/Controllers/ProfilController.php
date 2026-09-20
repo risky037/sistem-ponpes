@@ -75,13 +75,10 @@ class ProfilController extends Controller
                 'foto' => $validated['foto'],
             ]);
             if ($user->santri) {
-                AlamatSantri::where('santri_id', $user->santri->id)->update([
-                    'provinsi_id' => $validated['provinsi_id'],
-                    'kabupaten_id' => $validated['kabupaten_id'],
-                    'kecamatan_id' => $validated['kecamatan_id'],
-                    'kelurahan_id' => $validated['kelurahan_id'],
-                    'dusun' => $validated['dusun'],
-                ]);
+                AlamatSantri::updateOrCreate(
+                    ['santri_id' => $user->santri->id],
+                    ['alamat_lengkap' => $validated['alamat_lengkap']]
+                );
             }
             Toastr::success('Berhasil merubah data');
 

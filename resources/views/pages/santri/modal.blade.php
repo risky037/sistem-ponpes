@@ -15,10 +15,10 @@
                 </td>
             </tr>
             <tr>
-                <td>ALamat</td>
+                <td>Alamat</td>
                 <td>
                     @if (isset($item->alamat_santri))
-                        {{ ucwords(strtolower($item->alamat_santri->dusun . ', ' . $item->alamat_santri->kelurahan->name . ', ' . $item->alamat_santri->kecamatan->name . ', ' . $item->alamat_santri->kabupaten->name)) }}
+                        {{ $item->alamat_santri->alamat_lengkap }}
                     @endif
                 </td>
             </tr>
@@ -53,6 +53,17 @@
                 <td>Data Kependudukan</td>
                 <td>{{ 'NIK : ' . $item->nik . ' - KK : ' . $item->kk }}</td>
             </tr>
+            <tr>
+                <td>WhatsApp Santri</td>
+                <td>
+                    {{ $item->whatsapp }}
+                    @if ($item->whatsapp)
+                        <a href="{{ \App\Helpers\Whatsapp::url($item->whatsapp, 'Assalamualaikum ' . $item->user->name) }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-success ms-2">
+                            <i class="bx bxl-whatsapp"></i> Chat Santri
+                        </a>
+                    @endif
+                </td>
+            </tr>
             @if ($item->status == 'Santri Aktif')
                 <tr>
                     <td>Kelas</td>
@@ -71,7 +82,14 @@
             </tr>
             <tr>
                 <td>Nama Ibu</td>
-                <td>{{ isset($item->wali_santri) ? $item->wali_santri->nama_ibu : '' }}</td>
+                <td>
+                    {{ isset($item->wali_santri) ? $item->wali_santri->nama_ibu : '' }}
+                    @if ($item->whatsapp)
+                        <a href="{{ \App\Helpers\Whatsapp::url($item->whatsapp, 'Assalamualaikum Bapak/Ibu Wali dari ' . $item->user->name) }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-success ms-2">
+                            <i class="bx bxl-whatsapp"></i> Hubungi Wali
+                        </a>
+                    @endif
+                </td>
             </tr>
         </tbody>
     </table>

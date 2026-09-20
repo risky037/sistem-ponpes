@@ -28,9 +28,6 @@ class SettingRequest extends FormRequest
             'logo' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
             'favicon' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
             'kts_master' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
-            'whatsapp_api_key' => ['required', 'string', 'min:32', 'max:32'],
-            'whatsapp_feature' => ['required'],
-            'sender' => ['nullable'],
             'log_activity' => ['required'],
         ];
     }

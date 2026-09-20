@@ -9,7 +9,6 @@ use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -187,61 +186,5 @@ class PreMigrationCleanupTest extends TestCase
             $this->assertEquals(401, $e->getStatusCode());
             throw $e;
         }
-    }
-
-    public function test_sync_update_stores_timestamp_in_cache_without_mutating_config_file(): void
-    {
-        $this->actingAs($this->admin);
-
-        $configFile = config_path('modules.php');
-        $hashBefore = md5(file_get_contents($configFile));
-
-        $testTimestamp = '2026-09-19 14:00:00';
-        $response = $this->postJson(route('sync.update'), [
-            'data' => ['data santri', $testTimestamp],
-        ]);
-
-        $response->assertStatus(200);
-        $response->assertJson([
-            'success' => true,
-            'message' => 'Berhasil mengubah data',
-        ]);
-
-        // Verify that config file was NOT modified on disk
-        $hashAfter = md5(file_get_contents($configFile));
-        $this->assertEquals($hashBefore, $hashAfter);
-
-        // Verify that timestamp is stored in Cache
-        $this->assertEquals($testTimestamp, Cache::get('modules.sync.santri'));
-    }
-
-    public function test_sync_index_overlays_cached_timestamp(): void
-    {
-        $this->actingAs($this->admin);
-
-        $testTimestamp = '2026-09-19 15:30:00';
-        Cache::forever('modules.sync.santri', $testTimestamp);
-
-        $response = $this->get(route('sync.index'));
-
-        $response->assertStatus(200);
-        $response->assertSee($testTimestamp);
-    }
-
-    public function test_sinkron_helpers_handle_missing_spreadsheet_id_gracefully(): void
-    {
-        putenv('SPREADSHEET_ID=');
-        putenv('SPREDSHEET_ID=');
-        unset($_ENV['SPREADSHEET_ID'], $_ENV['SPREDSHEET_ID']);
-
-        $alumniResponse = \Sinkron::alumni();
-        $this->assertNotNull($alumniResponse);
-        $data = json_decode($alumniResponse->getContent(), true);
-        $this->assertFalse($data['success']);
-
-        $santriResponse = \Sinkron::santri();
-        $this->assertNotNull($santriResponse);
-        $data = json_decode($santriResponse->getContent(), true);
-        $this->assertFalse($data['success']);
     }
 }

@@ -7,7 +7,6 @@ use App\Models\Kelas;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -266,35 +265,6 @@ class ExceptionHandlingTest extends TestCase
 
         // Verify that internal exception detail was never leaked to client
         $response->assertDontSee('SENSITIVE_SANTRI_SCHEMA_FAILURE');
-    }
-
-    public function test_sinkron_update_failure_returns_500_and_logs_structured_context(): void
-    {
-        $this->actingAs($this->admin);
-
-        Log::spy();
-        Cache::shouldReceive('forever')
-            ->once()
-            ->andThrow(new \RuntimeException('Cache write failure'));
-
-        $response = $this->postJson(route('sync.update'), [
-            'data' => ['data santri', '1/6/2024, 7:20:50 PM'],
-        ]);
-
-        $response->assertStatus(500);
-        $response->assertJson([
-            'success' => false,
-            'message' => 'Internal server error',
-        ]);
-
-        Log::shouldHaveReceived('error')->withArgs(function ($message, $context) {
-            return str_contains($message, 'SinkronController update error')
-                && array_key_exists('user_id', $context)
-                && array_key_exists('request_uri', $context)
-                && array_key_exists('method', $context)
-                && array_key_exists('ip', $context)
-                && array_key_exists('exception', $context);
-        });
     }
 
     public function test_kelas_update_failure_logs_structured_context_and_redirects(): void

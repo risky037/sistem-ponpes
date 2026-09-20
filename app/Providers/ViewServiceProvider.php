@@ -2,12 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Kabupaten;
 use App\Models\Kamar;
-use App\Models\Kecamatan;
 use App\Models\Kelas;
-use App\Models\Kelurahan;
-use App\Models\Provinsi;
 use App\Models\Santri;
 use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
@@ -33,14 +29,6 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('classes', $kelas);
             $kamar = Kamar::all();
             $view->with('badroom', $kamar);
-            $provinsi = Provinsi::all();
-            $view->with('provinsi', $provinsi);
-            // $kabupaten = Kabupaten::all();
-            // $view->with('kabupaten', $kabupaten);
-            // $kecamatan = Kecamatan::all();
-            // $view->with('kecamatan', $kecamatan);
-            // $kelurahan = Kelurahan::all();
-            // $view->with('kelurahan', $kelurahan);
         });
         view()->composer('pages.users.index', function ($view) {
             $roles = Role::all();
@@ -49,10 +37,6 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('pages.transfer.index', function ($view) {
             $santris = Santri::whereHas('tabungan')->with('user')->get();
             $view->with('santris', $santris);
-        });
-        view()->composer('pages.profil.*', function ($view) {
-            $provinsi = Provinsi::all();
-            $view->with('provinsi', $provinsi);
         });
         view()->composer('pages.users.*', function ($view) {
             $roles = Role::all();

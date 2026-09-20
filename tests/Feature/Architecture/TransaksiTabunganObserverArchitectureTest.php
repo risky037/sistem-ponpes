@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Architecture;
 
+use App\Helpers\Whatsapp;
 use App\Models\ActivityLog;
 use App\Models\Santri;
 use App\Models\Setting;
 use App\Models\TransaksiTabungan;
 use App\Models\User;
-use App\Models\WhatsappMessage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
@@ -42,21 +42,6 @@ class TransaksiTabunganObserverArchitectureTest extends TestCase
             'id' => 1,
         ], [
             'log_activity' => true,
-            'whatsapp_feature' => true,
-            'whatsapp_api_key' => 'fake-api-key',
-            'sender' => 628123456789,
-        ])->update([
-            'log_activity' => true,
-            'whatsapp_feature' => true,
-            'whatsapp_api_key' => 'fake-api-key',
-            'sender' => 628123456789,
-        ]);
-
-        WhatsappMessage::firstOrCreate([
-            'id' => 1,
-        ], [
-            'pesan_setor_tunai' => 'Halo {nama}, setoran {nominal} pada {tanggal} berhasil.',
-            'pesan_tarik_tunai' => 'Halo {nama}, penarikan {nominal} pada {tanggal} untuk {tujuan} berhasil.',
         ]);
 
         $santriUser = User::create([
@@ -79,7 +64,7 @@ class TransaksiTabunganObserverArchitectureTest extends TestCase
     }
 
     /**
-     * 1. Verify TransaksiTabunganActivityObserver and TransaksiTabunganObserver are registered.
+     * 1. Verify TransaksiTabunganActivityObserver is registered and WhatsApp observer is removed.
      */
     public function test_transaksi_tabungan_observers_are_registered(): void
     {
@@ -88,16 +73,16 @@ class TransaksiTabunganObserverArchitectureTest extends TestCase
             "TransaksiTabungan 'creating' listener must be registered."
         );
         $this->assertTrue(
-            Event::hasListeners('eloquent.created: '.TransaksiTabungan::class),
-            "TransaksiTabungan 'created' listener must be registered."
-        );
-        $this->assertTrue(
             Event::hasListeners('eloquent.updating: '.TransaksiTabungan::class),
             "TransaksiTabungan 'updating' listener must be registered."
         );
         $this->assertTrue(
             Event::hasListeners('eloquent.deleting: '.TransaksiTabungan::class),
             "TransaksiTabungan 'deleting' listener must be registered."
+        );
+        $this->assertFalse(
+            Event::hasListeners('eloquent.created: '.TransaksiTabungan::class),
+            "TransaksiTabungan automated WhatsApp 'created' listener must NOT be registered."
         );
     }
 
@@ -197,9 +182,9 @@ class TransaksiTabunganObserverArchitectureTest extends TestCase
     }
 
     /**
-     * 5. Verify existing WhatsApp notification dispatch behavior remains unchanged.
+     * 5. Verify transactions do NOT trigger automated WhatsApp HTTP calls.
      */
-    public function test_existing_whatsapp_notification_behavior_remains_unchanged(): void
+    public function test_financial_transactions_do_not_dispatch_automated_whatsapp_http_requests(): void
     {
         $this->actingAs($this->admin);
 
@@ -214,23 +199,6 @@ class TransaksiTabunganObserverArchitectureTest extends TestCase
             'saldo_saatini' => 50000,
         ]);
 
-        Http::assertSent(function ($request) {
-            return str_contains($request->url(), 'connect.labelin.co/send-message')
-                && $request['api_key'] === 'fake-api-key'
-                && str_contains($request['message'], 'Santri Tabungan Arch')
-                && str_contains($request['message'], number_format(50000));
-        });
-    }
-
-    /**
-     * 6. Verify withdrawal transaction triggers WhatsApp notification with destination details.
-     */
-    public function test_withdrawal_transaction_triggers_whatsapp_notification_with_destination(): void
-    {
-        $this->actingAs($this->admin);
-
-        Http::fake();
-
         TransaksiTabungan::create([
             'santri_id' => $this->santri->id,
             'tanggal_transaksi' => '2026-09-20',
@@ -241,23 +209,32 @@ class TransaksiTabunganObserverArchitectureTest extends TestCase
             'tujuan' => 'Uang Saku',
         ]);
 
-        Http::assertSent(function ($request) {
-            return str_contains($request->url(), 'connect.labelin.co/send-message')
-                && str_contains($request['message'], 'Uang Saku');
-        });
+        Http::assertNothingSent();
     }
 
     /**
-     * 7. Verify disabled WhatsApp feature skips notification.
+     * 6. Verify manual WhatsApp URL helper creates valid wa.me links.
      */
-    public function test_disabled_whatsapp_feature_skips_notification(): void
+    public function test_manual_whatsapp_url_generation(): void
+    {
+        $urlWithoutMessage = Whatsapp::url('081234567890');
+        $this->assertEquals('https://wa.me/6281234567890', $urlWithoutMessage);
+
+        $urlWithMessage = Whatsapp::url('081234567890', 'Halo Santri');
+        $this->assertEquals('https://wa.me/6281234567890?text=Halo%20Santri', $urlWithMessage);
+
+        $this->assertEquals('#', Whatsapp::url(''));
+        $this->assertEquals('#', Whatsapp::url(null));
+    }
+
+    /**
+     * 7. Verify financial operations are fully autonomous without external notification services.
+     */
+    public function test_financial_operations_are_autonomous_without_notification_dependencies(): void
     {
         $this->actingAs($this->admin);
 
-        Setting::first()->update(['whatsapp_feature' => false]);
-        Http::fake();
-
-        TransaksiTabungan::create([
+        $transaction = TransaksiTabungan::create([
             'santri_id' => $this->santri->id,
             'tanggal_transaksi' => '2026-09-20',
             'jenis_transaksi' => 'Setoran',
@@ -266,6 +243,9 @@ class TransaksiTabunganObserverArchitectureTest extends TestCase
             'saldo_saatini' => 20000,
         ]);
 
-        Http::assertNothingSent();
+        $this->assertDatabaseHas('transaksi_tabungans', [
+            'id' => $transaction->id,
+            'jumlah_transaksi' => 20000,
+        ]);
     }
 }

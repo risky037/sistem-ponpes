@@ -3,16 +3,11 @@
 namespace Tests\Feature\Image;
 
 use App\Models\AlamatSantri;
-use App\Models\Kabupaten;
 use App\Models\Kamar;
-use App\Models\Kecamatan;
 use App\Models\Kelas;
-use App\Models\Kelurahan;
-use App\Models\Provinsi;
 use App\Models\Santri;
 use App\Models\Setting;
 use App\Models\User;
-use App\Models\WhatsappMessage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
@@ -29,14 +24,6 @@ class ImageProcessingSecurityTest extends TestCase
     protected Kelas $kelas;
 
     protected Kamar $kamar;
-
-    protected Provinsi $provinsi;
-
-    protected Kabupaten $kabupaten;
-
-    protected Kecamatan $kecamatan;
-
-    protected Kelurahan $kelurahan;
 
     protected Setting $setting;
 
@@ -59,11 +46,6 @@ class ImageProcessingSecurityTest extends TestCase
             'log_activity' => false,
         ]);
 
-        WhatsappMessage::create([
-            'pesan_tarik_tunai' => 'Pesan tarik tunai',
-            'pesan_setor_tunai' => 'Pesan setor tunai',
-        ]);
-
         $this->admin = User::factory()->create([
             'name' => 'Admin Image Test',
             'email' => 'admin_image@example.com',
@@ -83,20 +65,6 @@ class ImageProcessingSecurityTest extends TestCase
             'blok' => 'A',
             'maksimal_santri' => 10,
             'jumlah_santri' => 0,
-        ]);
-
-        $this->provinsi = Provinsi::create(['name' => 'Jawa Timur']);
-        $this->kabupaten = Kabupaten::create([
-            'provinsi_id' => $this->provinsi->id,
-            'name' => 'Surabaya',
-        ]);
-        $this->kecamatan = Kecamatan::create([
-            'kabupaten_id' => $this->kabupaten->id,
-            'name' => 'Wonokromo',
-        ]);
-        $this->kelurahan = Kelurahan::create([
-            'kecamatan_id' => $this->kecamatan->id,
-            'name' => 'Darmo',
         ]);
     }
 
@@ -130,11 +98,7 @@ class ImageProcessingSecurityTest extends TestCase
             'kelas' => $this->kelas->id,
             'kamar' => $this->kamar->id,
             'nama_lengkap' => 'Ahmad Fulan',
-            'provinsi_id' => $this->provinsi->id,
-            'kabupaten_id' => $this->kabupaten->id,
-            'kecamatan_id' => $this->kecamatan->id,
-            'kelurahan_id' => $this->kelurahan->id,
-            'dusun' => 'Dusun 1',
+            'alamat_lengkap' => 'Jl. Darmo No. 10, Surabaya',
             'jenis_kelamin' => 'Laki-Laki',
             'whatsapp' => '081234567890',
             'tanggal_lahir' => '2005-01-01',
@@ -177,11 +141,7 @@ class ImageProcessingSecurityTest extends TestCase
             'kelas' => $this->kelas->id,
             'kamar' => $this->kamar->id,
             'nama_lengkap' => 'Budi Santoso',
-            'provinsi_id' => $this->provinsi->id,
-            'kabupaten_id' => $this->kabupaten->id,
-            'kecamatan_id' => $this->kecamatan->id,
-            'kelurahan_id' => $this->kelurahan->id,
-            'dusun' => 'Dusun 2',
+            'alamat_lengkap' => 'Jl. Darmo No. 10, Surabaya',
             'jenis_kelamin' => 'Laki-Laki',
             'whatsapp' => '081234567891',
             'tanggal_lahir' => '2005-02-02',
@@ -246,11 +206,7 @@ class ImageProcessingSecurityTest extends TestCase
             'kelas' => $this->kelas->id,
             'kamar' => $this->kamar->id,
             'nama_lengkap' => 'Santri Update Target',
-            'provinsi_id' => $this->provinsi->id,
-            'kabupaten_id' => $this->kabupaten->id,
-            'kecamatan_id' => $this->kecamatan->id,
-            'kelurahan_id' => $this->kelurahan->id,
-            'dusun' => 'Dusun Update',
+            'alamat_lengkap' => 'Jl. Darmo No. 10, Surabaya',
             'jenis_kelamin' => 'Laki-Laki',
             'whatsapp' => '081234567999',
             'tanggal_lahir' => '2005-03-03',
@@ -308,11 +264,7 @@ class ImageProcessingSecurityTest extends TestCase
 
         AlamatSantri::create([
             'santri_id' => $santri->id,
-            'provinsi_id' => $this->provinsi->id,
-            'kabupaten_id' => $this->kabupaten->id,
-            'kecamatan_id' => $this->kecamatan->id,
-            'kelurahan_id' => $this->kelurahan->id,
-            'dusun' => 'Dusun Profil',
+            'alamat_lengkap' => 'Jl. Darmo No. 10, Surabaya',
         ]);
 
         $profilePhoto = UploadedFile::fake()->image('profile.jpg', 300, 400);
@@ -322,11 +274,7 @@ class ImageProcessingSecurityTest extends TestCase
             'tanggal_lahir' => '2005-04-04',
             'jenis_kelamin' => 'Laki-Laki',
             'whatsapp' => '081234567888',
-            'provinsi_id' => $this->provinsi->id,
-            'kabupaten_id' => $this->kabupaten->id,
-            'kecamatan_id' => $this->kecamatan->id,
-            'kelurahan_id' => $this->kelurahan->id,
-            'dusun' => 'Dusun Profil',
+            'alamat_lengkap' => 'Jl. Darmo No. 10, Surabaya',
             'nik' => '3578012345678888',
             'kk' => '3578012345678887',
             'foto' => $profilePhoto,
@@ -357,9 +305,6 @@ class ImageProcessingSecurityTest extends TestCase
         $ktsMaster = UploadedFile::fake()->image('kts_master.png', 500, 700);
 
         $response = $this->actingAs($this->admin)->patch(route('setting.update', $this->setting->id), [
-            'whatsapp_api_key' => str_repeat('a', 32),
-            'whatsapp_feature' => [1],
-            'sender' => '081234567890',
             'log_activity' => '1',
             'logo' => $logo,
             'favicon' => $favicon,
@@ -461,11 +406,7 @@ class ImageProcessingSecurityTest extends TestCase
             'kelas' => $this->kelas->id,
             'kamar' => $this->kamar->id,
             'nama_lengkap' => 'Invalid Image Santri',
-            'provinsi_id' => $this->provinsi->id,
-            'kabupaten_id' => $this->kabupaten->id,
-            'kecamatan_id' => $this->kecamatan->id,
-            'kelurahan_id' => $this->kelurahan->id,
-            'dusun' => 'Dusun Invalid',
+            'alamat_lengkap' => 'Jl. Darmo No. 10, Surabaya',
             'jenis_kelamin' => 'Laki-Laki',
             'whatsapp' => '081234567890',
             'tanggal_lahir' => '2005-01-01',

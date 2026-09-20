@@ -222,9 +222,6 @@ class SecurityHardeningTest extends TestCase
         $fakeScript = UploadedFile::fake()->create('malicious.php', 100, 'text/x-php');
 
         $response = $this->post(route('setting.store'), [
-            'whatsapp_api_key' => str_repeat('a', 32),
-            'whatsapp_feature' => [1],
-            'sender' => '081234567890',
             'log_activity' => '1',
             'logo' => $fakeScript,
             'favicon' => $fakeScript,

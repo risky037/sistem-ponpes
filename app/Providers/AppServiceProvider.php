@@ -10,15 +10,16 @@ use App\Models\Tabungan;
 use App\Models\TransaksiTabungan;
 use App\Models\Transfer;
 use App\Models\User;
+use App\Models\WaliSantri;
 use App\Observers\KamarObserver;
 use App\Observers\KelasObserver;
 use App\Observers\SantriObserver;
 use App\Observers\SettingObserver;
 use App\Observers\TabunganObserver;
 use App\Observers\TransaksiTabunganActivityObserver;
-use App\Observers\TransaksiTabunganObserver;
 use App\Observers\TransferObserver;
 use App\Observers\UserObserver;
+use App\Observers\WaliSantriObserver;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         Transfer::observe(TransferObserver::class);
         Santri::observe(SantriObserver::class);
         TransaksiTabungan::observe(TransaksiTabunganActivityObserver::class);
-        TransaksiTabungan::observe(TransaksiTabunganObserver::class);
+        WaliSantri::observe(WaliSantriObserver::class);
 
         Gate::policy(User::class, UserPolicy::class);
 

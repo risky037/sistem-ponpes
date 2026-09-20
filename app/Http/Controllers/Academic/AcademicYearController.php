@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Http\Controllers\Academic;
+
+use App\Http\Controllers\Controller;
+use App\Models\AcademicYear;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Toastr;
+use Yajra\DataTables\Facades\DataTables;
+
+class AcademicYearController extends Controller
+{
+    public function index()
+    {
+        if (request()->ajax()) {
+            $academicYears = AcademicYear::query()->orderBy('start_date', 'desc');
+
+            return DataTables::of($academicYears)
+                ->addIndexColumn()
+                ->editColumn('is_active', function ($row) {
+                    return $row->is_active
+                        ? '<span class="badge bg-success">Aktif</span>'
+                        : '<span class="badge bg-secondary">Tidak Aktif</span>';
+                })
+                ->addColumn('action', 'pages.academic.academic_year.include.action')
+                ->rawColumns(['is_active', 'action'])
+                ->toJson();
+        }
+
+        return view('pages.academic.academic_year.index');
+    }
+
+    public function create()
+    {
+        return view('pages.academic.academic_year.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'semester' => 'required|string|in:Ganjil,Genap',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        try {
+            $validated['is_active'] = $request->boolean('is_active');
+            if ($validated['is_active']) {
+                AcademicYear::where('is_active', true)->update(['is_active' => false]);
+            }
+
+            AcademicYear::create($validated);
+            Toastr::success('Berhasil menambah tahun ajaran');
+
+            return redirect()->route('academic-year.index');
+        } catch (\Throwable $th) {
+            Log::error('AcademicYearController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal menambah tahun ajaran');
+
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function edit(AcademicYear $academicYear)
+    {
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json($academicYear);
+        }
+
+        return view('pages.academic.academic_year.edit', compact('academicYear'));
+    }
+
+    public function update(Request $request, AcademicYear $academicYear)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'semester' => 'required|string|in:Ganjil,Genap',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        try {
+            $validated['is_active'] = $request->boolean('is_active');
+            if ($validated['is_active']) {
+                AcademicYear::where('id', '!=', $academicYear->id)->update(['is_active' => false]);
+            }
+
+            $academicYear->update($validated);
+            Toastr::success('Berhasil memperbarui tahun ajaran');
+
+            return redirect()->route('academic-year.index');
+        } catch (\Throwable $th) {
+            Log::error('AcademicYearController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal memperbarui tahun ajaran');
+
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function destroy(AcademicYear $academicYear)
+    {
+        try {
+            $academicYear->delete();
+            Toastr::success('Berhasil menghapus tahun ajaran');
+
+            return redirect()->route('academic-year.index');
+        } catch (\Throwable $th) {
+            Log::error('AcademicYearController destroy error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal menghapus tahun ajaran');
+
+            return redirect()->back();
+        }
+    }
+}

@@ -129,11 +129,7 @@ class ProfileAuthorizationTest extends TestCase
             'tanggal_lahir' => '2000-01-01',
             'jenis_kelamin' => 'Laki-Laki',
             'whatsapp' => '081234567890',
-            'provinsi_id' => 1,
-            'kabupaten_id' => 1,
-            'kecamatan_id' => 1,
-            'kelurahan_id' => 1,
-            'dusun' => 'Dusun 1',
+            'alamat_lengkap' => 'Jl. Kebon Jeruk No. 1, Jakarta',
             'nik' => '1234567890123456',
             'kk' => '1234567890123456',
         ]);

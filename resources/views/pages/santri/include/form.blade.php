@@ -51,75 +51,16 @@
         </div>
     </div>
 </div>
-@if (isset($item))
-    <div class="row mb-2" id="edit_alamat">
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='provinsi_id' id="provinsi_id-{{ $item->id }}" label='Provinsi'>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='kabupaten_id' id="kabupaten_id-{{ $item->id }}" label='Kabupaten'>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='kecamatan_id' id="kecamatan_id-{{ $item->id }}" label='Kecamatan'>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='kelurahan_id' id="kelurahan_id-{{ $item->id }}" label='Desa / Kelurahan'>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-2">
-                <x-input type='text' name='dusun' id="dusun" label='Dusun' placeholder='Dusun'
-                    value="{{ isset($item->alamat_santri) ? $item->alamat_santri->dusun : old('dusun') }}"></x-input>
-            </div>
+<div class="row mb-2">
+    <div class="col-12">
+        <div class="mb-2">
+            <x-input type='text' name='alamat_lengkap' id="alamat_lengkap" label='Alamat Lengkap'
+                placeholder='Alamat Lengkap (Jl, Dusun, RT/RW, Desa, Kec, Kab, Prov)'
+                value="{{ isset($item->alamat_santri) ? $item->alamat_santri->alamat_lengkap : old('alamat_lengkap') }}"
+                attribute="required"></x-input>
         </div>
     </div>
-@else
-    <div class="row mb-2">
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='provinsi_id' id="provinsi_id" label='Provinsi' attribute="required">
-                    <option value="" selected disabled>Pilih Provinsi</option>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='kabupaten_id' id="kabupaten_id" label='Kabupaten' attribute="required">
-                    <option value="" selected disabled>Pilih Kabupaten</option>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='kecamatan_id' id="kecamatan_id" label='Kecamatan' attribute="required">
-                    <option value="" selected disabled>Pilih Kecamatan</option>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-2">
-                <x-select-option name='kelurahan_id' id="kelurahan_id" label='Desa / Kelurahan' attribute="required">
-                    <option value="" selected disabled>Pilih Kelurahan</option>
-                </x-select-option>
-            </div>
-        </div>
-        <div class="col">
-            <x-input type="text" name="dusun" id="dusun" value="{{ old('dusun') }}" label="Dusun"
-                placeholder="Dusun"></x-input>
-        </div>
-    </div>
-@endif
+</div>
 <div class="row mb-2">
     <div class="col-6">
         <div class="mb-2">

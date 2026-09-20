@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Whatsapp;
 use App\Http\Requests\SettingRequest;
 use App\Models\Setting;
-use App\Models\WhatsappMessage;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Laravel\Facades\Image;
 use Toastr;
@@ -16,9 +13,8 @@ class SettingController extends Controller
     public function index()
     {
         $setting = Setting::first();
-        $whatsapp = WhatsappMessage::first();
 
-        return view('pages.setting.index', compact('setting', 'whatsapp'));
+        return view('pages.setting.index', compact('setting'));
     }
 
     public function store(SettingRequest $request)
@@ -88,8 +84,6 @@ class SettingController extends Controller
     {
         $validate = $request->validated();
         try {
-            $validate['whatsapp_feature'] = $validate['whatsapp_feature'][0];
-            $validate['sender'] = Whatsapp::make($request->input('sender', $validate['sender'] ?? null));
             $logo = request()->file('logo');
             if (isset($logo) == true) {
                 $path = storage_path('app/public/uploads/setting/');
@@ -151,32 +145,6 @@ class SettingController extends Controller
                 'exception' => $th,
             ]);
             Toastr::error('Gagal merubah data setting!');
-
-            return redirect()->back();
-        }
-    }
-
-    public function whatsapp(Request $request)
-    {
-        try {
-            $whatsapp = WhatsappMessage::first();
-            if ($whatsapp) {
-                $whatsapp->update($request->all());
-            } else {
-                WhatsappMessage::create($request->all());
-            }
-            Toastr::success('Berhasil menyimpan data');
-
-            return redirect()->back();
-        } catch (\Throwable $th) {
-            Log::error('SettingController whatsapp error: '.$th->getMessage(), [
-                'user_id' => auth()->id(),
-                'request_uri' => request()->fullUrl(),
-                'method' => request()->method(),
-                'ip' => request()->ip(),
-                'exception' => $th,
-            ]);
-            Toastr::error('Gagal menyimpan data');
 
             return redirect()->back();
         }

@@ -1,8 +1,6 @@
 <?php
 
 use App\Helpers\Helper;
-use App\Helpers\Ping;
-use App\Helpers\Sinkron;
 use App\Providers\AppServiceProvider;
 use App\Providers\ViewServiceProvider;
 use Illuminate\Support\Facades\Facade;
@@ -12,8 +10,6 @@ use Milon\Barcode\Facades\DNS1DFacade;
 use Milon\Barcode\Facades\DNS2DFacade;
 
 return [
-
-    'domain' => env('APP_DOMAIN', '@digitren.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -193,8 +189,6 @@ return [
         'DNS1D' => DNS1DFacade::class,
         'DNS2D' => DNS2DFacade::class,
         'Helper' => Helper::class,
-        'Ping' => Ping::class,
-        'Sinkron' => Sinkron::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

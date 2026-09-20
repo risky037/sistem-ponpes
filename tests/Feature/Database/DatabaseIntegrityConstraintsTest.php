@@ -31,7 +31,6 @@ class DatabaseIntegrityConstraintsTest extends TestCase
 
         Setting::firstOrCreate([
             'log_activity' => false,
-            'whatsapp_feature' => false,
         ]);
 
         $this->admin = User::create([

@@ -10,6 +10,7 @@ use App\Models\Setting;
 use App\Models\Tabungan;
 use App\Models\Transfer;
 use App\Models\User;
+use App\Models\WaliSantri;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Spatie\Permission\Models\Role;
@@ -66,9 +67,9 @@ class ObserverArchitectureTest extends TestCase
     }
 
     /**
-     * 1. Verify all six logging observers are registered in the event dispatcher.
+     * 1. Verify all logging observers are registered in the event dispatcher.
      */
-    public function test_all_six_logging_observers_are_registered(): void
+    public function test_all_logging_observers_are_registered(): void
     {
         $observedModels = [
             User::class,
@@ -77,6 +78,7 @@ class ObserverArchitectureTest extends TestCase
             Kamar::class,
             Tabungan::class,
             Transfer::class,
+            WaliSantri::class,
         ];
 
         foreach ($observedModels as $model) {
@@ -181,7 +183,7 @@ class ObserverArchitectureTest extends TestCase
         $lastLogId = ActivityLog::max('id') ?? 0;
 
         $setting->update([
-            'whatsapp_feature' => true,
+            'log_activity' => ! $setting->log_activity,
         ]);
 
         $newLogs = ActivityLog::where('id', '>', $lastLogId)->get();
@@ -232,5 +234,27 @@ class ObserverArchitectureTest extends TestCase
         $newLogs = ActivityLog::where('id', '>', $lastLogId)->get();
         $this->assertCount(1, $newLogs);
         $this->assertStringContainsString('Creating Transfer 25000', $newLogs->first()->activity);
+    }
+
+    /**
+     * 7. Verify WaliSantriObserver records activity logs.
+     */
+    public function test_wali_santri_observer_creates_activity_log(): void
+    {
+        $this->actingAs($this->admin);
+
+        $santri = $this->createSantri('Santri Wali Test', '14450103');
+
+        $lastLogId = ActivityLog::max('id') ?? 0;
+
+        $wali = WaliSantri::create([
+            'santri_id' => $santri->id,
+            'nama_ayah' => 'Ayah Test',
+            'nama_ibu' => 'Ibu Test',
+        ]);
+
+        $newLogs = ActivityLog::where('id', '>', $lastLogId)->get();
+        $this->assertCount(1, $newLogs);
+        $this->assertStringContainsString('Creating WaliSantri', $newLogs->first()->activity);
     }
 }

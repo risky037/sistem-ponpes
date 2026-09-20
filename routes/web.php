@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AlamatController;
+use App\Http\Controllers\Academic\AcademicYearController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Kamar\KamarController;
@@ -10,7 +10,6 @@ use App\Http\Controllers\Riwayat\RiwayatController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Santri\SantriController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\Sinkron\SinkronController;
 use App\Http\Controllers\Tabungan\SaldoDebitController;
 use App\Http\Controllers\Transaksi\TransaksiController;
 use App\Http\Controllers\TransferController;
@@ -62,6 +61,15 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/kelas/update/{kelas}', 'update')->name('update');
             Route::delete('/kelas/destroy/{kelas}', 'destroy')->name('destroy');
         });
+        // academic year (tahun ajaran)
+        Route::controller(AcademicYearController::class)->as('academic-year.')->group(function () {
+            Route::get('/academic-year', 'index')->name('index');
+            Route::get('/academic-year/create', 'create')->name('create');
+            Route::post('/academic-year', 'store')->name('store');
+            Route::get('/academic-year/{academicYear}/edit', 'edit')->name('edit');
+            Route::patch('/academic-year/{academicYear}', 'update')->name('update');
+            Route::delete('/academic-year/{academicYear}', 'destroy')->name('destroy');
+        });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {
             Route::get('/santri', 'index')->name('index');
@@ -74,11 +82,6 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/santri/update/{santri}', 'update')->name('update');
             Route::delete('/santri/destroy/{santri}', 'destroy')->name('destroy');
             Route::get('print/kts/{santri:no_induk}', 'print_kts')->name('print.kts');
-        });
-        Route::controller(SinkronController::class)->as('sync.')->group(function () {
-            Route::get('/sinkron', 'index')->name('index');
-            Route::get('/sheet/get/data', 'sync')->name('sync');
-            Route::post('/update/modules', 'update')->name('update');
         });
     });
     Route::group(['middleware' => ['role:Administrator']], function () {
@@ -105,7 +108,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('setting', 'index')->name('index');
             Route::post('setting/store', 'store')->name('store');
             Route::patch('setting/{setting}/update', 'update')->name('update');
-            Route::post('setting/whatsapp', 'whatsapp')->name('whatsapp');
         });
     });
     Route::group(['middleware' => ['role:Administrator|Keuangan']], function () {
@@ -127,10 +129,5 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/transfer', 'index')->name('index');
             Route::post('/transfer/store', 'store')->name('store');
         });
-    });
-    Route::controller(AlamatController::class)->as('alamat.')->group(function () {
-        Route::get('/kabupaten', 'kabupaten')->name('kabupaten');
-        Route::get('/kecamatan', 'kecamatan')->name('kecamatan');
-        Route::get('/kelurahan', 'kelurahan')->name('kelurahan');
     });
 });

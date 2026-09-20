@@ -15,7 +15,6 @@ class SettingSeeder extends Seeder
         Setting::firstOrCreate(
             ['id' => 1],
             [
-                'whatsapp_feature' => false,
                 'log_activity' => false,
             ]
         );

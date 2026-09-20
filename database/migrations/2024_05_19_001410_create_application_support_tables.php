@@ -19,18 +19,8 @@ return new class extends Migration
             $table->id();
             $table->string('favicon')->nullable();
             $table->string('logo')->nullable();
-            $table->boolean('whatsapp_feature')->default(false)->nullable();
             $table->string('kts_master')->nullable();
-            $table->bigInteger('sender')->nullable();
-            $table->string('whatsapp_api_key')->nullable();
             $table->boolean('log_activity')->default(false)->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('whatsapp_messages', function (Blueprint $table) {
-            $table->id();
-            $table->text('pesan_tarik_tunai')->nullable();
-            $table->text('pesan_setor_tunai')->nullable();
             $table->timestamps();
         });
 
@@ -64,7 +54,6 @@ return new class extends Migration
         Schema::dropIfExists('kamar_santris');
         Schema::dropIfExists('kelas_santris');
         Schema::dropIfExists('activity_logs');
-        Schema::dropIfExists('whatsapp_messages');
         Schema::dropIfExists('settings');
     }
 };

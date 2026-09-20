@@ -38,6 +38,13 @@
                     <div class="menu-title">Kelas</div>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('academic-year.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('academic-year.index') }}">
+                    <div class="parent-icon icon-color-2"> <i class="bx bx-calendar"></i>
+                    </div>
+                    <div class="menu-title">Tahun Ajaran</div>
+                </a>
+            </li>
             <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-4"><i class="bx bx-user"></i>
@@ -135,13 +142,6 @@
                     <div class="parent-icon icon-color-8"><i class="bx bx-history"></i>
                     </div>
                     <div class="menu-title">Riwayat</div>
-                </a>
-            </li>
-            <li class="{{ request()->routeIs('sinkronisasi.*') ? 'mm-active' : '' }}">
-                <a href="{{ route('sync.index') }}">
-                    <div class="parent-icon icon-color-9"><i class="bx bx-sync"></i>
-                    </div>
-                    <div class="menu-title">Sinkronisasi</div>
                 </a>
             </li>
         @endrole

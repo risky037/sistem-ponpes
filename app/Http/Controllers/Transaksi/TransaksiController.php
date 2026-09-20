@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Santri;
-use App\Models\Tabungan;
-use App\Models\TransaksiTabungan;
+use App\Services\FinancialTransactionService;
+use DomainException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Toastr;
 
 class TransaksiController extends Controller
 {
+    public function __construct(
+        protected FinancialTransactionService $financialTransactionService
+    ) {}
+
     public function index()
     {
         if (request()->ajax()) {
@@ -60,26 +63,11 @@ class TransaksiController extends Controller
             if ($validate['debit'] < 50000) {
                 Toastr::info('Minimal setoran Rp. 50.000');
             } else {
-                DB::transaction(function () use ($validate) {
-                    $santri = Santri::firstWhere('no_induk', $validate['santri_noinduk']);
-                    $tabungan = Tabungan::where('santri_id', $santri->id)->lockForUpdate()->firstOrFail();
-
-                    $saldoSebelumnya = $tabungan->saldo;
-                    $saldoSaatIni = $saldoSebelumnya + $validate['debit'];
-
-                    $transaksi = TransaksiTabungan::create([
-                        'santri_id' => $santri->id,
-                        'tanggal_transaksi' => date('Y-m-d'),
-                        'jenis_transaksi' => $validate['jenis_transaksi'],
-                        'jumlah_transaksi' => $validate['debit'],
-                        'saldo_sebelumnya' => $saldoSebelumnya,
-                        'saldo_saatini' => $saldoSaatIni,
-                    ]);
-
-                    $tabungan->update([
-                        'saldo' => $saldoSaatIni,
-                    ]);
-                });
+                $this->financialTransactionService->deposit(
+                    $validate['santri_noinduk'],
+                    $validate['debit'],
+                    $validate['jenis_transaksi']
+                );
 
                 Toastr::success('Berhasil menyimpan data');
             }
@@ -110,52 +98,19 @@ class TransaksiController extends Controller
             if ($validate['kredit'] < 10000) {
                 Toastr::info('Minimal penarikan 10.000 atau diatasnya');
             } else {
-                $santri = Santri::firstWhere('no_induk', $validate['santri_noinduk']);
+                $this->financialTransactionService->withdraw(
+                    $validate['santri_noinduk'],
+                    $validate['kredit'],
+                    $request->get('tujuan') ?: 'Uang Jajan',
+                    $validate['jenis_transaksi']
+                );
 
-                $executed = DB::transaction(function () use ($validate, $santri) {
-                    $tabungan = Tabungan::where('santri_id', $santri->id)->lockForUpdate()->firstOrFail();
-
-                    if ($tabungan->saldo < $validate['kredit']) {
-                        Toastr::info('Saldo tidak cukup, saldo saat ini '.$tabungan->saldo);
-
-                        return false;
-                    }
-
-                    $tr_now = TransaksiTabungan::where('santri_id', $santri->id)
-                        ->whereDate('tanggal_transaksi', now()->toDateString())
-                        ->where('jenis_transaksi', 'Penarikan')
-                        ->get();
-
-                    if (! $tr_now->isEmpty()) {
-                        Toastr::info('Santri dengan nomor induk '."$santri->no_induk".' telah selesai melakukan penarikan');
-
-                        return false;
-                    }
-
-                    $saldoSebelumnya = $tabungan->saldo;
-                    $saldoSaatIni = $saldoSebelumnya - $validate['kredit'];
-
-                    $transaksi = TransaksiTabungan::create([
-                        'santri_id' => $santri->id,
-                        'tanggal_transaksi' => date('Y-m-d'),
-                        'jenis_transaksi' => $validate['jenis_transaksi'],
-                        'jumlah_transaksi' => $validate['kredit'],
-                        'saldo_sebelumnya' => $saldoSebelumnya,
-                        'saldo_saatini' => $saldoSaatIni,
-                        'tujuan' => request()->get('tujuan') != null ? request()->get('tujuan') : 'Uang Jajan',
-                    ]);
-
-                    $tabungan->update([
-                        'saldo' => $saldoSaatIni,
-                    ]);
-
-                    return true;
-                });
-
-                if ($executed) {
-                    Toastr::success('Berhasil menyimpan data');
-                }
+                Toastr::success('Berhasil menyimpan data');
             }
+
+            return redirect()->back()->withQuery(['jenis_transaksi' => 'Penarikan']);
+        } catch (DomainException $de) {
+            Toastr::info($de->getMessage());
 
             return redirect()->back()->withQuery(['jenis_transaksi' => 'Penarikan']);
         } catch (\Throwable $th) {
@@ -170,44 +125,5 @@ class TransaksiController extends Controller
 
             return redirect()->back()->withInput();
         }
-    }
-
-    /**
-     * @deprecated Single notification flow is handled by TransaksiTabunganObserver.
-     */
-    public function send_message($santri, $tujuan, $nominal)
-    {
-        $sender = config('whatsapp.sender_number');
-        $number = isset($santri->whatsapp) ? $santri->whatsapp : '';
-        $apiKey = config('whatsapp.api_key');
-        $tanggal = now('Asia/Jakarta')->format('d-F-Y H:i:s');
-        $pesan = "*Assalamualaikum Wr. Wb.*\n\n";
-        $pesan .= "Hormat Kami,\n";
-        $pesan .= "Kami dari pengurus Pondok Pesantren *Al-Ibrohimy Masaran Sentol Daya Pragaan Sumenep* ingin memberitahukan bahwa santri sebagaimana data berikut telah melakukan transaksi tarik tunai tabungan:\n\n";
-        $pesan .= "Nama: *{$santri->user->name}*\n";
-        $pesan .= "Nominal: *Rp. {$nominal}*\n";
-        $pesan .= "Tujuan: *{$tujuan}*\n";
-        $pesan .= "Tanggal: *{$tanggal}*\n\n";
-        $pesan .= "Demikian pemberitahuan ini kami sampaikan terimakasih, dan mohon maaf telah mengganggu waktu anda.\n";
-        $pesan .= "Sekian dari kami Wassalamualaikuk Wr. Wb.\n\n";
-        $pesan .= "Hormat kami,\n";
-        $pesan .= '*Pengurus Pondok Pesantren Al-Ibrohimy*';
-        $params = [
-            'api_key' => $apiKey,
-            'sender' => $sender,
-            'number' => $number,
-            'message' => $pesan,
-        ];
-
-        // return $params;
-        $url = 'https://connect.labelin.co/send-message';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return $response;
     }
 }

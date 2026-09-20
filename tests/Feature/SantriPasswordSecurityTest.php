@@ -2,12 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Kabupaten;
 use App\Models\Kamar;
-use App\Models\Kecamatan;
 use App\Models\Kelas;
-use App\Models\Kelurahan;
-use App\Models\Provinsi;
 use App\Models\Santri;
 use App\Models\Setting;
 use App\Models\User;
@@ -25,14 +21,6 @@ class SantriPasswordSecurityTest extends TestCase
     protected Kelas $kelas;
 
     protected Kamar $kamar;
-
-    protected Provinsi $provinsi;
-
-    protected Kabupaten $kabupaten;
-
-    protected Kecamatan $kecamatan;
-
-    protected Kelurahan $kelurahan;
 
     protected function setUp(): void
     {
@@ -65,20 +53,6 @@ class SantriPasswordSecurityTest extends TestCase
             'blok' => 'A',
             'maksimal_santri' => 10,
             'jumlah_santri' => 0,
-        ]);
-
-        $this->provinsi = Provinsi::create(['name' => 'Jawa Timur']);
-        $this->kabupaten = Kabupaten::create([
-            'provinsi_id' => $this->provinsi->id,
-            'name' => 'Surabaya',
-        ]);
-        $this->kecamatan = Kecamatan::create([
-            'kabupaten_id' => $this->kabupaten->id,
-            'name' => 'Wonokromo',
-        ]);
-        $this->kelurahan = Kelurahan::create([
-            'kecamatan_id' => $this->kecamatan->id,
-            'name' => 'Darmo',
         ]);
     }
 
@@ -122,11 +96,7 @@ class SantriPasswordSecurityTest extends TestCase
             'kelas' => $this->kelas->id,
             'kamar' => $this->kamar->id,
             'nama_lengkap' => 'Santri Updated Name',
-            'provinsi_id' => $this->provinsi->id,
-            'kabupaten_id' => $this->kabupaten->id,
-            'kecamatan_id' => $this->kecamatan->id,
-            'kelurahan_id' => $this->kelurahan->id,
-            'dusun' => 'Dusun Krajan',
+            'alamat_lengkap' => 'Jl. Krajan No. 5, Surabaya',
             'jenis_kelamin' => 'Laki-Laki',
             'whatsapp' => '081234567890',
             'tanggal_lahir' => '2005-01-01',

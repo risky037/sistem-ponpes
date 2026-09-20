@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\LogActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -64,6 +65,16 @@ class Santri extends Model
     public function alamat_santri()
     {
         return $this->hasOne(AlamatSantri::class);
+    }
+
+    public function student_batch(): BelongsTo
+    {
+        return $this->belongsTo(StudentBatch::class);
+    }
+
+    public function academic_enrollments(): HasMany
+    {
+        return $this->hasMany(AcademicEnrollment::class);
     }
 
     public function pengiriman(): HasMany
