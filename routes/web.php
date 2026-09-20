@@ -3,6 +3,7 @@
 use App\Http\Controllers\Academic\AcademicCalendarEventController;
 use App\Http\Controllers\Academic\AcademicEnrollmentController;
 use App\Http\Controllers\Academic\AcademicYearController;
+use App\Http\Controllers\Academic\AttendanceController;
 use App\Http\Controllers\Academic\ClassScheduleController;
 use App\Http\Controllers\Academic\MapelController;
 use App\Http\Controllers\Academic\StudentBatchController;
@@ -126,6 +127,13 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/academic-calendar-event', 'store')->name('store');
             Route::match(['put', 'patch'], '/academic-calendar-event/{academicCalendarEvent}', 'update')->name('update');
             Route::delete('/academic-calendar-event/{academicCalendarEvent}', 'destroy')->name('destroy');
+        });
+        // attendance (presensi pembelajaran)
+        Route::controller(AttendanceController::class)->as('attendance.')->group(function () {
+            Route::get('/attendance', 'index')->name('index');
+            Route::get('/attendance/{teachingSession}/manage', 'manage')->name('manage');
+            Route::post('/attendance/{teachingSession}', 'store')->name('store');
+            Route::match(['put', 'patch'], '/attendance/record/{attendanceRecord}', 'update')->name('update');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AcademicEnrollment extends Model
 {
@@ -63,5 +64,15 @@ class AcademicEnrollment extends Model
     public function kelas(): BelongsTo
     {
         return $this->belongsTo(Kelas::class);
+    }
+
+    public function attendanceRecords(): HasMany
+    {
+        return $this->hasMany(AttendanceRecord::class, 'academic_enrollment_id');
+    }
+
+    public function attendance_records(): HasMany
+    {
+        return $this->hasMany(AttendanceRecord::class, 'academic_enrollment_id');
     }
 }

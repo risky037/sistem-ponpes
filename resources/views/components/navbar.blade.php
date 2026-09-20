@@ -94,6 +94,13 @@
                     <div class="menu-title">Kalender Akademik</div>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('attendance.*') ? 'mm-active' : '' }}">
+                <a href="{{ route('attendance.index') }}">
+                    <div class="parent-icon icon-color-3"> <i class="bx bx-check-square"></i>
+                    </div>
+                    <div class="menu-title">Presensi Kelas</div>
+                </a>
+            </li>
             <li>
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-4"><i class="bx bx-user"></i>
