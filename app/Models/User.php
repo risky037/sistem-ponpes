@@ -64,4 +64,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(StudentAssessmentScore::class, 'graded_by');
     }
+
+    public function capturedKpiSnapshots(): HasMany
+    {
+        return $this->hasMany(AcademicKpiSnapshot::class, 'captured_by');
+    }
+
+    public function captured_kpi_snapshots(): HasMany
+    {
+        return $this->hasMany(AcademicKpiSnapshot::class, 'captured_by');
+    }
 }

@@ -76,4 +76,14 @@ class AcademicYear extends Model
     {
         return $this->hasMany(AssessmentDefinition::class);
     }
+
+    public function kpiSnapshots(): HasMany
+    {
+        return $this->hasMany(AcademicKpiSnapshot::class);
+    }
+
+    public function kpi_snapshots(): HasMany
+    {
+        return $this->hasMany(AcademicKpiSnapshot::class);
+    }
 }

@@ -141,6 +141,24 @@
                     <div class="menu-title">Ekspor Data</div>
                 </a>
             </li>
+            <li class="{{ request()->routeIs('academic.intelligence.*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon icon-color-3"><i class="bx bx-analyse"></i>
+                    </div>
+                    <div class="menu-title">Intelijen Akademik</div>
+                </a>
+                <ul>
+                    <li class="{{ request()->routeIs('academic.intelligence.index') ? 'mm-active' : '' }}">
+                        <a href="{{ route('academic.intelligence.index') }}"><i class="bx bx-right-arrow-alt"></i>Dashboard KPI</a>
+                    </li>
+                    <li class="{{ request()->routeIs('academic.intelligence.workload') ? 'mm-active' : '' }}">
+                        <a href="{{ route('academic.intelligence.workload') }}"><i class="bx bx-right-arrow-alt"></i>Beban Mengajar Guru</a>
+                    </li>
+                    <li class="{{ request()->routeIs('academic.intelligence.subjects') ? 'mm-active' : '' }}">
+                        <a href="{{ route('academic.intelligence.subjects') }}"><i class="bx bx-right-arrow-alt"></i>Analisis Mapel</a>
+                    </li>
+                </ul>
+            </li>
             @endhasanyrole
             <li>
                 <a class="has-arrow" href="javascript:;">

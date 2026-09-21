@@ -4,6 +4,7 @@ use App\Http\Controllers\Academic\AcademicAdministrationController;
 use App\Http\Controllers\Academic\AcademicCalendarEventController;
 use App\Http\Controllers\Academic\AcademicEnrollmentController;
 use App\Http\Controllers\Academic\AcademicExportController;
+use App\Http\Controllers\Academic\AcademicIntelligenceController;
 use App\Http\Controllers\Academic\AcademicPerformanceController;
 use App\Http\Controllers\Academic\AcademicYearController;
 use App\Http\Controllers\Academic\AssessmentController;
@@ -174,6 +175,14 @@ Route::middleware(['auth'])->group(function () {
             Route::match(['get', 'post'], '/attendance', 'exportAttendance')->name('attendance')->middleware('can:export.attendance');
             Route::match(['get', 'post'], '/assessment', 'exportAssessment')->name('assessment')->middleware('can:export.assessment');
             Route::match(['get', 'post'], '/performance', 'exportPerformance')->name('performance')->middleware('can:export.performance');
+        });
+        // academic intelligence (intelijen & analitik akademik)
+        Route::controller(AcademicIntelligenceController::class)->prefix('academic/intelligence')->as('academic.intelligence.')->group(function () {
+            Route::get('/', 'index')->name('index')->middleware('can:intelligence.index');
+            Route::get('/workload', 'workload')->name('workload')->middleware('can:intelligence.workload');
+            Route::get('/subjects', 'subjectAnalytics')->name('subjects')->middleware('can:intelligence.analytics');
+            Route::post('/year/{year}/refresh', 'refresh')->name('refresh')->middleware('can:intelligence.dashboard');
+            Route::post('/year/{year}/snapshot', 'snapshot')->name('snapshot')->middleware('can:intelligence.snapshot');
         });
         // santri dan kelas santri
         Route::controller(SantriController::class)->as('santri.')->group(function () {
