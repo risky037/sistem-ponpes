@@ -27,6 +27,23 @@
         </div>
     </x-edit-modal>
 
+    <button data-bs-toggle="modal" data-bs-target="#resetPasswordModal-{{ $model->id }}" class="btn btn-sm btn-warning text-white" title="Reset Password">
+        <span class="bx bx-key"> </span>
+    </button>
+    <x-modal-form id="resetPasswordModal-{{ $model->id }}" title="Reset Password Pengguna" fn="{{ route('users.reset-password', $model->id) }}" method="POST" icon="bx-key">
+        @csrf
+        @method('PATCH')
+        <div class="alert alert-info border-0 bg-light-info py-2 mb-3">
+            <small class="text-dark">Atur ulang password untuk akun <strong>{{ $model->name }}</strong> ({{ $model->email }}).</small>
+        </div>
+        <div class="mb-3">
+            <x-input type="password" name="password" id="reset_password_{{ $model->id }}" label="Password Baru" placeholder="Minimal 8 karakter" attribute="required minlength=8"></x-input>
+        </div>
+        <div class="mb-3">
+            <x-input type="password" name="password_confirmation" id="reset_password_confirmation_{{ $model->id }}" label="Konfirmasi Password Baru" placeholder="Ulangi password baru" attribute="required minlength=8"></x-input>
+        </div>
+    </x-modal-form>
+
     <button data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $model->id }}" class="btn btn-sm btn-danger">
         <span class="bx bx-trash"> </span>
     </button>

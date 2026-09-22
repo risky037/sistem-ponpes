@@ -24,6 +24,7 @@ use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -45,6 +46,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        Blade::directive('formatDate', function ($expression) {
+            return "<?php echo \App\Helpers\Helper::formatDate($expression); ?>";
+        });
+
         User::observe(UserObserver::class);
         Setting::observe(SettingObserver::class);
         Kelas::observe(KelasObserver::class);

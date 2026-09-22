@@ -21,7 +21,7 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="table-responsive">
-                                        <table class="table table-striped dataTable" style="width:100%" role="grid"
+                                        <table class="table table-hover dataTable" style="width:100%" role="grid"
                                             id="table">
                                             <thead>
                                                 <tr>
@@ -37,8 +37,8 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->name }}</td>
-                                                        <td>{{ $item->created_at->format('d F Y') }}</td>
-                                                        <td>{{ $item->updated_at->format('d F Y') }}</td>
+                                                        <td>@formatDate($item->created_at)</td>
+                                                        <td>@formatDate($item->updated_at)</td>
                                                         <td>
                                                             <div class="btn-group pull-right">
                                                                 <button data-bs-toggle="modal"

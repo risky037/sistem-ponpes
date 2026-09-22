@@ -9,6 +9,7 @@ use App\Imports\SantriImport;
 use App\Models\Santri;
 use App\Services\SantriLifecycleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Toastr;
@@ -86,9 +87,16 @@ class SantriController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('SantriController store error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menambah data');
 
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -113,6 +121,13 @@ class SantriController extends Controller
 
             return redirect()->back();
         } catch (\Throwable $th) {
+            Log::error('SantriController update error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal merubah data');
 
             return redirect()->back()->withInput();
@@ -127,6 +142,13 @@ class SantriController extends Controller
 
             return to_route('santri.index');
         } catch (\Throwable $th) {
+            Log::error('SantriController destroy error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
             Toastr::error('Gagal menghapus data');
 
             return redirect()->back();

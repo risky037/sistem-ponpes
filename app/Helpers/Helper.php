@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Santri;
+use Illuminate\Support\Carbon;
 
 class Helper
 {
@@ -62,5 +63,28 @@ class Helper
         ];
 
         return $bulanIndonesia[$params];
+    }
+
+    /**
+     * Format a date string or Carbon instance to a localized readable Indonesian format.
+     *
+     * @param  string|\DateTimeInterface|null  $date
+     * @param  string  $format  Default is 'd F Y' (e.g. 05 Januari 2025)
+     */
+    public static function formatDate($date, string $format = 'd F Y'): string
+    {
+        if (empty($date)) {
+            return '-';
+        }
+
+        try {
+            if ($date instanceof \DateTimeInterface) {
+                return Carbon::instance($date)->locale('id')->translatedFormat($format);
+            }
+
+            return Carbon::parse($date)->locale('id')->translatedFormat($format);
+        } catch (\Throwable) {
+            return (string) $date;
+        }
     }
 }

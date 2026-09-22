@@ -153,7 +153,7 @@
                             <!-- Attendance Tab -->
                             <div class="tab-pane fade show active" id="tab-attendance" role="tabpanel">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped align-middle">
+                                    <table class="table table-bordered table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 5%">#</th>
@@ -199,7 +199,7 @@
                             <!-- Scores Tab -->
                             <div class="tab-pane fade" id="tab-scores" role="tabpanel">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped align-middle">
+                                    <table class="table table-bordered table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 5%">#</th>

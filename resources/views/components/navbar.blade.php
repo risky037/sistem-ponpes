@@ -101,7 +101,8 @@
                     <div class="menu-title">Presensi Kelas</div>
                 </a>
             </li>
-            @hasanyrole('Administrator|Pengurus')
+            @hasanyrole('Administrator|Pengurus|Guru')
+            @canany(['assessment.definition.index', 'assessment.score.index', 'assessment.input'])
             <li class="{{ request()->routeIs('assessment.*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-5"><i class="bx bx-clipboard"></i>
@@ -109,17 +110,23 @@
                     <div class="menu-title">Penilaian</div>
                 </a>
                 <ul>
+                    @can('assessment.definition.index')
                     <li class="{{ request()->routeIs('assessment.definition.*') ? 'mm-active' : '' }}">
                         <a href="{{ route('assessment.definition.index') }}"><i class="bx bx-right-arrow-alt"></i>Definisi Nilai</a>
                     </li>
                     <li class="{{ request()->routeIs('assessment.component.*') ? 'mm-active' : '' }}">
                         <a href="{{ route('assessment.component.index') }}"><i class="bx bx-right-arrow-alt"></i>Komponen Nilai</a>
                     </li>
+                    @endcan
+                    @canany(['assessment.score.index', 'assessment.input'])
                     <li class="{{ request()->routeIs('assessment.score.*') ? 'mm-active' : '' }}">
                         <a href="{{ route('assessment.score.index') }}"><i class="bx bx-right-arrow-alt"></i>Input Nilai</a>
                     </li>
+                    @endcanany
                 </ul>
             </li>
+            @endcanany
+            @can('performance.index')
             <li class="{{ request()->routeIs('academic.performance.*') ? 'mm-active' : '' }}">
                 <a href="{{ route('academic.performance.index') }}">
                     <div class="parent-icon icon-color-6"><i class="bx bx-bar-chart-alt-2"></i>
@@ -127,6 +134,8 @@
                     <div class="menu-title">Performa Akademik</div>
                 </a>
             </li>
+            @endcan
+            @can('export.index')
             <li class="{{ request()->routeIs('academic.administration.*') ? 'mm-active' : '' }}">
                 <a href="{{ route('academic.administration.index') }}">
                     <div class="parent-icon icon-color-1"><i class="bx bx-grid-alt"></i>
@@ -141,6 +150,8 @@
                     <div class="menu-title">Ekspor Data</div>
                 </a>
             </li>
+            @endcan
+            @can('intelligence.index')
             <li class="{{ request()->routeIs('academic.intelligence.*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="javascript:;">
                     <div class="parent-icon icon-color-3"><i class="bx bx-analyse"></i>
@@ -159,6 +170,7 @@
                     </li>
                 </ul>
             </li>
+            @endcan
             @endhasanyrole
             <li>
                 <a class="has-arrow" href="javascript:;">

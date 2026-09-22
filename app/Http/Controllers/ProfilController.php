@@ -27,7 +27,11 @@ class ProfilController extends Controller
         Gate::authorize('updateAccount', $user);
 
         try {
-            $user->update($request->validated());
+            $data = $request->validated();
+            if (empty($data['password'])) {
+                unset($data['password']);
+            }
+            $user->update($data);
             Toastr::success('Berhasil merubah data');
 
             return redirect()->back();

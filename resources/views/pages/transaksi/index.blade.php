@@ -10,16 +10,16 @@
             <div class="page-content-wrapper">
                 <div class="page-content">
                     <x-breadcrumb url="{{ route('dashboard') }}" attribute="required" path='Transaksi'></x-breadcrumb>
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row">
+                    <div class="card radius-15 border shadow-sm">
+                        <div class="card-header border-bottom py-3">
+                            <div class="row align-items-center">
                                 <div class="col">
-                                    <h1 class="card-title">Transaksi
+                                    <h5 class="card-title font-weight-bold mb-0">Transaksi
                                         {{ request()->get('jenis_transaksi') ? request()->get('jenis_transaksi') : 'Setoran' }}
-                                    </h1>
+                                    </h5>
                                 </div>
-                                <div class="col text-end">
-                                    <select name="select" id="select" class="form-control">
+                                <div class="col-auto">
+                                    <select name="select" id="select" class="form-select">
                                         <option value="Setoran"
                                             {{ request()->get('jenis_transaksi') != null
                                                 ? (request()->get('jenis_transaksi') == 'Setoran'
@@ -69,13 +69,12 @@
                             @else
                                 @include('pages.transaksi.penarikan')
                             @endif
-                            <div class="col border rounded {{ request()->get('jenis_transaksi') != null
+                            <div class="col-12 border-0 rounded radius-15 {{ request()->get('jenis_transaksi') != null
                                 ? (request()->get('jenis_transaksi') == 'Setoran'
                                     ? 'bg-info'
                                     : 'bg-danger')
-                                : 'bg-info' }} text-white text-center"
-                                style="margin-top: -1%">
-                                <h1 class="fw-bold">Saldo : Rp. <span id="saldo">000000</span></h1>
+                                : 'bg-info' }} text-white text-center py-3 mt-3 shadow-sm">
+                                <h4 class="fw-bold mb-0 text-white">Saldo : Rp <span id="saldo">0</span></h4>
                             </div>
                         </div>
                     </div>

@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/profil/account/{user}', 'account')->name('account');
         Route::post('/profil/biodata/{user}', 'biodata')->name('biodata');
     });
-    Route::group(['middleware' => ['role:Administrator|Pengurus']], function () {
+    Route::group(['middleware' => ['role:Administrator|Pengurus|Guru']], function () {
         // kamar
         Route::controller(KamarController::class)->as('kamar.')->group(function () {
             Route::get('/kamar', 'index')->name('index');
@@ -211,6 +211,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/users', 'index')->name('index');
             Route::post('/users', 'store')->name('store');
             Route::patch('/users/{user}/update', 'update')->name('update');
+            Route::patch('/users/{user}/reset-password', 'resetPassword')->name('reset-password');
+            Route::patch('/users/{user}/reset_password', 'resetPassword')->name('reset_password');
             Route::delete('/users/{user}/destroy', 'destroy')->name('destroy');
         });
         // riwayat

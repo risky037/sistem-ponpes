@@ -9,12 +9,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- **[Phase 5.8.7D] Academic Intelligence Layer:**
-  - Operational analytics and institutional telemetry
-  - Teacher workload distribution and capacity analytics
-  - Academic Key Performance Indicators (KPIs)
-  - Predictive insights on student attendance and subject mastery
+---
+
+## [5.8.7E] - 2026-09-22
+
+### Added
+- **Design Token & Dark Mode System (`app.css`)**:
+  - CSS variables for brand colors (`--pesantren-primary`, `--pesantren-secondary`, `--pesantren-accent`), card backgrounds, text, and borders.
+  - Reusable gradient utility classes (`.bg-brand-gradient`, `.bg-intelligence-gradient`, `.bg-subject-gradient`, `.bg-workload-gradient`).
+  - Semantic color classes (`.text-teal`, `.bg-teal`, `.text-amber`, `.bg-amber`, `.bg-primary-subtle-brand`).
+- **Dedicated Guru Role & Permission Matrix**:
+  - Registered `Guru` role in `config/permission.php` and `RolePermissionSeeder`.
+  - Added dedicated permissions: `attendance.manage`, `assessment.input`, `teaching.schedule.view`, `class.schedule.view`.
+  - Granular `@can` / `@canany` navbar gates for Guru role.
+- **Role-Aware Dashboard & Portals**:
+  - `Santri` Portal (`pages.portal.santri`): Personal read-only portal showing profile info, active class, room, attendance KPI stats, and assessment score rekap with strict boundary enforcement (no financial data, no modification).
+  - `Guru` Portal (`pages.portal.guru`): Teacher dashboard showing active academic year, assigned subjects/classes, weekly schedule, and quick links for Presensi and Nilai input.
+  - `DashboardController` role-aware dispatcher automatically rendering corresponding portal based on user roles.
+- **Admin Password Reset**:
+  - Administrator endpoint `PATCH /users/{user}/reset-password` (and `users.reset_password` alias) with confirmation modal.
+  - Optional password updating in profile account editing (`nullable` validation in `AccountRequest`).
+- **Demo Data Architecture**:
+  - Artisan command `php artisan demo:install {--fresh} {--santri=20}`.
+  - `DemoDataSeeder` generating complete presentation-ready dataset: Administrator, Pengurus, Keuangan, 3 Asatidz (Guru), enrolled Santri, classes, rooms, academic years, teaching assignments, schedules, completed sessions, attendance records, assessment definitions, components, scores, and performance summaries.
+  - Model factories: `SantriFactory`, `KelasFactory`, `MapelFactory`, `AcademicYearFactory`.
+- **Date Formatting Standardization**:
+  - Centralized helper `Helper::formatDate($date, $format = 'd F Y')`.
+  - Registered `@formatDate()` Blade directive.
+- **Automated Tests**:
+  - `Tests\Feature\RolePortalTest` with 7 comprehensive feature tests covering portals, password reset, and demo installer (total suite: 325 passed, 1264 assertions).
+
+### Changed
+- Standardized all tables across 23 Blade templates: replaced `table-striped` with clean `.table-hover` surfaces compatible with dark mode.
+- Synchronized `modal-form.blade.php` and `edit-modal.blade.php` with centered layout, rounded corners (`radius-15`), and consistent action buttons.
+- Enhanced `SantriController`: added structured logging on errors (`Log::error`) and input preservation (`withInput()`).
+- Refactored `pages/transaksi/index.blade.php` to clean card header and remove negative margin hack.
+- Removed phantom `kode` column from Kamar and Kelas DataTables.
+
+---
+
+## [5.8.7D] - 2026-09-21
+
+### Added
+- **Academic Intelligence Layer (`academic/intelligence`)**:
+  - Macro-level executive dashboard presenting institutional vital signs, attendance analytics, score distribution brackets, teacher workload, and class operational health.
+  - Materialized snapshot archiving via `academic_kpi_snapshots` table and `AcademicKpiSnapshot` model.
+  - In-memory hybrid caching with 30-minute TTL and on-demand refresh.
+  - Full suite tests bringing total assertions to 318 passed (1226 assertions).
 
 ---
 

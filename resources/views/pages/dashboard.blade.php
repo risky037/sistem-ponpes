@@ -7,7 +7,7 @@
         <div class="page-content-wrapper">
             <div class="page-content">
                 <!-- Welcome Banner -->
-                <div class="card radius-15 border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #157347 0%, #0f5132 100%); color: #fff;">
+                <div class="card radius-15 border-0 shadow-sm mb-4 bg-brand-gradient">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div>
@@ -35,7 +35,7 @@
                                         <h3 class="mb-0 font-weight-bold text-dark">{{ number_format($total_santri) }}</h3>
                                         <small class="text-muted">Seluruh Santri Terdata</small>
                                     </div>
-                                    <div class="widgets-icons ms-auto rounded-circle text-white" style="background-color: var(--pesantren-primary, #157347);">
+                                    <div class="widgets-icons ms-auto rounded-circle text-white" style="background-color: var(--pesantren-primary);">
                                         <i class='bx bx-group'></i>
                                     </div>
                                 </div>
@@ -104,10 +104,10 @@
                                 <div class="d-flex align-items-center">
                                     <div>
                                         <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Santri Aktif Putri</p>
-                                        <h3 class="mb-0 font-weight-bold" style="color: #0d9488;">{{ number_format($putri) }}</h3>
+                                        <h3 class="mb-0 font-weight-bold text-teal">{{ number_format($putri) }}</h3>
                                         <small class="text-muted">Asrama Putri</small>
                                     </div>
-                                    <div class="widgets-icons ms-auto rounded-circle text-white" style="background-color: #0d9488;">
+                                    <div class="widgets-icons ms-auto rounded-circle text-white bg-teal">
                                         <i class='bx bx-user'></i>
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@
                                         <h3 class="mb-0 font-weight-bold text-dark">{{ number_format($pengurus) }}</h3>
                                         <small class="text-muted">Staf & Dewan Asatidz</small>
                                     </div>
-                                    <div class="widgets-icons ms-auto rounded-circle text-white" style="background-color: #b45309;">
+                                    <div class="widgets-icons ms-auto rounded-circle text-white bg-amber">
                                         <i class='bx bx-badge-check'></i>
                                     </div>
                                 </div>

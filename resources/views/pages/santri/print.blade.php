@@ -74,7 +74,7 @@
 
     {{-- biodata --}}
     <p style="position: absolute; margin-top: -26rem; margin-left: 34%; font-size: 27px; color: #333333">
-        {{ ucwords($santri->tempat_lahir . ', ' . date('d-m-Y', strtotime($santri->tanggal_lahir))) }}</p>
+        {{ ucwords($santri->tempat_lahir) . ', ' . \App\Helpers\Helper::formatDate($santri->tanggal_lahir) }}</p>
     <p style="position: absolute; margin-top: -21.2rem; margin-left: 34%; font-size: 27px; color: #333333">
         {{ ucwords($santri->wali_santri->nama_ayah) }}</p>
     <p style="position: absolute; margin-top: -18.7rem; margin-left: 34%; font-size: 27px; color: #333333">

@@ -9,7 +9,7 @@
                 <x-breadcrumb url="{{ route('academic.intelligence.index') }}" path='Analisis Mata Pelajaran'></x-breadcrumb>
 
                 {{-- Header Filter & Info Bar --}}
-                <div class="card radius-15 border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #6f42c1 0%, #59359a 100%); color: #fff;">
+                <div class="card radius-15 border-0 shadow-sm mb-4 bg-subject-gradient">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div>

@@ -26,7 +26,7 @@ class AccountRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($this->route('user'))],
-            'password' => ['required', 'min:8', 'confirmed'],
+            'password' => ['nullable', 'min:8', 'confirmed'],
         ];
     }
 }

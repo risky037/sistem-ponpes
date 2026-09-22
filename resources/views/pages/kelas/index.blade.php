@@ -21,12 +21,11 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="table-responsive">
-                                        <table class="table table-striped dataTable" style="width:100%" role="grid"
+                                        <table class="table table-hover dataTable" style="width:100%" role="grid"
                                             id="table">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Kode Kelas</th>
                                                     <th>Tingkat</th>
                                                     <th>Kelas</th>
                                                     <th>Keterangan</th>
@@ -72,9 +71,6 @@
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false,
-                }, {
-                    data: 'kode',
-                    name: 'kode'
                 }, {
                     data: 'tingkatan',
                     name: 'tingkatan'

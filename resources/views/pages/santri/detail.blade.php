@@ -83,7 +83,7 @@
                                 </h6>
                             </div>
                             <div class="card-body p-0">
-                                <table class="table table-borderless table-striped mb-0 font-14">
+                                <table class="table table-borderless table-hover mb-0 font-14">
                                     <tbody>
                                         <tr>
                                             <th class="ps-3 text-muted" style="width: 40%;">Nomor Induk Santri</th>
@@ -99,7 +99,7 @@
                                         </tr>
                                         <tr>
                                             <th class="ps-3 text-muted">Tempat, Tanggal Lahir</th>
-                                            <td>{{ $item->tempat_lahir }}, {{ \Illuminate\Support\Carbon::parse($item->tanggal_lahir)->translatedFormat('d F Y') }}</td>
+                                            <td>{{ $item->tempat_lahir }}, @formatDate($item->tanggal_lahir)</td>
                                         </tr>
                                         <tr>
                                             <th class="ps-3 text-muted">Jenis Kelamin</th>
@@ -126,7 +126,7 @@
                                 </h6>
                             </div>
                             <div class="card-body p-0">
-                                <table class="table table-borderless table-striped mb-0 font-14">
+                                <table class="table table-borderless table-hover mb-0 font-14">
                                     <tbody>
                                         <tr>
                                             <th class="ps-3 text-muted" style="width: 40%;">Nama Ayah</th>
@@ -198,7 +198,7 @@
                                 </h6>
                             </div>
                             <div class="card-body p-0">
-                                <table class="table table-borderless table-striped mb-0 font-14">
+                                <table class="table table-borderless table-hover mb-0 font-14">
                                     <tbody>
                                         <tr>
                                             <th class="ps-3 text-muted" style="width: 40%;">Status Santri</th>
@@ -239,7 +239,7 @@
                                         @if ($item->status === 'Santri Alumni')
                                             <tr>
                                                 <th class="ps-3 text-muted">Tanggal Boyong</th>
-                                                <td>{{ $item->tanggal_boyong ?? '-' }} ({{ $item->tanggal_boyong_hijriyah ?? '-' }} H)</td>
+                                                <td>@formatDate($item->tanggal_boyong) ({{ $item->tanggal_boyong_hijriyah ?? '-' }} H)</td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -257,7 +257,7 @@
                             <div class="card-body p-0">
                                 @if ($item->academic_enrollments && $item->academic_enrollments->count() > 0)
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped align-middle mb-0 font-13">
+                                        <table class="table table-bordered table-hover align-middle mb-0 font-13">
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>Tahun Ajaran</th>

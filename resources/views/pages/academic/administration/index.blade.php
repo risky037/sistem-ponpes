@@ -165,7 +165,7 @@
                             <a href="{{ route('academic.export.index') }}" class="btn btn-sm btn-outline-secondary">Lihat Semua Log</a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped align-middle mb-0">
+                            <table class="table table-bordered table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width: 5%">#</th>

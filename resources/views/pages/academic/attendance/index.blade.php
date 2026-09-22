@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered align-middle dataTable" style="width:100%" role="grid"
+                                    <table class="table table-hover table-bordered align-middle dataTable" style="width:100%" role="grid"
                                         id="table">
                                         <thead>
                                             <tr>

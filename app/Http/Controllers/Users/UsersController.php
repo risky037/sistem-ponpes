@@ -138,4 +138,33 @@ class UsersController extends Controller
             return redirect()->back();
         }
     }
+
+    public function resetPassword(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'password' => 'required|confirmed|string|min:8',
+        ]);
+
+        try {
+            $user->update([
+                'password' => $validated['password'],
+            ]);
+
+            Toastr::success("Berhasil mengatur ulang password pengguna {$user->name}");
+
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Log::error('UsersController resetPassword error: '.$th->getMessage(), [
+                'user_id' => auth()->id(),
+                'target_user_id' => $user->id,
+                'request_uri' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'exception' => $th,
+            ]);
+            Toastr::error('Gagal mengatur ulang password');
+
+            return redirect()->back();
+        }
+    }
 }

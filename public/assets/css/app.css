@@ -9,9 +9,87 @@
 	--pesantren-border: #e2e8f0;
 	--pesantren-text-dark: #1e293b;
 	--pesantren-text-muted: #64748b;
+	--pesantren-teal: #0d9488;
+	--pesantren-amber: #b45309;
+	--pesantren-info: #0dcaf0;
+	--pesantren-danger: #dc3545;
+	--pesantren-warning: #ffc107;
+	--pesantren-success: #198754;
+	--pesantren-blue: #0d6efd;
+	--pesantren-purple: #6f42c1;
 	--bs-primary: #157347;
 	--bs-primary-rgb: 21, 115, 71;
 }
+
+html.dark-theme {
+	--pesantren-surface: #1a1e21;
+	--pesantren-background: #16191c;
+	--pesantren-border: rgba(255, 255, 255, 0.12);
+	--pesantren-text-dark: #f8fafc;
+	--pesantren-text-muted: #94a3b8;
+}
+
+/* Design Tokens & Theme Utility Classes */
+.bg-brand-gradient {
+	background: linear-gradient(135deg, var(--pesantren-primary) 0%, #0f5132 100%) !important;
+	color: #ffffff !important;
+}
+
+.bg-intelligence-gradient {
+	background: linear-gradient(135deg, var(--pesantren-blue) 0%, #0a58ca 100%) !important;
+	color: #ffffff !important;
+}
+
+.bg-subject-gradient {
+	background: linear-gradient(135deg, var(--pesantren-purple) 0%, #59359a 100%) !important;
+	color: #ffffff !important;
+}
+
+.bg-workload-gradient {
+	background: linear-gradient(135deg, var(--pesantren-success) 0%, #146c43 100%) !important;
+	color: #ffffff !important;
+}
+
+.text-teal {
+	color: var(--pesantren-teal) !important;
+}
+
+.bg-teal {
+	background-color: var(--pesantren-teal) !important;
+	color: #ffffff !important;
+}
+
+.text-amber {
+	color: var(--pesantren-amber) !important;
+}
+
+.bg-amber {
+	background-color: var(--pesantren-amber) !important;
+	color: #ffffff !important;
+}
+
+.text-primary-brand {
+	color: var(--pesantren-primary) !important;
+}
+
+.bg-primary-subtle-brand {
+	background-color: var(--pesantren-primary-subtle) !important;
+	color: var(--pesantren-primary) !important;
+}
+
+/* Standardized Table Hover and Surfaces */
+.table {
+	--bs-table-hover-bg: rgba(21, 115, 71, 0.04);
+}
+
+.table-hover > tbody > tr:hover > * {
+	--bs-table-accent-bg: var(--bs-table-hover-bg);
+}
+
+html.dark-theme .table {
+	--bs-table-hover-bg: rgba(255, 255, 255, 0.06);
+}
+
 
 /*
 Template Name: Syndash Admin

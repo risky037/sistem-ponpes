@@ -25,12 +25,11 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="table-responsive">
-                                        <table class="table table-striped dataTable" style="width:100%" role="grid"
+                                        <table class="table table-hover dataTable" style="width:100%" role="grid"
                                             id="table">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Kode</th>
                                                     <th>Nama</th>
                                                     <th>Blok</th>
                                                     <th>Jumlah Santri</th>
@@ -115,9 +114,6 @@
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false,
-                }, {
-                    data: 'kode',
-                    name: 'kode'
                 }, {
                     data: 'nama',
                     name: 'nama'

@@ -20,7 +20,7 @@
                             <div class="row mb-2">
                                 <div class="col">
                                     <div class="table-responsive">
-                                        <table class="table table-striped dataTable" style="width:100%" role="grid"
+                                        <table class="table table-hover dataTable" style="width:100%" role="grid"
                                             id="table">
                                             <thead>
                                                 <tr>

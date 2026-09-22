@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-bordered table-striped align-middle">
+    <table class="table table-bordered table-hover align-middle">
         <tbody>
             <tr>
                 <td style="width: 30%;" class="font-weight-bold">Foto Santri</td>
@@ -31,7 +31,7 @@
             </tr>
             <tr>
                 <td class="font-weight-bold">Tempat, Tanggal Lahir</td>
-                <td>{{ $item->tempat_lahir }}, {{ \Illuminate\Support\Carbon::parse($item->tanggal_lahir)->translatedFormat('d F Y') }}</td>
+                <td>{{ $item->tempat_lahir }}, @formatDate($item->tanggal_lahir)</td>
             </tr>
             <tr>
                 <td class="font-weight-bold">Data Kependudukan</td>
@@ -60,7 +60,7 @@
             @if ($item->status === 'Santri Alumni')
                 <tr>
                     <td class="font-weight-bold">Tanggal Boyong</td>
-                    <td>{{ $item->tanggal_boyong ?? '-' }} ({{ $item->tanggal_boyong_hijriyah ?? '-' }} H)</td>
+                    <td>@formatDate($item->tanggal_boyong) ({{ $item->tanggal_boyong_hijriyah ?? '-' }} H)</td>
                 </tr>
             @endif
             @if ($item->status === 'Santri Aktif')

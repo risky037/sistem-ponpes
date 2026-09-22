@@ -9,7 +9,7 @@
                 <x-breadcrumb url="{{ route('academic.administration.index') }}" path='Intelijen Akademik'></x-breadcrumb>
 
                 {{-- Header Filter & Actions Bar --}}
-                <div class="card radius-15 border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: #fff;">
+                <div class="card radius-15 border-0 shadow-sm mb-4 bg-intelligence-gradient">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                             <div>

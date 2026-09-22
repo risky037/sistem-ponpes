@@ -39,6 +39,13 @@ class RolePermissionSeeder extends Seeder
             }
         }
 
+        $guruPermissions = [];
+        foreach (config('permission.guru', []) as $group => $permissions) {
+            foreach ($permissions as $permission) {
+                $guruPermissions[$permission] = $permission;
+            }
+        }
+
         $santriPermissions = [];
         foreach (config('permission.santri', []) as $group => $permissions) {
             foreach ($permissions as $permission) {
@@ -47,7 +54,12 @@ class RolePermissionSeeder extends Seeder
         }
 
         // Create all permissions idempotently
-        foreach ($adminPermissions as $permissionName) {
+        $allPermissions = array_unique(array_merge(
+            array_keys($adminPermissions),
+            array_keys($guruPermissions)
+        ));
+
+        foreach ($allPermissions as $permissionName) {
             Permission::firstOrCreate([
                 'name' => $permissionName,
                 'guard_name' => 'web',
@@ -59,6 +71,7 @@ class RolePermissionSeeder extends Seeder
             'Administrator' => array_values($adminPermissions),
             'Keuangan' => array_values($keuanganPermissions),
             'Pengurus' => array_values($pengurusPermissions),
+            'Guru' => array_values($guruPermissions),
             'Santri' => array_values($santriPermissions),
             'Alumni' => [],
         ];
