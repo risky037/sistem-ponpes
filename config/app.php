@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Helper;
+use App\Helpers\ToastrHelper;
 use App\Providers\AppServiceProvider;
 use App\Providers\ViewServiceProvider;
 use Illuminate\Support\Facades\Facade;
@@ -189,6 +190,8 @@ return [
         'DNS1D' => DNS1DFacade::class,
         'DNS2D' => DNS2DFacade::class,
         'Helper' => Helper::class,
+        'Toastr' => ToastrHelper::class,
+        'ToastrHelper' => ToastrHelper::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

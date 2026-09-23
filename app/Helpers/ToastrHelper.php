@@ -1,6 +1,8 @@
 <?php
 
-class Toastr
+namespace App\Helpers;
+
+class ToastrHelper
 {
     public static function success($message)
     {
@@ -22,3 +24,4 @@ class Toastr
         flash($message, 'error');
     }
 }
+
