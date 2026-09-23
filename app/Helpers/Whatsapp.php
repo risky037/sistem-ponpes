@@ -41,7 +41,7 @@ class Whatsapp
      */
     public static function adminResetUrl(?string $identifier = null, ?string $name = null): string
     {
-        $adminPhone = config('pesantren.admin_whatsapp', '081234567890');
+        $adminPhone = config('pesantren.admin_whatsapp', '081352991280');
         $pesantrenName = config('pesantren.nama_pesantren', 'Pondok Pesantren Fatimah Az Zahra');
 
         $message = "Assalamu'alaikum Admin {$pesantrenName},\nSaya membutuhkan bantuan reset password akun DIGITREN.";
