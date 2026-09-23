@@ -35,4 +35,24 @@ class Whatsapp
 
         return 'https://wa.me/'.$number;
     }
+
+    /**
+     * Generate pre-filled WhatsApp admin password reset request URL.
+     */
+    public static function adminResetUrl(?string $identifier = null, ?string $name = null): string
+    {
+        $adminPhone = config('pesantren.admin_whatsapp', '081234567890');
+        $pesantrenName = config('pesantren.nama_pesantren', 'Pondok Pesantren Fatimah Az Zahra');
+
+        $message = "Assalamu'alaikum Admin {$pesantrenName},\nSaya membutuhkan bantuan reset password akun DIGITREN.";
+        if (! empty($name)) {
+            $message .= "\nNama: {$name}";
+        }
+        if (! empty($identifier)) {
+            $message .= "\nEmail / No. Induk: {$identifier}";
+        }
+        $message .= "\nMohon bantuan untuk reset kredensial saya. Terima kasih.";
+
+        return self::url($adminPhone, $message);
+    }
 }

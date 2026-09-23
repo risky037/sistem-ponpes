@@ -16,6 +16,7 @@ use App\Http\Controllers\Academic\TeachingAssignmentController;
 use App\Http\Controllers\Academic\WaliKelasAssignmentController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\Kamar\KamarController;
 use App\Http\Controllers\Kelas\KelasController;
 use App\Http\Controllers\ProfilController;
@@ -47,10 +48,13 @@ Route::get('/', function () {
 });
 Route::get('login', [AuthController::class, 'login'])->name('login')->middleware('guest');
 Route::post('auth', [AuthController::class, 'auth'])->name('login.auth')->middleware('guest');
+Route::get('forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request')->middleware('guest');
+Route::post('forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email')->middleware('guest');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('panduan', [DocumentationController::class, 'index'])->name('documentation.index');
     Route::controller(ProfilController::class)->as('profil.')->group(function () {
         Route::get('/profil/{user}', 'show')->name('show');
         Route::post('/profil/account/{user}', 'account')->name('account');

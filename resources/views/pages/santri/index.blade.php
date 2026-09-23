@@ -150,7 +150,12 @@
                     },
                     {
                         data: 'tahun_masuk',
-                        name: 'tahun_masuk'
+                        name: 'tahun_masuk',
+                        render: function(data) {
+                            if (!data) return '-';
+                            if (data.length === 4) return data;
+                            return $.fn.dataTable.render.indonesianDate()(data);
+                        }
                     },
                     {
                         data: 'status',

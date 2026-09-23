@@ -51,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
             return "<?php echo \App\Helpers\Helper::formatDate($expression); ?>";
         });
 
+        Blade::directive('formatDateTime', function ($expression) {
+            return "<?php echo \App\Helpers\Helper::formatDateTime($expression); ?>";
+        });
+
         User::observe(UserObserver::class);
         Setting::observe(SettingObserver::class);
         Kelas::observe(KelasObserver::class);

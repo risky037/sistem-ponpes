@@ -87,4 +87,15 @@ class Helper
             return (string) $date;
         }
     }
+
+    /**
+     * Format a datetime string or Carbon instance to a localized readable Indonesian format.
+     *
+     * @param  string|\DateTimeInterface|null  $date
+     * @param  string  $format  Default is 'd F Y H:i'
+     */
+    public static function formatDateTime($date, string $format = 'd F Y H:i'): string
+    {
+        return self::formatDate($date, $format);
+    }
 }

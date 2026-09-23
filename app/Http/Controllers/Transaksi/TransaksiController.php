@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Santri;
+use App\Models\TransaksiTabungan;
 use App\Services\FinancialTransactionService;
 use DomainException;
 use Illuminate\Http\Request;
@@ -23,15 +24,13 @@ class TransaksiController extends Controller
             $santri = Santri::with(['user', 'tabungan'])->where('no_induk', $noinduk)->first();
             if ($santri) {
                 $saldo = $santri->tabungan?->saldo ?? 0;
-                if (request()->get('jenis') == 'Penarikan') {
-                    $hasWithdrawnToday = $santri->transaksi_tabungan()
-                        ->whereDate('tanggal_transaksi', now()->toDateString())
-                        ->where('jenis_transaksi', 'Penarikan')
-                        ->exists();
+                $hasWithdrawnToday = $santri->transaksi_tabungan()
+                    ->whereDate('tanggal_transaksi', now()->toDateString())
+                    ->where('jenis_transaksi', 'Penarikan')
+                    ->exists();
 
-                    if ($hasWithdrawnToday) {
-                        return response()->json(['message' => "Santri dengan nomor induk <strong> $noinduk </strong> telah melakukan penarikan"], 200);
-                    }
+                if (request()->get('jenis') == 'Penarikan' && $hasWithdrawnToday) {
+                    return response()->json(['message' => "Santri dengan nomor induk <strong> $noinduk </strong> telah melakukan penarikan"], 200);
                 }
 
                 $data = [
@@ -39,7 +38,11 @@ class TransaksiController extends Controller
                     'no_induk' => $santri->no_induk,
                     'name' => $santri->user->name,
                     'saldo' => number_format($saldo),
+                    'saldo_raw' => $saldo,
                     'foto' => $santri->foto,
+                    'kelas' => $santri->kelas_santri?->kelas?->kelas ?? '-',
+                    'kamar' => $santri->kamar_santri?->kamar?->nama_kamar ?? '-',
+                    'can_withdraw' => ! $hasWithdrawnToday,
                 ];
 
                 return response()->json(['data' => $data], 200);
@@ -47,9 +50,34 @@ class TransaksiController extends Controller
 
             return response()->json(['message' => 'Tidak ada data santri dengan nomor induk <strong>'.$noinduk.'</strong>'], 200);
         }
+
         $santri = Santri::with('user')->get(['no_induk as id', 'user_id']);
 
-        return view('pages.transaksi.index', compact('santri'));
+        $today = now()->toDateString();
+        $totalSetoranHariIni = TransaksiTabungan::whereDate('tanggal_transaksi', $today)
+            ->where('jenis_transaksi', 'Setoran')
+            ->sum('jumlah_transaksi');
+
+        $totalPenarikanHariIni = TransaksiTabungan::whereDate('tanggal_transaksi', $today)
+            ->where('jenis_transaksi', 'Penarikan')
+            ->sum('jumlah_transaksi');
+
+        $countTransaksiHariIni = TransaksiTabungan::whereDate('tanggal_transaksi', $today)
+            ->count();
+
+        $recentTransactions = TransaksiTabungan::with(['santri.user'])
+            ->whereDate('tanggal_transaksi', $today)
+            ->latest('id')
+            ->limit(5)
+            ->get();
+
+        return view('pages.transaksi.index', compact(
+            'santri',
+            'totalSetoranHariIni',
+            'totalPenarikanHariIni',
+            'countTransaksiHariIni',
+            'recentTransactions'
+        ));
     }
 
     public function store(Request $request)

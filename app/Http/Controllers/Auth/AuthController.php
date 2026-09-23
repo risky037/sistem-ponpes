@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Helper;
+use App\Helpers\Whatsapp;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
@@ -52,7 +55,7 @@ class AuthController extends Controller
             if (Auth::check()) {
                 ActivityLog::create([
                     'user_id' => Auth::id(),
-                    'activity' => Auth::user()->name.' Login pada '.date('d F Y H:i s'),
+                    'activity' => Auth::user()->name.' Login pada '.Helper::formatDateTime(now()),
                 ]);
             }
 
@@ -68,12 +71,42 @@ class AuthController extends Controller
             ->withErrors(['email' => 'Email atau password yang Anda masukkan salah.']);
     }
 
+    public function showForgotPassword()
+    {
+        $adminWhatsapp = config('pesantren.admin_whatsapp', '081234567890');
+        $namaPesantren = config('pesantren.nama_pesantren', 'Pondok Pesantren Fatimah Az Zahra');
+        $defaultWaUrl = Whatsapp::adminResetUrl();
+
+        return view('pages.auth.forgot-password', compact('adminWhatsapp', 'namaPesantren', 'defaultWaUrl'));
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            flash(trans($status), 'success');
+
+            return back()->with('status', trans($status));
+        }
+
+        flash(trans($status), 'error');
+
+        return back()->withErrors(['email' => trans($status)]);
+    }
+
     public function logout(Request $request)
     {
         if (Auth::check()) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
-                'activity' => Auth::user()->name.' Logout pada '.date('d F Y H:i s'),
+                'activity' => Auth::user()->name.' Logout pada '.Helper::formatDateTime(now()),
             ]);
         }
 

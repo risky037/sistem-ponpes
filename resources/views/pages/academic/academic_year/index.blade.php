@@ -105,11 +105,13 @@
                     },
                     {
                         data: 'start_date',
-                        name: 'start_date'
+                        name: 'start_date',
+                        render: $.fn.dataTable.render.indonesianDate()
                     },
                     {
                         data: 'end_date',
-                        name: 'end_date'
+                        name: 'end_date',
+                        render: $.fn.dataTable.render.indonesianDate()
                     },
                     {
                         data: 'is_active',

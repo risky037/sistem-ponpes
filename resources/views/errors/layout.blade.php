@@ -1,53 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@yield('title') | DIGITREN</title>
+    <link rel="icon" href="{{ url('assets/images/favicon-32x32.png') }}" type="image/png" />
+    <link rel="stylesheet" href="{{ url('assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url('assets/css/icons.css') }}" />
+    <link rel="stylesheet" href="{{ url('assets/css/app.css') }}" />
+</head>
+<body class="bg-light">
+    <div class="d-flex align-items-center justify-content-center min-vh-100 p-4">
+        <div class="container" style="max-width: 620px;">
+            <div class="card radius-15 border-0 shadow-sm text-center p-4 p-md-5">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <img src="{{ url('assets/images/logo-icon.png') }}" width="72" alt="DIGITREN" class="mb-2">
+                        <h6 class="text-muted small text-uppercase font-weight-bold mb-0">Sistem Informasi Pesantren Fatimah Az Zahra</h6>
+                    </div>
 
-        <title>@yield('title')</title>
+                    <div class="mb-3">
+                        <span class="display-1 font-weight-bold text-primary">@yield('code', 'Error')</span>
+                    </div>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
+                    <h4 class="font-weight-bold text-dark mb-2">@yield('heading', 'Terjadi Kendala')</h4>
+                    <p class="text-secondary mb-4">
+                        @yield('message', 'Halaman atau tindakan yang Anda minta tidak dapat diproses.')
+                    </p>
 
-            .full-height {
-                height: 100vh;
-            }
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+                        <a href="{{ url('/dashboard') }}" class="btn btn-primary d-inline-flex align-items-center gap-1">
+                            <i class="bx bx-home-alt"></i> Kembali ke Dashboard
+                        </a>
+                        <button onclick="window.history.back()" class="btn btn-outline-secondary d-inline-flex align-items-center gap-1">
+                            <i class="bx bx-arrow-back"></i> Halaman Sebelumnya
+                        </button>
+                    </div>
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+                    <hr class="my-3 opacity-25">
 
-            .position-ref {
-                position: relative;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 36px;
-                padding: 20px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            <div class="content">
-                <div class="title">
-                    @yield('message')
+                    <small class="text-muted d-block">
+                        Butuh bantuan teknis? Hubungi <a href="https://wa.me/{{ config('pesantren.admin_whatsapp', '6281234567890') }}" target="_blank" class="text-success font-weight-bold"><i class="bx bxl-whatsapp"></i> Admin Pesantren</a>
+                    </small>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>

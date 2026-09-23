@@ -24,4 +24,3 @@ class ToastrHelper
         flash($message, 'error');
     }
 }
-

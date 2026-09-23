@@ -1,5 +1,6 @@
-@extends('errors::minimal')
+@extends('errors.layout')
 
-@section('title', __('Server Error'))
+@section('title', 'Kendala Server (500)')
 @section('code', '500')
-@section('message', __('Server Error'))
+@section('heading', 'Terjadi Kendala pada Server')
+@section('message', 'Sistem sedang mengalami kendala sementara saat memproses permintaan Anda. Tim administrator telah menerima laporan terkait.')

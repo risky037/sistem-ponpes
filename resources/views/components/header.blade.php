@@ -8,6 +8,12 @@
             <div class="right-topbar ms-auto">
                 <ul class="navbar-nav">
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('documentation.index') }}" title="Panduan Penggunaan">
+                            <i class="bx bx-help-circle font-22"></i>
+                        </a>
+                    </li>
+
                     <li class="nav-item dropdown dropdown-user-profile">
                         <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;"
                             data-bs-toggle="dropdown">
@@ -23,6 +29,9 @@
                         <div class="dropdown-menu dropdown-menu-end">
                             <a class="dropdown-item" href="{{ route('profil.show', auth()->user()->id) }}"><i
                                     class="bx bx-user"></i><span>Profile</span>
+                            </a>
+                            <a class="dropdown-item" href="{{ route('documentation.index') }}"><i
+                                    class="bx bx-help-circle"></i><span>Panduan Sistem</span>
                             </a>
                             <a class="dropdown-item" href="{{ route('setting.index') }}"><i
                                     class="bx bx-cog"></i><span>Settings</span>
