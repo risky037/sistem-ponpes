@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Academic\AcademicIntelligenceFilterRequest;
 use App\Models\AcademicYear;
@@ -15,7 +16,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Toastr;
 
 class AcademicIntelligenceController extends Controller
 {
@@ -133,12 +133,12 @@ class AcademicIntelligenceController extends Controller
             $this->intelligenceService->purgeCache($year);
             $this->intelligenceService->getDashboardOverview($year, true);
 
-            Toastr::success("Metrik intelijen akademik tahun ajaran {$year->name} ({$year->semester}) berhasil disegarkan.", 'Sukses');
+            ToastrHelper::success("Metrik intelijen akademik tahun ajaran {$year->name} ({$year->semester}) berhasil disegarkan.", 'Sukses');
 
             return redirect()->back();
         } catch (Exception $e) {
             Log::error('AcademicIntelligenceController::refresh error: '.$e->getMessage());
-            Toastr::error('Terjadi kesalahan saat menyegarkan data intelijen.', 'Error');
+            ToastrHelper::error('Terjadi kesalahan saat menyegarkan data intelijen.', 'Error');
 
             return redirect()->back();
         }
@@ -152,16 +152,16 @@ class AcademicIntelligenceController extends Controller
         try {
             $snapshots = $this->intelligenceService->captureSnapshot($year);
 
-            Toastr::success("Snapshot historis ({$snapshots->count()} domain) berhasil dibekukan dan disimpan.", 'Sukses');
+            ToastrHelper::success("Snapshot historis ({$snapshots->count()} domain) berhasil dibekukan dan disimpan.", 'Sukses');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage(), 'Peringatan');
+            ToastrHelper::warning($e->getMessage(), 'Peringatan');
 
             return redirect()->back();
         } catch (Exception $e) {
             Log::error('AcademicIntelligenceController::snapshot error: '.$e->getMessage());
-            Toastr::error('Terjadi kesalahan saat membuat snapshot historis.', 'Error');
+            ToastrHelper::error('Terjadi kesalahan saat membuat snapshot historis.', 'Error');
 
             return redirect()->back();
         }

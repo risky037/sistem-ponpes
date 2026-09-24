@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\Kelas;
@@ -11,7 +12,6 @@ use App\Services\Academic\WaliKelasAssignmentService;
 use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class WaliKelasAssignmentController extends Controller
@@ -90,11 +90,11 @@ class WaliKelasAssignmentController extends Controller
                 notes: $validated['notes'] ?? null
             );
 
-            Toastr::success('Berhasil menugaskan wali kelas');
+            ToastrHelper::success('Berhasil menugaskan wali kelas');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -105,7 +105,7 @@ class WaliKelasAssignmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menugaskan wali kelas');
+            ToastrHelper::error('Gagal menugaskan wali kelas');
 
             return redirect()->back()->withInput();
         }
@@ -127,11 +127,11 @@ class WaliKelasAssignmentController extends Controller
                 notes: $validated['notes'] ?? null
             );
 
-            Toastr::success('Berhasil memperbarui penugasan wali kelas');
+            ToastrHelper::success('Berhasil memperbarui penugasan wali kelas');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -142,7 +142,7 @@ class WaliKelasAssignmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui penugasan wali kelas');
+            ToastrHelper::error('Gagal memperbarui penugasan wali kelas');
 
             return redirect()->back()->withInput();
         }
@@ -152,7 +152,7 @@ class WaliKelasAssignmentController extends Controller
     {
         try {
             $this->assignmentService->delete($waliKelasAssignment);
-            Toastr::success('Berhasil menghapus penugasan wali kelas');
+            ToastrHelper::success('Berhasil menghapus penugasan wali kelas');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -163,7 +163,7 @@ class WaliKelasAssignmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus penugasan wali kelas');
+            ToastrHelper::error('Gagal menghapus penugasan wali kelas');
 
             return redirect()->back();
         }

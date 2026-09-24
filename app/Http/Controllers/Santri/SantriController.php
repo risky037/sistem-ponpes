@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Santri;
 
 use App\Exports\SantriExport;
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SantriRequest;
 use App\Imports\SantriImport;
@@ -12,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class SantriController extends Controller
@@ -120,7 +120,7 @@ class SantriController extends Controller
             $validate['password'] = $request->input('password');
 
             $this->santriLifecycleService->register($validate, $request->file('foto'));
-            Toastr::success('Berhasil menambah data');
+            ToastrHelper::success('Berhasil menambah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -131,7 +131,7 @@ class SantriController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambah data');
+            ToastrHelper::error('Gagal menambah data');
 
             return redirect()->back()->withInput();
         }
@@ -154,7 +154,7 @@ class SantriController extends Controller
             $validate['tanggal_boyong'] = $request->input('tanggal_boyong');
 
             $this->santriLifecycleService->update($santri, $validate, $request->file('foto'));
-            Toastr::success('Berhasil merubah data');
+            ToastrHelper::success('Berhasil merubah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -165,7 +165,7 @@ class SantriController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal merubah data');
+            ToastrHelper::error('Gagal merubah data');
 
             return redirect()->back()->withInput();
         }
@@ -175,7 +175,7 @@ class SantriController extends Controller
     {
         try {
             $this->santriLifecycleService->delete($santri);
-            Toastr::success('Berhasil menghapus data');
+            ToastrHelper::success('Berhasil menghapus data');
 
             return to_route('santri.index');
         } catch (\Throwable $th) {
@@ -186,7 +186,7 @@ class SantriController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus data');
+            ToastrHelper::error('Gagal menghapus data');
 
             return redirect()->back();
         }
@@ -214,11 +214,11 @@ class SantriController extends Controller
                 $file = $request->file('file');
                 Excel::import(new SantriImport, $file);
             }
-            Toastr::success('Berhasil import data santri');
+            ToastrHelper::success('Berhasil import data santri');
 
             return redirect()->back();
         } catch (\Throwable $th) {
-            Toastr::error('Gagal import data santri');
+            ToastrHelper::error('Gagal import data santri');
 
             return redirect()->back();
         }

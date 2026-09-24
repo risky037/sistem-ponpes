@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\Kelas;
@@ -13,7 +14,6 @@ use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class TeachingAssignmentController extends Controller
@@ -194,11 +194,11 @@ class TeachingAssignmentController extends Controller
                 status: $validated['status'] ?? TeachingAssignment::STATUS_AKTIF
             );
 
-            Toastr::success('Berhasil menugaskan pengajar mata pelajaran');
+            ToastrHelper::success('Berhasil menugaskan pengajar mata pelajaran');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -209,7 +209,7 @@ class TeachingAssignmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menugaskan pengajar');
+            ToastrHelper::error('Gagal menugaskan pengajar');
 
             return redirect()->back()->withInput();
         }
@@ -238,11 +238,11 @@ class TeachingAssignmentController extends Controller
                 notes: $validated['notes'] ?? null
             );
 
-            Toastr::success('Berhasil memperbarui penugasan mengajar');
+            ToastrHelper::success('Berhasil memperbarui penugasan mengajar');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -253,7 +253,7 @@ class TeachingAssignmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui penugasan mengajar');
+            ToastrHelper::error('Gagal memperbarui penugasan mengajar');
 
             return redirect()->back()->withInput();
         }
@@ -263,7 +263,7 @@ class TeachingAssignmentController extends Controller
     {
         try {
             $this->assignmentService->deactivate($teachingAssignment);
-            Toastr::success('Berhasil menonaktifkan penugasan mengajar');
+            ToastrHelper::success('Berhasil menonaktifkan penugasan mengajar');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -274,7 +274,7 @@ class TeachingAssignmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menonaktifkan penugasan mengajar');
+            ToastrHelper::error('Gagal menonaktifkan penugasan mengajar');
 
             return redirect()->back();
         }

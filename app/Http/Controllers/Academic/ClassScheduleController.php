@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\ClassSchedule;
@@ -14,7 +15,6 @@ use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class ClassScheduleController extends Controller
@@ -204,11 +204,11 @@ class ClassScheduleController extends Controller
                 notes: $validated['notes'] ?? null
             );
 
-            Toastr::success('Berhasil menambahkan jadwal pelajaran');
+            ToastrHelper::success('Berhasil menambahkan jadwal pelajaran');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -219,7 +219,7 @@ class ClassScheduleController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambahkan jadwal pelajaran');
+            ToastrHelper::error('Gagal menambahkan jadwal pelajaran');
 
             return redirect()->back()->withInput();
         }
@@ -239,11 +239,11 @@ class ClassScheduleController extends Controller
 
         try {
             $this->scheduleService->updateSchedule($classSchedule, $validated);
-            Toastr::success('Berhasil memperbarui jadwal pelajaran');
+            ToastrHelper::success('Berhasil memperbarui jadwal pelajaran');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -254,7 +254,7 @@ class ClassScheduleController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui jadwal pelajaran');
+            ToastrHelper::error('Gagal memperbarui jadwal pelajaran');
 
             return redirect()->back()->withInput();
         }
@@ -264,11 +264,11 @@ class ClassScheduleController extends Controller
     {
         try {
             $this->scheduleService->deleteSchedule($classSchedule);
-            Toastr::success('Berhasil menghapus jadwal pelajaran');
+            ToastrHelper::success('Berhasil menghapus jadwal pelajaran');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -279,7 +279,7 @@ class ClassScheduleController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus jadwal pelajaran');
+            ToastrHelper::error('Gagal menghapus jadwal pelajaran');
 
             return redirect()->back();
         }

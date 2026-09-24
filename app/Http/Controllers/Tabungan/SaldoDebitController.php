@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tabungan;
 
 use App\Exports\TabunganExport;
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Santri;
 use App\Models\Tabungan;
@@ -11,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class SaldoDebitController extends Controller
@@ -51,7 +51,7 @@ class SaldoDebitController extends Controller
                     ->get();
 
                 if ($santri->isEmpty()) {
-                    Toastr::info('Tidak ada santri yang dapat ditambahkan');
+                    ToastrHelper::info('Tidak ada santri yang dapat ditambahkan');
 
                     return redirect()->back();
                 }
@@ -74,15 +74,15 @@ class SaldoDebitController extends Controller
                         }
                     }
                 });
-                Toastr::success('Berhasil menambahkan semua santri');
+                ToastrHelper::success('Berhasil menambahkan semua santri');
 
                 return redirect()->back();
             }
             $santriTarget = Santri::with('tabungan')->find($validate['santri_id']);
             if ($santriTarget?->tabungan) {
-                Toastr::info('Santri sudah memiliki tabungan');
+                ToastrHelper::info('Santri sudah memiliki tabungan');
             } elseif ($santriTarget?->status == 'Santri Alumni') {
-                Toastr::info('Santri sudah menjadi alumni');
+                ToastrHelper::info('Santri sudah menjadi alumni');
             } else {
                 DB::transaction(function () use ($validate) {
                     $tabungan = Tabungan::create($validate);
@@ -96,7 +96,7 @@ class SaldoDebitController extends Controller
                         ]);
                     }
                 });
-                Toastr::success('Berhasil menyimpan data');
+                ToastrHelper::success('Berhasil menyimpan data');
             }
 
             return redirect()->back();
@@ -108,7 +108,7 @@ class SaldoDebitController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menyimpan data');
+            ToastrHelper::error('Gagal menyimpan data');
 
             return redirect()->back();
         }
@@ -139,7 +139,7 @@ class SaldoDebitController extends Controller
                 $tabungan->delete();
                 TransaksiTabungan::where('santri_id', $santriId)->delete();
             });
-            Toastr::success('Berhasil menghapus data');
+            ToastrHelper::success('Berhasil menghapus data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -150,7 +150,7 @@ class SaldoDebitController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus data');
+            ToastrHelper::error('Gagal menghapus data');
 
             return redirect()->back();
         }

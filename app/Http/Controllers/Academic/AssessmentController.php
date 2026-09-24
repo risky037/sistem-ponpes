@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicEnrollment;
 use App\Models\AcademicYear;
@@ -14,7 +15,6 @@ use App\Services\Academic\AssessmentService;
 use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class AssessmentController extends Controller
@@ -107,11 +107,11 @@ class AssessmentController extends Controller
             $academicYear = AcademicYear::findOrFail($validated['academic_year_id']);
             $this->assessmentService->createDefinition($academicYear, $validated);
 
-            Toastr::success('Definisi penilaian berhasil ditambahkan.');
+            ToastrHelper::success('Definisi penilaian berhasil ditambahkan.');
 
             return redirect()->route('assessment.definition.index');
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -119,7 +119,7 @@ class AssessmentController extends Controller
                 'user_id' => auth()->id(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambahkan definisi penilaian.');
+            ToastrHelper::error('Gagal menambahkan definisi penilaian.');
 
             return redirect()->back()->withInput();
         }
@@ -140,11 +140,11 @@ class AssessmentController extends Controller
         try {
             $this->assessmentService->updateDefinition($assessmentDefinition, $validated);
 
-            Toastr::success('Definisi penilaian berhasil diperbarui.');
+            ToastrHelper::success('Definisi penilaian berhasil diperbarui.');
 
             return redirect()->route('assessment.definition.index');
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -153,7 +153,7 @@ class AssessmentController extends Controller
                 'definition_id' => $assessmentDefinition->id,
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui definisi penilaian.');
+            ToastrHelper::error('Gagal memperbarui definisi penilaian.');
 
             return redirect()->back()->withInput();
         }
@@ -168,14 +168,14 @@ class AssessmentController extends Controller
             $deleted = $this->assessmentService->deactivateDefinition($assessmentDefinition);
 
             if ($deleted) {
-                Toastr::success('Definisi penilaian berhasil dihapus.');
+                ToastrHelper::success('Definisi penilaian berhasil dihapus.');
             } else {
-                Toastr::info('Definisi penilaian memiliki riwayat komponen/nilai sehingga dinonaktifkan.');
+                ToastrHelper::info('Definisi penilaian memiliki riwayat komponen/nilai sehingga dinonaktifkan.');
             }
 
             return redirect()->route('assessment.definition.index');
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -184,7 +184,7 @@ class AssessmentController extends Controller
                 'definition_id' => $assessmentDefinition->id,
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memproses penghapusan definisi penilaian.');
+            ToastrHelper::error('Gagal memproses penghapusan definisi penilaian.');
 
             return redirect()->back();
         }
@@ -307,11 +307,11 @@ class AssessmentController extends Controller
 
             $this->assessmentService->createComponent($assignment, $definition, $weight);
 
-            Toastr::success('Komponen penilaian berhasil ditambahkan.');
+            ToastrHelper::success('Komponen penilaian berhasil ditambahkan.');
 
             return redirect()->route('assessment.component.index');
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -319,7 +319,7 @@ class AssessmentController extends Controller
                 'user_id' => auth()->id(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambahkan komponen penilaian.');
+            ToastrHelper::error('Gagal menambahkan komponen penilaian.');
 
             return redirect()->back()->withInput();
         }
@@ -333,11 +333,11 @@ class AssessmentController extends Controller
         try {
             $this->assessmentService->deleteComponent($assessmentComponent);
 
-            Toastr::success('Komponen penilaian berhasil dihapus.');
+            ToastrHelper::success('Komponen penilaian berhasil dihapus.');
 
             return redirect()->route('assessment.component.index');
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -346,7 +346,7 @@ class AssessmentController extends Controller
                 'component_id' => $assessmentComponent->id,
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus komponen penilaian.');
+            ToastrHelper::error('Gagal menghapus komponen penilaian.');
 
             return redirect()->back();
         }
@@ -410,11 +410,11 @@ class AssessmentController extends Controller
                 gradedBy: auth()->user()
             );
 
-            Toastr::success('Nilai santri berhasil disimpan.');
+            ToastrHelper::success('Nilai santri berhasil disimpan.');
 
             return redirect()->route('assessment.score.manage', $assessmentComponent->id);
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -423,7 +423,7 @@ class AssessmentController extends Controller
                 'component_id' => $assessmentComponent->id,
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menyimpan nilai santri.');
+            ToastrHelper::error('Gagal menyimpan nilai santri.');
 
             return redirect()->back()->withInput();
         }
@@ -447,11 +447,11 @@ class AssessmentController extends Controller
                 gradedBy: auth()->user()
             );
 
-            Toastr::success('Nilai santri berhasil diperbarui.');
+            ToastrHelper::success('Nilai santri berhasil diperbarui.');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -460,7 +460,7 @@ class AssessmentController extends Controller
                 'score_id' => $studentAssessmentScore->id,
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui nilai santri.');
+            ToastrHelper::error('Gagal memperbarui nilai santri.');
 
             return redirect()->back();
         }

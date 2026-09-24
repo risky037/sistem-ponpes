@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicEnrollment;
 use App\Models\AcademicPerformanceSummary;
@@ -12,7 +13,6 @@ use DomainException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class AcademicPerformanceController extends Controller
@@ -197,16 +197,16 @@ class AcademicPerformanceController extends Controller
     {
         try {
             $this->performanceService->generateSummary($enrollment);
-            Toastr::success('Rekap performa akademik santri berhasil dihitung.', 'Sukses');
+            ToastrHelper::success('Rekap performa akademik santri berhasil dihitung.', 'Sukses');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage(), 'Peringatan');
+            ToastrHelper::warning($e->getMessage(), 'Peringatan');
 
             return redirect()->back();
         } catch (Exception $e) {
             Log::error('AcademicPerformanceController::store error: '.$e->getMessage());
-            Toastr::error('Terjadi kesalahan saat menghitung performa akademik.', 'Error');
+            ToastrHelper::error('Terjadi kesalahan saat menghitung performa akademik.', 'Error');
 
             return redirect()->back();
         }
@@ -219,16 +219,16 @@ class AcademicPerformanceController extends Controller
     {
         try {
             $summaries = $this->performanceService->generateForYear($year);
-            Toastr::success("Rekap performa untuk {$summaries->count()} santri aktif berhasil dihitung.", 'Sukses');
+            ToastrHelper::success("Rekap performa untuk {$summaries->count()} santri aktif berhasil dihitung.", 'Sukses');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage(), 'Peringatan');
+            ToastrHelper::warning($e->getMessage(), 'Peringatan');
 
             return redirect()->back();
         } catch (Exception $e) {
             Log::error('AcademicPerformanceController::bulkGenerate error: '.$e->getMessage());
-            Toastr::error('Terjadi kesalahan saat menghitung agregasi tahun ajaran.', 'Error');
+            ToastrHelper::error('Terjadi kesalahan saat menghitung agregasi tahun ajaran.', 'Error');
 
             return redirect()->back();
         }

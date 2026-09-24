@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Requests\TransferRequest;
 use App\Models\Santri;
 use App\Models\Transfer;
 use App\Services\FinancialTransactionService;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class TransferController extends Controller
@@ -39,20 +39,20 @@ class TransferController extends Controller
             $jumlah = $validated['nominal'];
             $keterangan = $validated['keterangan'];
             if ($pengirim->id == $penerima->id) {
-                Toastr::error('Santri pengirim dan penerima tidak boleh sama.');
+                ToastrHelper::error('Santri pengirim dan penerima tidak boleh sama.');
 
                 return redirect()->back();
             }
 
             $pengirimTabungan = $pengirim->tabungan;
             if (! $pengirimTabungan || $pengirimTabungan->saldo < $jumlah) {
-                Toastr::error('Saldo tidak mencukupi.');
+                ToastrHelper::error('Saldo tidak mencukupi.');
 
                 return redirect()->back();
             }
 
             $this->transfer($penerima, $pengirim, $jumlah, $keterangan);
-            Toastr::success('Transfer berhasil.');
+            ToastrHelper::success('Transfer berhasil.');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -65,9 +65,9 @@ class TransferController extends Controller
             ]);
 
             if ($th->getMessage() === 'Saldo tidak mencukupi.') {
-                Toastr::error('Saldo tidak mencukupi.');
+                ToastrHelper::error('Saldo tidak mencukupi.');
             } else {
-                Toastr::error('Transfer gagal.');
+                ToastrHelper::error('Transfer gagal.');
             }
 
             return redirect()->back();

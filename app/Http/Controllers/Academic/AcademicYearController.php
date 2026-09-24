@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class AcademicYearController extends Controller
@@ -61,7 +61,7 @@ class AcademicYearController extends Controller
             }
 
             AcademicYear::create($validated);
-            Toastr::success('Berhasil menambah tahun ajaran');
+            ToastrHelper::success('Berhasil menambah tahun ajaran');
 
             return redirect()->route('academic-year.index');
         } catch (\Throwable $th) {
@@ -72,7 +72,7 @@ class AcademicYearController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambah tahun ajaran');
+            ToastrHelper::error('Gagal menambah tahun ajaran');
 
             return redirect()->back()->withInput();
         }
@@ -113,7 +113,7 @@ class AcademicYearController extends Controller
             }
 
             $academicYear->update($validated);
-            Toastr::success('Berhasil memperbarui tahun ajaran');
+            ToastrHelper::success('Berhasil memperbarui tahun ajaran');
 
             return redirect()->route('academic-year.index');
         } catch (\Throwable $th) {
@@ -124,7 +124,7 @@ class AcademicYearController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui tahun ajaran');
+            ToastrHelper::error('Gagal memperbarui tahun ajaran');
 
             return redirect()->back()->withInput();
         }
@@ -133,38 +133,38 @@ class AcademicYearController extends Controller
     public function destroy(AcademicYear $academicYear)
     {
         if ($academicYear->academic_enrollments()->exists()) {
-            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data riwayat pendaftaran santri.');
+            ToastrHelper::error('Tidak dapat menghapus tahun ajaran yang memiliki data riwayat pendaftaran santri.');
 
             return redirect()->route('academic-year.index');
         }
 
         if ($academicYear->wali_kelas_assignments()->exists()) {
-            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data penugasan wali kelas.');
+            ToastrHelper::error('Tidak dapat menghapus tahun ajaran yang memiliki data penugasan wali kelas.');
 
             return redirect()->route('academic-year.index');
         }
 
         if ($academicYear->teaching_assignments()->exists()) {
-            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data penugasan mengajar.');
+            ToastrHelper::error('Tidak dapat menghapus tahun ajaran yang memiliki data penugasan mengajar.');
 
             return redirect()->route('academic-year.index');
         }
 
         if ($academicYear->classSchedules()->exists()) {
-            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data jadwal pelajaran.');
+            ToastrHelper::error('Tidak dapat menghapus tahun ajaran yang memiliki data jadwal pelajaran.');
 
             return redirect()->route('academic-year.index');
         }
 
         if ($academicYear->calendarEvents()->exists()) {
-            Toastr::error('Tidak dapat menghapus tahun ajaran yang memiliki data agenda kalender akademik.');
+            ToastrHelper::error('Tidak dapat menghapus tahun ajaran yang memiliki data agenda kalender akademik.');
 
             return redirect()->route('academic-year.index');
         }
 
         try {
             $academicYear->delete();
-            Toastr::success('Berhasil menghapus tahun ajaran');
+            ToastrHelper::success('Berhasil menghapus tahun ajaran');
 
             return redirect()->route('academic-year.index');
         } catch (\Throwable $th) {
@@ -175,7 +175,7 @@ class AcademicYearController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus tahun ajaran');
+            ToastrHelper::error('Gagal menghapus tahun ajaran');
 
             return redirect()->back();
         }

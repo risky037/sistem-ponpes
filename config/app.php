@@ -190,7 +190,6 @@ return [
         'DNS1D' => DNS1DFacade::class,
         'DNS2D' => DNS2DFacade::class,
         'Helper' => Helper::class,
-        'Toastr' => ToastrHelper::class,
         'ToastrHelper' => ToastrHelper::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),

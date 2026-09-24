@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicEnrollment;
 use App\Models\AcademicYear;
@@ -13,7 +14,6 @@ use DomainException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class AcademicEnrollmentController extends Controller
@@ -185,11 +185,11 @@ class AcademicEnrollmentController extends Controller
                 status: $validated['status'] ?? AcademicEnrollment::STATUS_AKTIF
             );
 
-            Toastr::success('Berhasil mendaftarkan santri ke kelas akademik');
+            ToastrHelper::success('Berhasil mendaftarkan santri ke kelas akademik');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::warning($e->getMessage());
+            ToastrHelper::warning($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (Exception $e) {
@@ -200,7 +200,7 @@ class AcademicEnrollmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $e,
             ]);
-            Toastr::error('Gagal mendaftarkan santri ke kelas akademik');
+            ToastrHelper::error('Gagal mendaftarkan santri ke kelas akademik');
 
             return redirect()->back()->withInput();
         }
@@ -223,7 +223,7 @@ class AcademicEnrollmentController extends Controller
 
             $this->enrollmentService->updateStatus($academicEnrollment, $validated['status'], $validated['notes'] ?? null);
 
-            Toastr::success('Berhasil memperbarui data pendaftaran akademik');
+            ToastrHelper::success('Berhasil memperbarui data pendaftaran akademik');
 
             return redirect()->back();
         } catch (Exception $e) {
@@ -234,7 +234,7 @@ class AcademicEnrollmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $e,
             ]);
-            Toastr::error('Gagal memperbarui data pendaftaran akademik');
+            ToastrHelper::error('Gagal memperbarui data pendaftaran akademik');
 
             return redirect()->back()->withInput();
         }
@@ -244,7 +244,7 @@ class AcademicEnrollmentController extends Controller
     {
         try {
             $this->enrollmentService->deactivate($academicEnrollment);
-            Toastr::success('Pendaftaran santri berhasil dinonaktifkan (riwayat akademik dipertahankan)');
+            ToastrHelper::success('Pendaftaran santri berhasil dinonaktifkan (riwayat akademik dipertahankan)');
 
             return redirect()->back();
         } catch (Exception $e) {
@@ -255,7 +255,7 @@ class AcademicEnrollmentController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $e,
             ]);
-            Toastr::error('Gagal menonaktifkan pendaftaran santri');
+            ToastrHelper::error('Gagal menonaktifkan pendaftaran santri');
 
             return redirect()->back();
         }

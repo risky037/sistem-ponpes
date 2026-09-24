@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Helpers\Helper;
+use App\Helpers\ToastrHelper;
 use App\Models\Santri;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -10,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Toastr;
 
 class SantriImport implements ToModel, WithHeadingRow
 {
@@ -58,7 +58,7 @@ class SantriImport implements ToModel, WithHeadingRow
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            Toastr::error('Gagal import data santri');
+            ToastrHelper::error('Gagal import data santri');
         }
     }
 }

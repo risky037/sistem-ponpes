@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Role;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
-use Toastr;
 
 class RoleController extends Controller
 {
@@ -39,7 +39,7 @@ class RoleController extends Controller
             if (isset($request->destroy)) {
                 $role->givePermissionTo($request->destroy);
             }
-            Toastr::success('Berhasil menambah data');
+            ToastrHelper::success('Berhasil menambah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -50,7 +50,7 @@ class RoleController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambah data');
+            ToastrHelper::error('Gagal menambah data');
 
             return redirect()->back();
         }
@@ -63,7 +63,7 @@ class RoleController extends Controller
         ]);
         try {
             $role->update($validate);
-            Toastr::success('Berhasil memperbarui data');
+            ToastrHelper::success('Berhasil memperbarui data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -74,7 +74,7 @@ class RoleController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui data');
+            ToastrHelper::error('Gagal memperbarui data');
 
             return redirect()->back();
         }
@@ -85,14 +85,14 @@ class RoleController extends Controller
         $protectedRoles = config('permission.protected_roles', ['Administrator', 'Keuangan', 'Santri']);
 
         if (in_array($role->name, $protectedRoles, true)) {
-            Toastr::error('Role sistem default tidak dapat dihapus');
+            ToastrHelper::error('Role sistem default tidak dapat dihapus');
 
             return redirect()->back();
         }
 
         try {
             $role->delete();
-            Toastr::success('Berhasil menghapus data');
+            ToastrHelper::success('Berhasil menghapus data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -103,7 +103,7 @@ class RoleController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus data');
+            ToastrHelper::error('Gagal menghapus data');
 
             return redirect()->back();
         }

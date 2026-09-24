@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Requests\Profil\AccountRequest;
 use App\Http\Requests\Profil\BiodataRequest;
 use App\Models\AlamatSantri;
@@ -10,7 +11,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Laravel\Facades\Image;
-use Toastr;
 
 class ProfilController extends Controller
 {
@@ -32,7 +32,7 @@ class ProfilController extends Controller
                 unset($data['password']);
             }
             $user->update($data);
-            Toastr::success('Berhasil merubah data');
+            ToastrHelper::success('Berhasil merubah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -43,7 +43,7 @@ class ProfilController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal merubah data');
+            ToastrHelper::error('Gagal merubah data');
 
             return redirect()->back();
         }
@@ -84,7 +84,7 @@ class ProfilController extends Controller
                     ['alamat_lengkap' => $validated['alamat_lengkap']]
                 );
             }
-            Toastr::success('Berhasil merubah data');
+            ToastrHelper::success('Berhasil merubah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -95,7 +95,7 @@ class ProfilController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal merubah data');
+            ToastrHelper::error('Gagal merubah data');
 
             return redirect()->back();
         }

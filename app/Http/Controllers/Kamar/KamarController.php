@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Kamar;
 
 use App\Exports\KamarExport;
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class KamarController extends Controller
@@ -44,7 +44,7 @@ class KamarController extends Controller
 
             $validate['kode'] = $kode;
             Kamar::create($validate);
-            Toastr::success('Berhasil menambah data');
+            ToastrHelper::success('Berhasil menambah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -55,7 +55,7 @@ class KamarController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambah data');
+            ToastrHelper::error('Gagal menambah data');
 
             return redirect()->back();
         }
@@ -71,7 +71,7 @@ class KamarController extends Controller
         ]);
         try {
             $kamar->update($validate);
-            Toastr::success('Berhasil merubah data');
+            ToastrHelper::success('Berhasil merubah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -82,7 +82,7 @@ class KamarController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal merubah data');
+            ToastrHelper::error('Gagal merubah data');
 
             return redirect()->back()->withInput();
         }
@@ -93,9 +93,9 @@ class KamarController extends Controller
         try {
             if ($kamar->jumlah_santri == 0) {
                 $kamar->delete();
-                Toastr::success('Berhasil menghapus data');
+                ToastrHelper::success('Berhasil menghapus data');
             } else {
-                Toastr::info('Kamar telah diisi, tidak dapat dihapus');
+                ToastrHelper::info('Kamar telah diisi, tidak dapat dihapus');
             }
 
             return redirect()->back();
@@ -107,7 +107,7 @@ class KamarController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus data');
+            ToastrHelper::error('Gagal menghapus data');
 
             return redirect()->back();
         }

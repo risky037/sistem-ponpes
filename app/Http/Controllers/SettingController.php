@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Requests\SettingRequest;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Laravel\Facades\Image;
-use Toastr;
 
 class SettingController extends Controller
 {
@@ -63,7 +63,7 @@ class SettingController extends Controller
                 $validate['kts_master'] = $filename;
             }
             Setting::updateOrCreate($validate);
-            Toastr::success('Berhasil menyimpan data setting!');
+            ToastrHelper::success('Berhasil menyimpan data setting!');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -74,7 +74,7 @@ class SettingController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menyimpan data setting!');
+            ToastrHelper::error('Gagal menyimpan data setting!');
 
             return redirect()->back();
         }
@@ -133,7 +133,7 @@ class SettingController extends Controller
                 $validate['kts_master'] = $filename;
             }
             $setting->update($validate);
-            Toastr::success('Berhasil merubah data setting!');
+            ToastrHelper::success('Berhasil merubah data setting!');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -144,7 +144,7 @@ class SettingController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal merubah data setting!');
+            ToastrHelper::error('Gagal merubah data setting!');
 
             return redirect()->back();
         }

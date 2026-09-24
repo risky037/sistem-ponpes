@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class UsersController extends Controller
@@ -46,7 +46,7 @@ class UsersController extends Controller
                 $user->syncRoles([(int) $roleId]);
             });
 
-            Toastr::success('Berhasil menambah data');
+            ToastrHelper::success('Berhasil menambah data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -57,7 +57,7 @@ class UsersController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambah data');
+            ToastrHelper::error('Gagal menambah data');
 
             return redirect()->back();
         }
@@ -78,7 +78,7 @@ class UsersController extends Controller
             if (auth()->id() === $user->id && $user->hasRole('Administrator')) {
                 $adminRole = Role::where('name', 'Administrator')->where('guard_name', 'web')->first();
                 if ($adminRole && $roleId !== (int) $adminRole->id) {
-                    Toastr::error('Tidak dapat menurunkan role Administrator pada akun Anda sendiri');
+                    ToastrHelper::error('Tidak dapat menurunkan role Administrator pada akun Anda sendiri');
 
                     return redirect()->back();
                 }
@@ -89,7 +89,7 @@ class UsersController extends Controller
                 $user->syncRoles([(int) $roleId]);
             });
 
-            Toastr::success('Berhasil memperbarui data');
+            ToastrHelper::success('Berhasil memperbarui data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -100,7 +100,7 @@ class UsersController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui data');
+            ToastrHelper::error('Gagal memperbarui data');
 
             return redirect()->back();
         }
@@ -109,20 +109,20 @@ class UsersController extends Controller
     public function destroy(User $user)
     {
         if (auth()->id() === $user->id) {
-            Toastr::error('Tidak dapat menghapus akun Anda sendiri');
+            ToastrHelper::error('Tidak dapat menghapus akun Anda sendiri');
 
             return redirect()->back();
         }
 
         if ($user->hasRole('Administrator') && User::role('Administrator')->count() <= 1) {
-            Toastr::error('Tidak dapat menghapus satu-satunya akun Administrator');
+            ToastrHelper::error('Tidak dapat menghapus satu-satunya akun Administrator');
 
             return redirect()->back();
         }
 
         try {
             $user->delete();
-            Toastr::success('Berhasil menghapus data');
+            ToastrHelper::success('Berhasil menghapus data');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -133,7 +133,7 @@ class UsersController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus data');
+            ToastrHelper::error('Gagal menghapus data');
 
             return redirect()->back();
         }
@@ -150,7 +150,7 @@ class UsersController extends Controller
                 'password' => $validated['password'],
             ]);
 
-            Toastr::success("Berhasil mengatur ulang password pengguna {$user->name}");
+            ToastrHelper::success("Berhasil mengatur ulang password pengguna {$user->name}");
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -162,7 +162,7 @@ class UsersController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal mengatur ulang password');
+            ToastrHelper::error('Gagal mengatur ulang password');
 
             return redirect()->back();
         }

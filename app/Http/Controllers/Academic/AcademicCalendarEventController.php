@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicCalendarEvent;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class AcademicCalendarEventController extends Controller
@@ -113,7 +113,7 @@ class AcademicCalendarEventController extends Controller
 
         try {
             AcademicCalendarEvent::create($validated);
-            Toastr::success('Berhasil menambahkan agenda kalender akademik');
+            ToastrHelper::success('Berhasil menambahkan agenda kalender akademik');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -124,7 +124,7 @@ class AcademicCalendarEventController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambahkan agenda kalender akademik');
+            ToastrHelper::error('Gagal menambahkan agenda kalender akademik');
 
             return redirect()->back()->withInput();
         }
@@ -144,7 +144,7 @@ class AcademicCalendarEventController extends Controller
 
         try {
             $academicCalendarEvent->update($validated);
-            Toastr::success('Berhasil memperbarui agenda kalender akademik');
+            ToastrHelper::success('Berhasil memperbarui agenda kalender akademik');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -155,7 +155,7 @@ class AcademicCalendarEventController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui agenda kalender akademik');
+            ToastrHelper::error('Gagal memperbarui agenda kalender akademik');
 
             return redirect()->back()->withInput();
         }
@@ -165,7 +165,7 @@ class AcademicCalendarEventController extends Controller
     {
         try {
             $academicCalendarEvent->delete();
-            Toastr::success('Berhasil menghapus agenda kalender akademik');
+            ToastrHelper::success('Berhasil menghapus agenda kalender akademik');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -176,7 +176,7 @@ class AcademicCalendarEventController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus agenda kalender akademik');
+            ToastrHelper::error('Gagal menghapus agenda kalender akademik');
 
             return redirect()->back();
         }

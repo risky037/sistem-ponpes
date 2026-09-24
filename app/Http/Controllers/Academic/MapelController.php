@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
 use App\Models\Mapel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class MapelController extends Controller
@@ -105,7 +105,7 @@ class MapelController extends Controller
         try {
             $validated['is_active'] = $request->boolean('is_active', true);
             Mapel::create($validated);
-            Toastr::success('Berhasil menambahkan mata pelajaran');
+            ToastrHelper::success('Berhasil menambahkan mata pelajaran');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -116,7 +116,7 @@ class MapelController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambahkan mata pelajaran');
+            ToastrHelper::error('Gagal menambahkan mata pelajaran');
 
             return redirect()->back()->withInput();
         }
@@ -145,7 +145,7 @@ class MapelController extends Controller
         try {
             $validated['is_active'] = $request->boolean('is_active');
             $mapel->update($validated);
-            Toastr::success('Berhasil memperbarui mata pelajaran');
+            ToastrHelper::success('Berhasil memperbarui mata pelajaran');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -156,7 +156,7 @@ class MapelController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui mata pelajaran');
+            ToastrHelper::error('Gagal memperbarui mata pelajaran');
 
             return redirect()->back()->withInput();
         }
@@ -165,14 +165,14 @@ class MapelController extends Controller
     public function destroy(Mapel $mapel)
     {
         if ($mapel->teaching_assignments()->exists()) {
-            Toastr::error('Tidak dapat menghapus mata pelajaran yang memiliki riwayat penugasan pengajar.');
+            ToastrHelper::error('Tidak dapat menghapus mata pelajaran yang memiliki riwayat penugasan pengajar.');
 
             return redirect()->back();
         }
 
         try {
             $mapel->delete();
-            Toastr::success('Berhasil menghapus mata pelajaran');
+            ToastrHelper::success('Berhasil menghapus mata pelajaran');
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -183,7 +183,7 @@ class MapelController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus mata pelajaran');
+            ToastrHelper::error('Gagal menghapus mata pelajaran');
 
             return redirect()->back();
         }

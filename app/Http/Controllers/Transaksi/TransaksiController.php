@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Transaksi;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Santri;
 use App\Models\TransaksiTabungan;
@@ -9,7 +10,6 @@ use App\Services\FinancialTransactionService;
 use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 
 class TransaksiController extends Controller
 {
@@ -89,7 +89,7 @@ class TransaksiController extends Controller
         ]);
         try {
             if ($validate['debit'] < 50000) {
-                Toastr::info('Minimal setoran Rp. 50.000');
+                ToastrHelper::info('Minimal setoran Rp. 50.000');
             } else {
                 $this->financialTransactionService->deposit(
                     $validate['santri_noinduk'],
@@ -97,7 +97,7 @@ class TransaksiController extends Controller
                     $validate['jenis_transaksi']
                 );
 
-                Toastr::success('Berhasil menyimpan data');
+                ToastrHelper::success('Berhasil menyimpan data');
             }
 
             return redirect()->back();
@@ -109,7 +109,7 @@ class TransaksiController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menyimpan data');
+            ToastrHelper::error('Gagal menyimpan data');
 
             return redirect()->back()->withInput();
         }
@@ -124,7 +124,7 @@ class TransaksiController extends Controller
         ]);
         try {
             if ($validate['kredit'] < 10000) {
-                Toastr::info('Minimal penarikan 10.000 atau diatasnya');
+                ToastrHelper::info('Minimal penarikan 10.000 atau diatasnya');
             } else {
                 $this->financialTransactionService->withdraw(
                     $validate['santri_noinduk'],
@@ -133,12 +133,12 @@ class TransaksiController extends Controller
                     $validate['jenis_transaksi']
                 );
 
-                Toastr::success('Berhasil menyimpan data');
+                ToastrHelper::success('Berhasil menyimpan data');
             }
 
             return redirect()->back()->withQuery(['jenis_transaksi' => 'Penarikan']);
         } catch (DomainException $de) {
-            Toastr::info($de->getMessage());
+            ToastrHelper::info($de->getMessage());
 
             return redirect()->back()->withQuery(['jenis_transaksi' => 'Penarikan']);
         } catch (\Throwable $th) {
@@ -149,7 +149,7 @@ class TransaksiController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menyimpan data');
+            ToastrHelper::error('Gagal menyimpan data');
 
             return redirect()->back()->withInput();
         }

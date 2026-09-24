@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\StudentBatch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class StudentBatchController extends Controller
@@ -41,7 +41,7 @@ class StudentBatchController extends Controller
 
         try {
             StudentBatch::create($validated);
-            Toastr::success('Berhasil menambah data angkatan');
+            ToastrHelper::success('Berhasil menambah data angkatan');
 
             return redirect()->route('student-batch.index');
         } catch (\Throwable $th) {
@@ -52,7 +52,7 @@ class StudentBatchController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menambah data angkatan');
+            ToastrHelper::error('Gagal menambah data angkatan');
 
             return redirect()->back()->withInput();
         }
@@ -79,7 +79,7 @@ class StudentBatchController extends Controller
 
         try {
             $studentBatch->update($validated);
-            Toastr::success('Berhasil memperbarui data angkatan');
+            ToastrHelper::success('Berhasil memperbarui data angkatan');
 
             return redirect()->route('student-batch.index');
         } catch (\Throwable $th) {
@@ -90,7 +90,7 @@ class StudentBatchController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui data angkatan');
+            ToastrHelper::error('Gagal memperbarui data angkatan');
 
             return redirect()->back()->withInput();
         }
@@ -99,14 +99,14 @@ class StudentBatchController extends Controller
     public function destroy(StudentBatch $studentBatch)
     {
         if ($studentBatch->santris()->exists()) {
-            Toastr::error('Tidak dapat menghapus angkatan yang masih memiliki data santri.');
+            ToastrHelper::error('Tidak dapat menghapus angkatan yang masih memiliki data santri.');
 
             return redirect()->route('student-batch.index');
         }
 
         try {
             $studentBatch->delete();
-            Toastr::success('Berhasil menghapus data angkatan');
+            ToastrHelper::success('Berhasil menghapus data angkatan');
 
             return redirect()->route('student-batch.index');
         } catch (\Throwable $th) {
@@ -117,7 +117,7 @@ class StudentBatchController extends Controller
                 'ip' => request()->ip(),
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menghapus data angkatan');
+            ToastrHelper::error('Gagal menghapus data angkatan');
 
             return redirect()->back();
         }

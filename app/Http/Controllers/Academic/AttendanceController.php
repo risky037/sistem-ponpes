@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Helpers\ToastrHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicEnrollment;
 use App\Models\AcademicYear;
@@ -15,7 +16,6 @@ use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
-use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
 class AttendanceController extends Controller
@@ -238,11 +238,11 @@ class AttendanceController extends Controller
                 marker: auth()->user()
             );
 
-            Toastr::success('Presensi berhasil disimpan.');
+            ToastrHelper::success('Presensi berhasil disimpan.');
 
             return redirect()->route('attendance.manage', $teachingSession->id);
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back()->withInput();
         } catch (\Throwable $th) {
@@ -251,7 +251,7 @@ class AttendanceController extends Controller
                 'session_id' => $teachingSession->id,
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal menyimpan presensi pembelajaran.');
+            ToastrHelper::error('Gagal menyimpan presensi pembelajaran.');
 
             return redirect()->back()->withInput();
         }
@@ -272,11 +272,11 @@ class AttendanceController extends Controller
                 notes: $validated['notes'] ?? null
             );
 
-            Toastr::success('Catatan kehadiran berhasil diperbarui.');
+            ToastrHelper::success('Catatan kehadiran berhasil diperbarui.');
 
             return redirect()->back();
         } catch (DomainException $e) {
-            Toastr::error($e->getMessage());
+            ToastrHelper::error($e->getMessage());
 
             return redirect()->back();
         } catch (\Throwable $th) {
@@ -285,7 +285,7 @@ class AttendanceController extends Controller
                 'record_id' => $attendanceRecord->id,
                 'exception' => $th,
             ]);
-            Toastr::error('Gagal memperbarui catatan kehadiran.');
+            ToastrHelper::error('Gagal memperbarui catatan kehadiran.');
 
             return redirect()->back();
         }
