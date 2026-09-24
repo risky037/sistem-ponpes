@@ -49,7 +49,6 @@ Route::get('/', function () {
 Route::get('login', [AuthController::class, 'login'])->name('login')->middleware('guest');
 Route::post('auth', [AuthController::class, 'auth'])->name('login.auth')->middleware('guest');
 Route::get('forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request')->middleware('guest');
-Route::post('forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email')->middleware('guest');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');

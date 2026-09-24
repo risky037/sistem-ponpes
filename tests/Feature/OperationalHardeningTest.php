@@ -10,6 +10,8 @@ use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class OperationalHardeningTest extends TestCase
@@ -38,30 +40,32 @@ class OperationalHardeningTest extends TestCase
     }
 
     /**
-     * Test 2: Forgot Password page renders with WhatsApp template as primary and native reset form as alternative.
+     * Test 2: Forgot Password page renders with WhatsApp template as exclusive recovery flow.
      */
-    public function test_forgot_password_page_renders_with_primary_whatsapp_template_and_reset_form(): void
+    public function test_forgot_password_page_renders_with_exclusive_whatsapp_recovery_flow(): void
     {
         $response = $this->get(route('password.request'));
 
         $response->assertStatus(200);
-        $response->assertSee('Bantuan Cepat via WhatsApp Admin');
+        $response->assertSee('Bantuan Langsung via WhatsApp Admin');
         $response->assertSee('wa.me', false);
-        $response->assertSee(route('password.email'), false);
         $response->assertSee(route('login'), false);
         $response->assertSee('Kembali ke Halaman Login');
+        $this->assertFalse(Route::has('password.email'));
     }
 
     /**
-     * Test 3: Forgot Password form requires valid email submission.
+     * Test 3: Native email password reset route is decommissioned.
      */
-    public function test_forgot_password_post_validates_email(): void
+    public function test_email_password_reset_route_is_decommissioned(): void
     {
-        $response = $this->post(route('password.email'), [
-            'email' => 'invalid-email-format',
+        $this->assertFalse(Route::has('password.email'));
+
+        $response = $this->post('/forgot-password', [
+            'email' => 'admin@example.com',
         ]);
 
-        $response->assertSessionHasErrors('email');
+        $response->assertStatus(405);
     }
 
     /**
@@ -195,5 +199,26 @@ class OperationalHardeningTest extends TestCase
         $view500 = view('errors.500')->render();
         $this->assertStringContainsString('500', $view500);
         $this->assertStringContainsString('Terjadi Kendala pada Server', $view500);
+    }
+
+    /**
+     * Test 11: User login with Remember Me sets remember_token in users table.
+     */
+    public function test_user_can_login_with_remember_me_and_sets_remember_token(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'remember.test@example.com',
+            'password' => Hash::make('SecretPass123!'),
+        ]);
+
+        $response = $this->post(route('login.auth'), [
+            'email' => 'remember.test@example.com',
+            'password' => 'SecretPass123!',
+            'remember' => '1',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertAuthenticatedAs($user);
+        $this->assertNotNull($user->fresh()->remember_token);
     }
 }
