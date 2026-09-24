@@ -267,4 +267,54 @@ class ClassScheduleCrudTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseHas('academic_years', ['id' => $this->academicYear->id]);
     }
+
+    public function test_service_updates_schedule_with_normalized_time(): void
+    {
+        $schedule = $this->service->createSchedule(
+            kelas: $this->kelas,
+            teachingAssignment: $this->teachingAssignment,
+            academicYear: $this->academicYear,
+            dayOfWeek: 'Senin',
+            startTime: '08:00',
+            endTime: '09:30'
+        );
+
+        $updated = $this->service->updateSchedule($schedule, [
+            'start_time' => '13:00',
+            'end_time' => '14:30',
+            'room' => 'Lab Komputer',
+        ]);
+
+        $this->assertEquals('13:00:00', $updated->start_time);
+        $this->assertEquals('14:30:00', $updated->end_time);
+        $this->assertDatabaseHas('class_schedules', [
+            'id' => $schedule->id,
+            'start_time' => '13:00:00',
+            'end_time' => '14:30:00',
+            'room' => 'Lab Komputer',
+        ]);
+    }
+
+    public function test_class_schedule_time_attributes_and_accessors_are_consistently_normalized(): void
+    {
+        $schedule = $this->service->createSchedule(
+            kelas: $this->kelas,
+            teachingAssignment: $this->teachingAssignment,
+            academicYear: $this->academicYear,
+            dayOfWeek: 'Rabu',
+            startTime: '07:30',
+            endTime: '09:00'
+        );
+
+        $this->assertEquals('07:30:00', $schedule->start_time);
+        $this->assertEquals('09:00:00', $schedule->end_time);
+        $this->assertEquals('07:30', $schedule->formatted_start_time);
+        $this->assertEquals('09:00', $schedule->formatted_end_time);
+        $this->assertEquals('07:30 - 09:00', $schedule->time_range);
+
+        $this->assertEquals('08:15:00', ClassSchedule::normalizeTime('08:15'));
+        $this->assertEquals('08:15:00', ClassSchedule::normalizeTime('08:15:00'));
+        $this->assertNull(ClassSchedule::normalizeTime(null));
+        $this->assertNull(ClassSchedule::normalizeTime(''));
+    }
 }

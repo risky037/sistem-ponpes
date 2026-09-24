@@ -32,7 +32,10 @@ class AcademicScheduleService
             throw new InvalidArgumentException("Hari '{$dayOfWeek}' tidak valid.");
         }
 
-        if (strtotime($startTime) >= strtotime($endTime)) {
+        $normalizedStart = ClassSchedule::normalizeTime($startTime) ?? $startTime;
+        $normalizedEnd = ClassSchedule::normalizeTime($endTime) ?? $endTime;
+
+        if (strtotime($normalizedStart) >= strtotime($normalizedEnd)) {
             throw new DomainException('Waktu mulai harus lebih awal dari waktu selesai.');
         }
 
@@ -49,8 +52,8 @@ class AcademicScheduleService
             $teachingAssignment,
             $academicYear,
             $dayOfWeek,
-            $startTime,
-            $endTime,
+            $normalizedStart,
+            $normalizedEnd,
             $room,
             $notes
         ) {
@@ -58,11 +61,12 @@ class AcademicScheduleService
                 ->where('teaching_assignment_id', $teachingAssignment->id)
                 ->where('academic_year_id', $academicYear->id)
                 ->where('day_of_week', $dayOfWeek)
-                ->where('start_time', $startTime)
+                ->where('start_time', $normalizedStart)
                 ->first();
 
             if ($existing) {
-                throw new DomainException("Jadwal untuk mata pelajaran dan kelas ini pada hari {$dayOfWeek} pukul {$startTime} sudah ada.");
+                $displayTime = substr($normalizedStart, 0, 5);
+                throw new DomainException("Jadwal untuk mata pelajaran dan kelas ini pada hari {$dayOfWeek} pukul {$displayTime} sudah ada.");
             }
 
             return ClassSchedule::create([
@@ -70,8 +74,8 @@ class AcademicScheduleService
                 'teaching_assignment_id' => $teachingAssignment->id,
                 'academic_year_id' => $academicYear->id,
                 'day_of_week' => $dayOfWeek,
-                'start_time' => $startTime,
-                'end_time' => $endTime,
+                'start_time' => $normalizedStart,
+                'end_time' => $normalizedEnd,
                 'room' => $room,
                 'notes' => $notes,
             ]);
@@ -88,6 +92,14 @@ class AcademicScheduleService
     {
         if (isset($data['day_of_week']) && ! in_array($data['day_of_week'], ClassSchedule::DAYS_OF_WEEK, true)) {
             throw new InvalidArgumentException("Hari '{$data['day_of_week']}' tidak valid.");
+        }
+
+        if (isset($data['start_time'])) {
+            $data['start_time'] = ClassSchedule::normalizeTime($data['start_time']) ?? $data['start_time'];
+        }
+
+        if (isset($data['end_time'])) {
+            $data['end_time'] = ClassSchedule::normalizeTime($data['end_time']) ?? $data['end_time'];
         }
 
         $startTime = $data['start_time'] ?? $schedule->start_time;
