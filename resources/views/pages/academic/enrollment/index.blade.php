@@ -19,7 +19,7 @@
                                     <select id="filter_academic_year" class="form-select form-select-sm">
                                         <option value="">Semua Tahun Ajaran</option>
                                         @foreach ($academicYears as $ay)
-                                            <option value="{{ $ay->id }}" {{ $activeYear && $activeYear->id === $ay->id ? 'selected' : '' }}>
+                                            <option value="{{ $ay->id }}" {{ $activeYear?->id === $ay->id ? 'selected' : '' }}>
                                                 {{ $ay->name }} ({{ $ay->semester }}) {{ $ay->is_active ? '★' : '' }}
                                             </option>
                                         @endforeach
@@ -83,7 +83,7 @@
             <select name="santri_id" class="form-select" required>
                 <option value="">-- Pilih Santri --</option>
                 @foreach ($santris as $s)
-                    <option value="{{ $s->id }}">{{ $s->nama_lengkap }} ({{ $s->no_induk }})</option>
+                    <option value="{{ $s->id }}">{{ $s->user?->name ?? $s->nama_lengkap }} ({{ $s->no_induk }})</option>
                 @endforeach
             </select>
         </div>
@@ -91,7 +91,7 @@
             <label class="form-label font-weight-bold">Tahun Ajaran <span class="text-danger">*</span></label>
             <select name="academic_year_id" class="form-select" required>
                 @foreach ($academicYears as $ay)
-                    <option value="{{ $ay->id }}" {{ $activeYear && $activeYear->id === $ay->id ? 'selected' : '' }}>
+                    <option value="{{ $ay->id }}" {{ $activeYear?->id === $ay->id ? 'selected' : '' }}>
                         {{ $ay->name }} - Semester {{ $ay->semester }} {{ $ay->is_active ? '(Aktif)' : '' }}
                     </option>
                 @endforeach
