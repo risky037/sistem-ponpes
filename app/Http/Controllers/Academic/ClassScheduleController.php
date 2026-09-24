@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\ClassSchedule;
 use App\Models\Kelas;
+use App\Models\Mapel;
 use App\Models\TeachingAssignment;
+use App\Models\User;
 use App\Services\Academic\AcademicScheduleService;
 use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -28,18 +31,30 @@ class ClassScheduleController extends Controller
                 'teachingAssignment.mapel',
                 'teachingAssignment.user',
                 'academicYear',
-            ]);
+            ])->select('class_schedules.*');
 
             if ($request->filled('academic_year_id')) {
-                $query->where('academic_year_id', $request->input('academic_year_id'));
+                $query->where('class_schedules.academic_year_id', $request->input('academic_year_id'));
             }
 
             if ($request->filled('kelas_id')) {
-                $query->where('kelas_id', $request->input('kelas_id'));
+                $query->where('class_schedules.kelas_id', $request->input('kelas_id'));
             }
 
             if ($request->filled('day_of_week')) {
-                $query->where('day_of_week', $request->input('day_of_week'));
+                $query->where('class_schedules.day_of_week', $request->input('day_of_week'));
+            }
+
+            if ($request->filled('user_id')) {
+                $query->whereHas('teachingAssignment', function ($q) use ($request) {
+                    $q->where('teaching_assignments.user_id', $request->input('user_id'));
+                });
+            }
+
+            if ($request->filled('mapel_id')) {
+                $query->whereHas('teachingAssignment', function ($q) use ($request) {
+                    $q->where('teaching_assignments.mapel_id', $request->input('mapel_id'));
+                });
             }
 
             $days = ClassSchedule::DAYS_OF_WEEK;
@@ -75,6 +90,59 @@ class ClassScheduleController extends Controller
                         'days' => $days,
                     ]);
                 })
+                ->filterColumn('kelas_name', function ($query, $keyword) {
+                    $query->whereHas('kelas', function ($q) use ($keyword) {
+                        $q->where('kelas.kelas', 'like', "%{$keyword}%")
+                            ->orWhere('kelas.tingkatan', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('kelas_name', function ($query, $direction) {
+                    $query->join('kelas', 'kelas.id', '=', 'class_schedules.kelas_id')
+                        ->orderBy('kelas.tingkatan', $direction)
+                        ->orderBy('kelas.kelas', $direction)
+                        ->select('class_schedules.*');
+                })
+                ->filterColumn('mapel_name', function ($query, $keyword) {
+                    $query->whereHas('teachingAssignment.mapel', function ($q) use ($keyword) {
+                        $q->where('mapels.name', 'like', "%{$keyword}%")
+                            ->orWhere('mapels.code', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('mapel_name', function ($query, $direction) {
+                    $query->join('teaching_assignments', 'teaching_assignments.id', '=', 'class_schedules.teaching_assignment_id')
+                        ->join('mapels', 'mapels.id', '=', 'teaching_assignments.mapel_id')
+                        ->orderBy('mapels.name', $direction)
+                        ->select('class_schedules.*');
+                })
+                ->filterColumn('teacher_name', function ($query, $keyword) {
+                    $query->whereHas('teachingAssignment.user', function ($q) use ($keyword) {
+                        $q->where('users.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('teacher_name', function ($query, $direction) {
+                    $query->join('teaching_assignments', 'teaching_assignments.id', '=', 'class_schedules.teaching_assignment_id')
+                        ->join('users', 'users.id', '=', 'teaching_assignments.user_id')
+                        ->orderBy('users.name', $direction)
+                        ->select('class_schedules.*');
+                })
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && ! empty($request->search['value'])) {
+                        $search = $request->search['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->where('class_schedules.day_of_week', 'like', "%{$search}%")
+                                ->orWhere('class_schedules.room', 'like', "%{$search}%")
+                                ->orWhereHas('kelas', function ($sq) use ($search) {
+                                    $sq->where('kelas.kelas', 'like', "%{$search}%")
+                                        ->orWhere('kelas.tingkatan', 'like', "%{$search}%");
+                                })->orWhereHas('teachingAssignment.mapel', function ($sq) use ($search) {
+                                    $sq->where('mapels.name', 'like', "%{$search}%")
+                                        ->orWhere('mapels.code', 'like', "%{$search}%");
+                                })->orWhereHas('teachingAssignment.user', function ($sq) use ($search) {
+                                    $sq->where('users.name', 'like', "%{$search}%");
+                                });
+                        });
+                    }
+                })
                 ->rawColumns(['day_badge', 'action'])
                 ->toJson();
         }
@@ -83,6 +151,12 @@ class ClassScheduleController extends Controller
         $activeYear = AcademicYear::where('is_active', true)->first();
         $kelasList = Kelas::orderBy('tingkatan')->orderBy('kelas')->get();
         $days = ClassSchedule::DAYS_OF_WEEK;
+        $teacherRoles = ['Administrator', 'Pengurus'];
+        if (Role::where('name', 'Guru')->exists()) {
+            $teacherRoles[] = 'Guru';
+        }
+        $teachers = User::role($teacherRoles)->orderBy('name')->get();
+        $mapels = Mapel::active()->orderBy('name')->get();
 
         $teachingAssignments = TeachingAssignment::with(['kelas', 'mapel', 'user', 'academicYear'])
             ->where('status', TeachingAssignment::STATUS_AKTIF)
@@ -94,6 +168,8 @@ class ClassScheduleController extends Controller
             'kelasList' => $kelasList,
             'days' => $days,
             'teachingAssignments' => $teachingAssignments,
+            'teachers' => $teachers,
+            'mapels' => $mapels,
         ]);
     }
 

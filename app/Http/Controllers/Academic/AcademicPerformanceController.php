@@ -28,22 +28,26 @@ class AcademicPerformanceController extends Controller
     {
         if ($request->ajax()) {
             $query = AcademicEnrollment::with([
-                'santri',
+                'santri.user',
                 'kelas',
                 'academicYear',
                 'performanceSummary',
-            ])->orderBy('academic_year_id', 'desc')->orderBy('kelas_id', 'asc')->orderBy('id', 'asc');
+            ])
+                ->select('academic_enrollments.*')
+                ->orderBy('academic_enrollments.academic_year_id', 'desc')
+                ->orderBy('academic_enrollments.kelas_id', 'asc')
+                ->orderBy('academic_enrollments.id', 'asc');
 
             if ($request->filled('academic_year_id')) {
-                $query->where('academic_year_id', $request->input('academic_year_id'));
+                $query->where('academic_enrollments.academic_year_id', $request->input('academic_year_id'));
             }
 
             if ($request->filled('kelas_id')) {
-                $query->where('kelas_id', $request->input('kelas_id'));
+                $query->where('academic_enrollments.kelas_id', $request->input('kelas_id'));
             }
 
             if ($request->filled('status')) {
-                $query->where('status', $request->input('status'));
+                $query->where('academic_enrollments.status', $request->input('status'));
             }
 
             if ($request->filled('computation_status')) {
@@ -121,6 +125,39 @@ class AcademicPerformanceController extends Controller
                             </form>
                         </div>
                     ';
+                })
+                ->filterColumn('santri_name', function ($query, $keyword) {
+                    $query->whereHas('santri.user', function ($q) use ($keyword) {
+                        $q->where('users.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('santri_name', function ($query, $direction) {
+                    $query->join('santris', 'santris.id', '=', 'academic_enrollments.santri_id')
+                        ->join('users', 'users.id', '=', 'santris.user_id')
+                        ->orderBy('users.name', $direction)
+                        ->select('academic_enrollments.*');
+                })
+                ->filterColumn('kelas_name', function ($query, $keyword) {
+                    $query->whereHas('kelas', function ($q) use ($keyword) {
+                        $q->where('kelas.kelas', 'like', "%{$keyword}%")
+                            ->orWhere('kelas.tingkatan', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('kelas_name', function ($query, $direction) {
+                    $query->join('kelas', 'kelas.id', '=', 'academic_enrollments.kelas_id')
+                        ->orderBy('kelas.tingkatan', $direction)
+                        ->orderBy('kelas.kelas', $direction)
+                        ->select('academic_enrollments.*');
+                })
+                ->filterColumn('academic_year_name', function ($query, $keyword) {
+                    $query->whereHas('academicYear', function ($q) use ($keyword) {
+                        $q->where('academic_years.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('academic_year_name', function ($query, $direction) {
+                    $query->join('academic_years', 'academic_years.id', '=', 'academic_enrollments.academic_year_id')
+                        ->orderBy('academic_years.name', $direction)
+                        ->select('academic_enrollments.*');
                 })
                 ->rawColumns(['attendance_rate_formatted', 'average_score_formatted', 'status_badge', 'actions'])
                 ->make(true);

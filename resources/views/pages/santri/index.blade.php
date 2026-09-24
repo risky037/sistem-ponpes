@@ -10,7 +10,24 @@
                 <div class="card radius-15 border shadow-sm">
                     <div class="card-body">
                         <x-card-toolbar title="Manajemen Data Santri">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                            <div class="me-2">
+                                <select id="filter_status" class="form-select form-select-sm">
+                                    <option value="">Semua Status</option>
+                                    @foreach ($statusList ?? [] as $st)
+                                        <option value="{{ $st }}">{{ $st }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="me-2">
+                                <select id="filter_tahun_masuk" class="form-select form-select-sm">
+                                    <option value="">Semua Tahun Masuk</option>
+                                    @foreach ($tahunMasukList ?? [] as $yr)
+                                        <option value="{{ $yr }}">{{ $yr }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#importexport">
                                 <i class="bx bx-file"></i>
                                 Import / Export
@@ -104,11 +121,17 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            $('#table').DataTable({
+            var table = $('#table').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('santri.index') }}",
+                ajax: {
+                    url: "{{ route('santri.index') }}",
+                    data: function(d) {
+                        d.status = $('#filter_status').val();
+                        d.tahun_masuk = $('#filter_tahun_masuk').val();
+                    }
+                },
                 columns: [
                     {
                         data: 'DT_RowIndex',
@@ -176,6 +199,10 @@
                         searchable: false
                     }
                 ]
+            });
+
+            $('#filter_status, #filter_tahun_masuk').on('change', function() {
+                table.ajax.reload();
             });
         });
     </script>

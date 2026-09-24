@@ -38,6 +38,22 @@
                                     <option value="Cancelled">Cancelled</option>
                                 </select>
                             </div>
+                            <div>
+                                <select id="filter_teacher" class="form-select form-select-sm">
+                                    <option value="">Semua Pengajar</option>
+                                    @foreach ($teachers ?? [] as $t)
+                                        <option value="{{ $t->id }}">{{ $t->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <select id="filter_mapel" class="form-select form-select-sm">
+                                    <option value="">Semua Mapel</option>
+                                    @foreach ($mapels ?? [] as $m)
+                                        <option value="{{ $m->id }}">{{ $m->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </x-card-toolbar>
 
                         <div class="row">
@@ -81,21 +97,23 @@
                         d.academic_year_id = $('#filter_academic_year').val();
                         d.kelas_id = $('#filter_kelas').val();
                         d.status = $('#filter_status').val();
+                        d.user_id = $('#filter_teacher').val();
+                        d.mapel_id = $('#filter_mapel').val();
                     }
                 },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'formatted_date', name: 'session_date' },
-                    { data: 'kelas_name', name: 'teachingAssignment.kelas.kelas' },
-                    { data: 'mapel_name', name: 'teachingAssignment.mapel.name' },
-                    { data: 'teacher_name', name: 'teachingAssignment.user.name' },
+                    { data: 'formatted_date', name: 'teaching_sessions.session_date' },
+                    { data: 'kelas_name', name: 'kelas_name' },
+                    { data: 'mapel_name', name: 'mapel_name' },
+                    { data: 'teacher_name', name: 'teacher_name' },
                     { data: 'attendance_summary', name: 'attendance_summary', orderable: false, searchable: false },
-                    { data: 'status_badge', name: 'status' },
+                    { data: 'status_badge', name: 'teaching_sessions.status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ]
             });
 
-            $('#filter_academic_year, #filter_kelas, #filter_status').on('change', function() {
+            $('#filter_academic_year, #filter_kelas, #filter_status, #filter_teacher, #filter_mapel').on('change', function() {
                 table.ajax.reload();
             });
         });

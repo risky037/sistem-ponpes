@@ -119,11 +119,11 @@
                 },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'date_range', name: 'start_date' },
-                    { data: 'title', name: 'title' },
-                    { data: 'type_badge', name: 'event_type' },
-                    { data: 'academic_year_name', name: 'academicYear.name' },
-                    { data: 'description', name: 'description' },
+                    { data: 'date_range', name: 'academic_calendar_events.start_date' },
+                    { data: 'title', name: 'academic_calendar_events.title' },
+                    { data: 'type_badge', name: 'academic_calendar_events.event_type' },
+                    { data: 'academic_year_name', name: 'academic_year_name' },
+                    { data: 'description', name: 'academic_calendar_events.description' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ]
             });

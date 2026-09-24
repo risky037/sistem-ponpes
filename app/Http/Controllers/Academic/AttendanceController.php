@@ -7,11 +7,14 @@ use App\Models\AcademicEnrollment;
 use App\Models\AcademicYear;
 use App\Models\AttendanceRecord;
 use App\Models\Kelas;
+use App\Models\Mapel;
 use App\Models\TeachingSession;
+use App\Models\User;
 use App\Services\Academic\AttendanceService;
 use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -31,22 +34,37 @@ class AttendanceController extends Controller
                 'teachingAssignment.academicYear',
                 'classSchedule',
                 'attendanceRecords',
-            ])->orderBy('session_date', 'desc')->orderBy('id', 'desc');
+            ])
+                ->select('teaching_sessions.*')
+                ->orderBy('teaching_sessions.session_date', 'desc')
+                ->orderBy('teaching_sessions.id', 'desc');
 
             if ($request->filled('academic_year_id')) {
                 $query->whereHas('teachingAssignment', function ($q) use ($request) {
-                    $q->where('academic_year_id', $request->input('academic_year_id'));
+                    $q->where('teaching_assignments.academic_year_id', $request->input('academic_year_id'));
                 });
             }
 
             if ($request->filled('kelas_id')) {
                 $query->whereHas('teachingAssignment', function ($q) use ($request) {
-                    $q->where('kelas_id', $request->input('kelas_id'));
+                    $q->where('teaching_assignments.kelas_id', $request->input('kelas_id'));
+                });
+            }
+
+            if ($request->filled('user_id')) {
+                $query->whereHas('teachingAssignment', function ($q) use ($request) {
+                    $q->where('teaching_assignments.user_id', $request->input('user_id'));
+                });
+            }
+
+            if ($request->filled('mapel_id')) {
+                $query->whereHas('teachingAssignment', function ($q) use ($request) {
+                    $q->where('teaching_assignments.mapel_id', $request->input('mapel_id'));
                 });
             }
 
             if ($request->filled('status')) {
-                $query->where('status', $request->input('status'));
+                $query->where('teaching_sessions.status', $request->input('status'));
             }
 
             return DataTables::of($query)
@@ -106,6 +124,59 @@ class AttendanceController extends Controller
 
                     return '<a href="'.$manageUrl.'" class="btn btn-sm btn-primary '.$disabled.'" title="Kelola Presensi"><i class="bx bx-check-square"></i> Presensi</a>';
                 })
+                ->filterColumn('kelas_name', function ($query, $keyword) {
+                    $query->whereHas('teachingAssignment.kelas', function ($q) use ($keyword) {
+                        $q->where('kelas.kelas', 'like', "%{$keyword}%")
+                            ->orWhere('kelas.tingkatan', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('kelas_name', function ($query, $direction) {
+                    $query->join('teaching_assignments', 'teaching_assignments.id', '=', 'teaching_sessions.teaching_assignment_id')
+                        ->join('kelas', 'kelas.id', '=', 'teaching_assignments.kelas_id')
+                        ->orderBy('kelas.tingkatan', $direction)
+                        ->orderBy('kelas.kelas', $direction)
+                        ->select('teaching_sessions.*');
+                })
+                ->filterColumn('mapel_name', function ($query, $keyword) {
+                    $query->whereHas('teachingAssignment.mapel', function ($q) use ($keyword) {
+                        $q->where('mapels.name', 'like', "%{$keyword}%")
+                            ->orWhere('mapels.code', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('mapel_name', function ($query, $direction) {
+                    $query->join('teaching_assignments', 'teaching_assignments.id', '=', 'teaching_sessions.teaching_assignment_id')
+                        ->join('mapels', 'mapels.id', '=', 'teaching_assignments.mapel_id')
+                        ->orderBy('mapels.name', $direction)
+                        ->select('teaching_sessions.*');
+                })
+                ->filterColumn('teacher_name', function ($query, $keyword) {
+                    $query->whereHas('teachingAssignment.user', function ($q) use ($keyword) {
+                        $q->where('users.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('teacher_name', function ($query, $direction) {
+                    $query->join('teaching_assignments', 'teaching_assignments.id', '=', 'teaching_sessions.teaching_assignment_id')
+                        ->join('users', 'users.id', '=', 'teaching_assignments.user_id')
+                        ->orderBy('users.name', $direction)
+                        ->select('teaching_sessions.*');
+                })
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && ! empty($request->search['value'])) {
+                        $search = $request->search['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->where('teaching_sessions.status', 'like', "%{$search}%")
+                                ->orWhereHas('teachingAssignment.kelas', function ($sq) use ($search) {
+                                    $sq->where('kelas.kelas', 'like', "%{$search}%")
+                                        ->orWhere('kelas.tingkatan', 'like', "%{$search}%");
+                                })->orWhereHas('teachingAssignment.mapel', function ($sq) use ($search) {
+                                    $sq->where('mapels.name', 'like', "%{$search}%")
+                                        ->orWhere('mapels.code', 'like', "%{$search}%");
+                                })->orWhereHas('teachingAssignment.user', function ($sq) use ($search) {
+                                    $sq->where('users.name', 'like', "%{$search}%");
+                                });
+                        });
+                    }
+                })
                 ->rawColumns(['attendance_summary', 'status_badge', 'action'])
                 ->toJson();
         }
@@ -113,8 +184,14 @@ class AttendanceController extends Controller
         $academicYears = AcademicYear::orderBy('start_date', 'desc')->get();
         $activeYear = AcademicYear::where('is_active', true)->first();
         $kelasList = Kelas::orderBy('tingkatan')->orderBy('kelas')->get();
+        $teacherRoles = ['Administrator', 'Pengurus'];
+        if (Role::where('name', 'Guru')->exists()) {
+            $teacherRoles[] = 'Guru';
+        }
+        $teachers = User::role($teacherRoles)->orderBy('name')->get();
+        $mapels = Mapel::active()->orderBy('name')->get();
 
-        return view('pages.academic.attendance.index', compact('academicYears', 'activeYear', 'kelasList'));
+        return view('pages.academic.attendance.index', compact('academicYears', 'activeYear', 'kelasList', 'teachers', 'mapels'));
     }
 
     public function manage(TeachingSession $teachingSession)

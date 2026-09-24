@@ -15,14 +15,16 @@ class AcademicCalendarEventController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = AcademicCalendarEvent::with('academicYear')->orderBy('start_date', 'asc');
+            $query = AcademicCalendarEvent::with('academicYear')
+                ->select('academic_calendar_events.*')
+                ->orderBy('academic_calendar_events.start_date', 'asc');
 
             if ($request->filled('academic_year_id')) {
-                $query->where('academic_year_id', $request->input('academic_year_id'));
+                $query->where('academic_calendar_events.academic_year_id', $request->input('academic_year_id'));
             }
 
             if ($request->filled('event_type')) {
-                $query->where('event_type', $request->input('event_type'));
+                $query->where('academic_calendar_events.event_type', $request->input('event_type'));
             }
 
             $eventTypes = AcademicCalendarEvent::EVENT_TYPES;
@@ -57,6 +59,29 @@ class AcademicCalendarEventController extends Controller
                         'model' => $row,
                         'eventTypes' => $eventTypes,
                     ]);
+                })
+                ->filterColumn('academic_year_name', function ($query, $keyword) {
+                    $query->whereHas('academicYear', function ($q) use ($keyword) {
+                        $q->where('academic_years.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('academic_year_name', function ($query, $direction) {
+                    $query->join('academic_years', 'academic_years.id', '=', 'academic_calendar_events.academic_year_id')
+                        ->orderBy('academic_years.name', $direction)
+                        ->select('academic_calendar_events.*');
+                })
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && ! empty($request->search['value'])) {
+                        $search = $request->search['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->where('academic_calendar_events.title', 'like', "%{$search}%")
+                                ->orWhere('academic_calendar_events.event_type', 'like', "%{$search}%")
+                                ->orWhere('academic_calendar_events.description', 'like', "%{$search}%")
+                                ->orWhereHas('academicYear', function ($sq) use ($search) {
+                                    $sq->where('academic_years.name', 'like', "%{$search}%");
+                                });
+                        });
+                    }
                 })
                 ->rawColumns(['type_badge', 'action'])
                 ->toJson();

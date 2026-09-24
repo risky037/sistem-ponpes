@@ -38,6 +38,22 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div>
+                                <select id="filter_teacher" class="form-select form-select-sm">
+                                    <option value="">Semua Pengajar</option>
+                                    @foreach ($teachers ?? [] as $t)
+                                        <option value="{{ $t->id }}">{{ $t->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <select id="filter_mapel" class="form-select form-select-sm">
+                                    <option value="">Semua Mapel</option>
+                                    @foreach ($mapels ?? [] as $m)
+                                        <option value="{{ $m->id }}">{{ $m->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#createModal">
                                 <i class="bx bx-plus"></i>
@@ -147,21 +163,23 @@
                         d.academic_year_id = $('#filter_academic_year').val();
                         d.kelas_id = $('#filter_kelas').val();
                         d.day_of_week = $('#filter_day').val();
+                        d.user_id = $('#filter_teacher').val();
+                        d.mapel_id = $('#filter_mapel').val();
                     }
                 },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'day_badge', name: 'day_of_week' },
-                    { data: 'time_range', name: 'start_time' },
-                    { data: 'kelas_name', name: 'kelas.kelas' },
-                    { data: 'mapel_name', name: 'teachingAssignment.mapel.name' },
-                    { data: 'teacher_name', name: 'teachingAssignment.user.name' },
-                    { data: 'room', name: 'room' },
+                    { data: 'day_badge', name: 'class_schedules.day_of_week' },
+                    { data: 'time_range', name: 'class_schedules.start_time' },
+                    { data: 'kelas_name', name: 'kelas_name' },
+                    { data: 'mapel_name', name: 'mapel_name' },
+                    { data: 'teacher_name', name: 'teacher_name' },
+                    { data: 'room', name: 'class_schedules.room' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ]
             });
 
-            $('#filter_academic_year, #filter_kelas, #filter_day').on('change', function() {
+            $('#filter_academic_year, #filter_kelas, #filter_day, #filter_teacher, #filter_mapel').on('change', function() {
                 table.ajax.reload();
             });
 

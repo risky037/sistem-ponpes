@@ -12,14 +12,28 @@ use Yajra\DataTables\Facades\DataTables;
 
 class KelasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        if (request()->ajax()) {
-            $kelas = Kelas::all();
+        if ($request->ajax()) {
+            $query = Kelas::query()
+                ->select('kelas.*')
+                ->orderBy('kelas.tingkatan', 'asc')
+                ->orderBy('kelas.kelas', 'asc');
 
-            return DataTables::of($kelas)
+            return DataTables::of($query)
                 ->addIndexColumn()
                 ->addColumn('action', 'pages.kelas.include.action')
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && ! empty($request->search['value'])) {
+                        $search = $request->search['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->where('kelas.tingkatan', 'like', "%{$search}%")
+                                ->orWhere('kelas.kelas', 'like', "%{$search}%")
+                                ->orWhere('kelas.kode', 'like', "%{$search}%")
+                                ->orWhere('kelas.keterangan', 'like', "%{$search}%");
+                        });
+                    }
+                })
                 ->toJson();
         }
 

@@ -30,11 +30,12 @@ class AssessmentController extends Controller
     {
         if ($request->ajax()) {
             $query = AssessmentDefinition::with('academicYear')
-                ->orderBy('academic_year_id', 'desc')
-                ->orderBy('name', 'asc');
+                ->select('assessment_definitions.*')
+                ->orderBy('assessment_definitions.academic_year_id', 'desc')
+                ->orderBy('assessment_definitions.name', 'asc');
 
             if ($request->filled('academic_year_id')) {
-                $query->where('academic_year_id', $request->input('academic_year_id'));
+                $query->where('assessment_definitions.academic_year_id', $request->input('academic_year_id'));
             }
 
             if ($request->filled('type')) {
@@ -202,7 +203,9 @@ class AssessmentController extends Controller
                 'teachingAssignment.academicYear',
                 'assessmentDefinition',
                 'studentAssessmentScores',
-            ])->orderBy('id', 'desc');
+            ])
+                ->select('assessment_components.*')
+                ->orderBy('assessment_components.id', 'desc');
 
             if ($request->filled('academic_year_id')) {
                 $query->whereHas('teachingAssignment', function ($q) use ($request) {

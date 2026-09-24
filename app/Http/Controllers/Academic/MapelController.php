@@ -16,10 +16,16 @@ class MapelController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Mapel::with('kelas');
+            $query = Mapel::with('kelas')
+                ->select('mapels.*')
+                ->orderBy('mapels.name', 'asc');
 
             if ($request->filled('kelas_id')) {
-                $query->where('kelas_id', $request->input('kelas_id'));
+                $query->where('mapels.kelas_id', $request->input('kelas_id'));
+            }
+
+            if ($request->filled('is_active')) {
+                $query->where('mapels.is_active', $request->boolean('is_active'));
             }
 
             $kelasList = Kelas::orderBy('tingkatan')->orderBy('kelas')->get();
@@ -42,6 +48,32 @@ class MapelController extends Controller
                         'model' => $row,
                         'kelasList' => $kelasList,
                     ]);
+                })
+                ->filterColumn('kelas_name', function ($query, $keyword) {
+                    $query->whereHas('kelas', function ($q) use ($keyword) {
+                        $q->where('kelas.kelas', 'like', "%{$keyword}%")
+                            ->orWhere('kelas.tingkatan', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('kelas_name', function ($query, $direction) {
+                    $query->join('kelas', 'kelas.id', '=', 'mapels.kelas_id')
+                        ->orderBy('kelas.tingkatan', $direction)
+                        ->orderBy('kelas.kelas', $direction)
+                        ->select('mapels.*');
+                })
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && ! empty($request->search['value'])) {
+                        $search = $request->search['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->where('mapels.name', 'like', "%{$search}%")
+                                ->orWhere('mapels.code', 'like', "%{$search}%")
+                                ->orWhere('mapels.description', 'like', "%{$search}%")
+                                ->orWhereHas('kelas', function ($sq) use ($search) {
+                                    $sq->where('kelas.kelas', 'like', "%{$search}%")
+                                        ->orWhere('kelas.tingkatan', 'like', "%{$search}%");
+                                });
+                        });
+                    }
                 })
                 ->rawColumns(['code_badge', 'is_active', 'action'])
                 ->toJson();

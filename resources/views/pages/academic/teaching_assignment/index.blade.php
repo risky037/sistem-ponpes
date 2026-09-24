@@ -14,7 +14,7 @@
                                 <h5 class="mb-0 fw-bold">Penugasan Pengajar Mata Pelajaran</h5>
                                 <p class="text-muted small mb-0">Kelola penetapan ustadz/ustadzah pengampu mata pelajaran per kelas dan tahun ajaran</p>
                             </div>
-                            <div class="d-flex align-items-center gap-2">
+                            <div class="d-flex flex-wrap align-items-center gap-2">
                                 <div class="me-2">
                                     <select id="filter_academic_year" class="form-select form-select-sm">
                                         <option value="">Semua Tahun Ajaran</option>
@@ -32,6 +32,22 @@
                                             <option value="{{ $k->id }}">
                                                 {{ $k->tingkatan }} - {{ $k->kelas }}
                                             </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="me-2">
+                                    <select id="filter_teacher" class="form-select form-select-sm">
+                                        <option value="">Semua Pengajar</option>
+                                        @foreach ($teachers as $t)
+                                            <option value="{{ $t->id }}">{{ $t->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="me-2">
+                                    <select id="filter_mapel" class="form-select form-select-sm">
+                                        <option value="">Semua Mata Pelajaran</option>
+                                        @foreach ($mapels as $m)
+                                            <option value="{{ $m->id }}">{{ $m->name }} ({{ $m->kelas?->tingkatan }} {{ $m->kelas?->kelas }})</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -138,21 +154,23 @@
                     data: function(d) {
                         d.academic_year_id = $('#filter_academic_year').val();
                         d.kelas_id = $('#filter_kelas').val();
+                        d.user_id = $('#filter_teacher').val();
+                        d.mapel_id = $('#filter_mapel').val();
                     }
                 },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'teacher_name', name: 'user.name' },
-                    { data: 'mapel_name', name: 'mapel.name' },
-                    { data: 'kelas_name', name: 'kelas.kelas' },
-                    { data: 'academic_year_name', name: 'academic_year.name' },
-                    { data: 'status', name: 'status' },
-                    { data: 'notes', name: 'notes' },
+                    { data: 'teacher_name', name: 'teacher_name' },
+                    { data: 'mapel_name', name: 'mapel_name' },
+                    { data: 'kelas_name', name: 'kelas_name' },
+                    { data: 'academic_year_name', name: 'academic_year_name' },
+                    { data: 'status', name: 'teaching_assignments.status' },
+                    { data: 'notes', name: 'teaching_assignments.notes' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ]
             });
 
-            $('#filter_academic_year, #filter_kelas').on('change', function() {
+            $('#filter_academic_year, #filter_kelas, #filter_teacher, #filter_mapel').on('change', function() {
                 table.ajax.reload();
             });
 

@@ -25,6 +25,22 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="me-2">
+                                    <select id="filter_batch" class="form-select form-select-sm">
+                                        <option value="">Semua Angkatan</option>
+                                        @foreach ($studentBatches ?? [] as $batch)
+                                            <option value="{{ $batch->id }}">{{ $batch->name }} ({{ $batch->year }})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="me-2">
+                                    <select id="filter_kelas" class="form-select form-select-sm">
+                                        <option value="">Semua Kelas</option>
+                                        @foreach ($kelasList as $k)
+                                            <option value="{{ $k->id }}">{{ $k->tingkatan }} - {{ $k->kelas }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#createModal">
                                     <i class="bx bx-plus"></i>
@@ -112,6 +128,8 @@
                     url: "{{ route('academic-enrollment.index') }}",
                     data: function(d) {
                         d.academic_year_id = $('#filter_academic_year').val();
+                        d.student_batch_id = $('#filter_batch').val();
+                        d.kelas_id = $('#filter_kelas').val();
                     }
                 },
                 columns: [
@@ -123,28 +141,28 @@
                     },
                     {
                         data: 'santri_name',
-                        name: 'santri.nama_lengkap',
+                        name: 'santri_name',
                         className: 'fw-bold'
                     },
                     {
                         data: 'santri_nis',
-                        name: 'santri.no_induk'
+                        name: 'santri_nis'
                     },
                     {
                         data: 'academic_year_name',
-                        name: 'academic_year.name'
+                        name: 'academic_year_name'
                     },
                     {
                         data: 'kelas_name',
-                        name: 'kelas.kelas'
+                        name: 'kelas_name'
                     },
                     {
                         data: 'status',
-                        name: 'status'
+                        name: 'academic_enrollments.status'
                     },
                     {
                         data: 'enrolled_at',
-                        name: 'enrolled_at'
+                        name: 'academic_enrollments.enrolled_at'
                     },
                     {
                         data: 'action',
@@ -155,8 +173,8 @@
                 ]
             });
 
-            $('#filter_academic_year').on('change', function() {
-                table.draw();
+            $('#filter_academic_year, #filter_batch, #filter_kelas').on('change', function() {
+                table.ajax.reload();
             });
         });
     </script>

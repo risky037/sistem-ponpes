@@ -26,22 +26,51 @@ class SantriController extends Controller
         $santri = Santri::with([
             'user:id,name,email',
             'wali_santri',
-        ])->select('id', 'no_induk', 'jenis_kelamin', 'tanggal_lahir', 'user_id', 'foto', 'status', 'tahun_masuk')
-            ->orderBy('id', 'desc');
-        if (request()->ajax()) {
+        ])->select(
+            'santris.id',
+            'santris.no_induk',
+            'santris.jenis_kelamin',
+            'santris.tanggal_lahir',
+            'santris.user_id',
+            'santris.foto',
+            'santris.status',
+            'santris.tahun_masuk'
+        )->orderBy('santris.id', 'desc');
+
+        if ($request->ajax()) {
             return DataTables::of($santri)
                 ->addIndexColumn()
-                ->addColumn('wali_santri', function ($santri) {
-                    return $santri->wali_santri;
+                ->addColumn('wali_santri', function ($row) {
+                    return e($row->wali_santri?->nama_ayah ?? $row->wali_santri?->nama_wali ?? '-');
                 })
                 ->addColumn('action', 'pages.santri.include.action')
+                ->filterColumn('user.name', function ($query, $keyword) {
+                    $query->whereHas('user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('user.name', function ($query, $direction) {
+                    $query->join('users', 'users.id', '=', 'santris.user_id')
+                        ->orderBy('users.name', $direction)
+                        ->select('santris.*');
+                })
                 ->filter(function ($query) use ($request) {
-                    if ($request->has('search') && $request->search['value'] != '') {
+                    if ($request->filled('status')) {
+                        $query->where('santris.status', $request->input('status'));
+                    }
+                    if ($request->filled('tahun_masuk')) {
+                        $year = $request->input('tahun_masuk');
+                        $query->where(function ($q) use ($year) {
+                            $q->whereYear('santris.tahun_masuk', $year)
+                                ->orWhere('santris.tahun_masuk', 'like', "{$year}%");
+                        });
+                    }
+                    if ($request->has('search') && ! empty($request->search['value'])) {
                         $search = $request->search['value'];
                         $query->where(function ($q) use ($search) {
-                            $q->where('no_induk', 'like', "%{$search}%")
-                                ->orWhere('jenis_kelamin', 'like', "%{$search}%")
-                                ->orWhere('status', 'like', "%{$search}%")
+                            $q->where('santris.no_induk', 'like', "%{$search}%")
+                                ->orWhere('santris.jenis_kelamin', 'like', "%{$search}%")
+                                ->orWhere('santris.status', 'like', "%{$search}%")
                                 ->orWhereHas('user', function ($q) use ($search) {
                                     $q->where('name', 'like', "%{$search}%")
                                         ->orWhere('email', 'like', "%{$search}%");
@@ -52,7 +81,15 @@ class SantriController extends Controller
                 ->toJson();
         }
 
-        return view('pages.santri.index');
+        $tahunMasukList = Santri::whereNotNull('tahun_masuk')
+            ->selectRaw('DISTINCT substr(tahun_masuk, 1, 4) as year')
+            ->orderBy('year', 'desc')
+            ->pluck('year')
+            ->filter();
+
+        $statusList = ['Santri Aktif', 'Santri Alumni'];
+
+        return view('pages.santri.index', compact('tahunMasukList', 'statusList'));
     }
 
     public function show(Santri $santri)

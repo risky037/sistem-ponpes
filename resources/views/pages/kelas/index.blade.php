@@ -73,13 +73,13 @@
                     searchable: false,
                 }, {
                     data: 'tingkatan',
-                    name: 'tingkatan'
+                    name: 'kelas.tingkatan'
                 }, {
                     data: 'kelas',
-                    name: 'kelas'
+                    name: 'kelas.kelas'
                 }, {
                     data: 'keterangan',
-                    name: 'keterangan'
+                    name: 'kelas.keterangan'
                 }, {
                     data: 'action',
                     name: 'action',

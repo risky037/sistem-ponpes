@@ -25,6 +25,13 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="me-2">
+                                    <select id="filter_status" class="form-select form-select-sm">
+                                        <option value="">Semua Status</option>
+                                        <option value="1">Aktif</option>
+                                        <option value="0">Nonaktif</option>
+                                    </select>
+                                </div>
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                     data-bs-target="#createModal">
                                     <i class="bx bx-plus"></i>
@@ -100,20 +107,21 @@
                     url: "{{ route('mapel.index') }}",
                     data: function(d) {
                         d.kelas_id = $('#filter_kelas').val();
+                        d.is_active = $('#filter_status').val();
                     }
                 },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'code_badge', name: 'code' },
-                    { data: 'name', name: 'name' },
-                    { data: 'kelas_name', name: 'kelas.kelas' },
-                    { data: 'is_active', name: 'is_active' },
-                    { data: 'description', name: 'description', defaultContent: '-' },
+                    { data: 'code_badge', name: 'mapels.code' },
+                    { data: 'name', name: 'mapels.name' },
+                    { data: 'kelas_name', name: 'kelas_name' },
+                    { data: 'is_active', name: 'mapels.is_active' },
+                    { data: 'description', name: 'mapels.description', defaultContent: '-' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ]
             });
 
-            $('#filter_kelas').on('change', function() {
+            $('#filter_kelas, #filter_status').on('change', function() {
                 table.ajax.reload();
             });
         });

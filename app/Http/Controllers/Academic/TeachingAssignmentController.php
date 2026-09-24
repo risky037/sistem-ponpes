@@ -12,6 +12,7 @@ use App\Services\Academic\TeachingAssignmentService;
 use DomainException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 use Toastr;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -24,17 +25,34 @@ class TeachingAssignmentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = TeachingAssignment::with(['kelas', 'mapel', 'user', 'academic_year']);
+            $query = TeachingAssignment::with(['kelas', 'mapel', 'user', 'academic_year'])
+                ->select('teaching_assignments.*');
 
             if ($request->filled('academic_year_id')) {
-                $query->where('academic_year_id', $request->input('academic_year_id'));
+                $query->where('teaching_assignments.academic_year_id', $request->input('academic_year_id'));
             }
 
             if ($request->filled('kelas_id')) {
-                $query->where('kelas_id', $request->input('kelas_id'));
+                $query->where('teaching_assignments.kelas_id', $request->input('kelas_id'));
             }
 
-            $teachers = User::role(['Administrator', 'Pengurus'])->orderBy('name')->get();
+            if ($request->filled('user_id')) {
+                $query->where('teaching_assignments.user_id', $request->input('user_id'));
+            }
+
+            if ($request->filled('mapel_id')) {
+                $query->where('teaching_assignments.mapel_id', $request->input('mapel_id'));
+            }
+
+            if ($request->filled('status')) {
+                $query->where('teaching_assignments.status', $request->input('status'));
+            }
+
+            $teacherRoles = ['Administrator', 'Pengurus'];
+            if (Role::where('name', 'Guru')->exists()) {
+                $teacherRoles[] = 'Guru';
+            }
+            $teachers = User::role($teacherRoles)->orderBy('name')->get();
 
             return DataTables::of($query)
                 ->addIndexColumn()
@@ -66,6 +84,67 @@ class TeachingAssignmentController extends Controller
                         'teachers' => $teachers,
                     ]);
                 })
+                ->filterColumn('teacher_name', function ($query, $keyword) {
+                    $query->whereHas('user', function ($q) use ($keyword) {
+                        $q->where('users.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('teacher_name', function ($query, $direction) {
+                    $query->join('users', 'users.id', '=', 'teaching_assignments.user_id')
+                        ->orderBy('users.name', $direction)
+                        ->select('teaching_assignments.*');
+                })
+                ->filterColumn('mapel_name', function ($query, $keyword) {
+                    $query->whereHas('mapel', function ($q) use ($keyword) {
+                        $q->where('mapels.name', 'like', "%{$keyword}%")
+                            ->orWhere('mapels.code', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('mapel_name', function ($query, $direction) {
+                    $query->join('mapels', 'mapels.id', '=', 'teaching_assignments.mapel_id')
+                        ->orderBy('mapels.name', $direction)
+                        ->select('teaching_assignments.*');
+                })
+                ->filterColumn('kelas_name', function ($query, $keyword) {
+                    $query->whereHas('kelas', function ($q) use ($keyword) {
+                        $q->where('kelas.kelas', 'like', "%{$keyword}%")
+                            ->orWhere('kelas.tingkatan', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('kelas_name', function ($query, $direction) {
+                    $query->join('kelas', 'kelas.id', '=', 'teaching_assignments.kelas_id')
+                        ->orderBy('kelas.tingkatan', $direction)
+                        ->orderBy('kelas.kelas', $direction)
+                        ->select('teaching_assignments.*');
+                })
+                ->filterColumn('academic_year_name', function ($query, $keyword) {
+                    $query->whereHas('academic_year', function ($q) use ($keyword) {
+                        $q->where('academic_years.name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('academic_year_name', function ($query, $direction) {
+                    $query->join('academic_years', 'academic_years.id', '=', 'teaching_assignments.academic_year_id')
+                        ->orderBy('academic_years.name', $direction)
+                        ->select('teaching_assignments.*');
+                })
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && ! empty($request->search['value'])) {
+                        $search = $request->search['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->whereHas('user', function ($sq) use ($search) {
+                                $sq->where('users.name', 'like', "%{$search}%");
+                            })->orWhereHas('mapel', function ($sq) use ($search) {
+                                $sq->where('mapels.name', 'like', "%{$search}%")
+                                    ->orWhere('mapels.code', 'like', "%{$search}%");
+                            })->orWhereHas('kelas', function ($sq) use ($search) {
+                                $sq->where('kelas.kelas', 'like', "%{$search}%")
+                                    ->orWhere('kelas.tingkatan', 'like', "%{$search}%");
+                            })->orWhereHas('academic_year', function ($sq) use ($search) {
+                                $sq->where('academic_years.name', 'like', "%{$search}%");
+                            })->orWhere('teaching_assignments.status', 'like', "%{$search}%");
+                        });
+                    }
+                })
                 ->rawColumns(['mapel_name', 'status', 'action'])
                 ->toJson();
         }
@@ -74,7 +153,11 @@ class TeachingAssignmentController extends Controller
         $activeYear = AcademicYear::where('is_active', true)->first();
         $kelasList = Kelas::orderBy('tingkatan')->orderBy('kelas')->get();
         $mapels = Mapel::active()->with('kelas')->orderBy('name')->get();
-        $teachers = User::role(['Administrator', 'Pengurus'])->orderBy('name')->get();
+        $teacherRoles = ['Administrator', 'Pengurus'];
+        if (Role::where('name', 'Guru')->exists()) {
+            $teacherRoles[] = 'Guru';
+        }
+        $teachers = User::role($teacherRoles)->orderBy('name')->get();
 
         return view('pages.academic.teaching_assignment.index', [
             'academicYears' => $academicYears,
