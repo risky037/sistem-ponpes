@@ -25,9 +25,9 @@ class SettingRequest extends FormRequest
         $isUpdate = $this->isMethod('patch') || $this->isMethod('put');
 
         return [
-            'logo' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
-            'favicon' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
-            'kts_master' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:5020'],
+            'logo' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
+            'favicon' => [$isUpdate ? 'nullable' : 'required', 'image', 'mimes:png,jpg,jpeg,ico,webp', 'max:5120'],
+            'kts_master' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp', 'max:5120'],
             'log_activity' => ['required'],
         ];
     }

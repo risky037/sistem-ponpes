@@ -17,7 +17,7 @@ class ProfilController extends Controller
     public function show(User $user)
     {
         Gate::authorize('view', $user);
-        $user->load('santri');
+        $user->load(['santri.alamat_santri', 'roles']);
 
         return view('pages.profil.index', compact('user'));
     }
@@ -56,7 +56,7 @@ class ProfilController extends Controller
         try {
             $validated = $request->validated();
             $foto = $request->file('foto');
-            if (isset($foto) == true) {
+            if ($foto && $foto->isValid()) {
                 $path = storage_path('app/public/uploads/santri/');
                 $filename = $foto->hashName();
                 if (! file_exists($path)) {
@@ -65,20 +65,33 @@ class ProfilController extends Controller
                 Image::read($foto->getRealPath())
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
+
+                $publicPath = public_path('uploads/santri/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
                 $validated['foto'] = $filename;
             } else {
-                $validated['foto'] = $user->santri ? $user->santri->foto : 'santri.png';
+                $validated['foto'] = $user->santri?->foto ?? 'santri.png';
             }
-            Santri::where('user_id', $user->id)->update([
-                'jenis_kelamin' => $validated['jenis_kelamin'],
-                'nik' => $validated['nik'],
-                'kk' => $validated['kk'],
-                'whatsapp' => $validated['whatsapp'],
-                'tanggal_lahir' => $validated['tanggal_lahir'],
-                'tempat_lahir' => $validated['tempat_lahir'],
-                'foto' => $validated['foto'],
-            ]);
+
             if ($user->santri) {
+                Santri::where('user_id', $user->id)->update([
+                    'jenis_kelamin' => $validated['jenis_kelamin'],
+                    'nik' => $validated['nik'],
+                    'kk' => $validated['kk'],
+                    'whatsapp' => $validated['whatsapp'],
+                    'tanggal_lahir' => $validated['tanggal_lahir'],
+                    'tempat_lahir' => $validated['tempat_lahir'],
+                    'foto' => $validated['foto'],
+                ]);
+
                 AlamatSantri::updateOrCreate(
                     ['santri_id' => $user->santri->id],
                     ['alamat_lengkap' => $validated['alamat_lengkap']]

@@ -26,6 +26,35 @@ class Santri extends Model
         return $this->user?->name;
     }
 
+    /**
+     * Resiliently resolve photo URL across local and shared hosting.
+     */
+    public function fotoUrl(): string
+    {
+        if (empty($this->foto) || $this->foto === 'santri.png') {
+            return asset('img/santri.png');
+        }
+
+        if (file_exists(public_path('uploads/santri/'.$this->foto))) {
+            return asset('uploads/santri/'.$this->foto);
+        }
+
+        if (file_exists(public_path('storage/uploads/santri/'.$this->foto)) ||
+            file_exists(storage_path('app/public/uploads/santri/'.$this->foto))) {
+            return asset('storage/uploads/santri/'.$this->foto);
+        }
+
+        return asset('img/santri.png');
+    }
+
+    /**
+     * Static helper for photo URL with safe fallback.
+     */
+    public static function getFotoUrl(?self $santri = null): string
+    {
+        return $santri ? $santri->fotoUrl() : asset('img/santri.png');
+    }
+
     public function wali_santri()
     {
         return $this->hasOne(WaliSantri::class);

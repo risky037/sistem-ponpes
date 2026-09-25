@@ -23,7 +23,8 @@
                                     <p class="designattion mb-0">Online</p>
                                 </div>
                                 <img src="{{ url('assets/images/avatars/avatar-1.png') }}" class="user-img" loading="lazy"
-                                    alt="user avatar">
+                                    alt="Avatar {{ auth()->user()->name }}"
+                                    onerror="this.onerror=null;this.src='{{ url('assets/images/avatars/avatar-1.png') }}';">
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">

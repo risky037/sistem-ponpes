@@ -50,7 +50,7 @@
                 <option value="" selected disabled>Pilih Santri</option>
                 <option value="semua">Semua Santri Aktif</option>
                 @foreach ($santri as $str)
-                    <option value="{{ $str->id }}">{{ $str->user->name }} ({{ $str->no_induk }})</option>
+                    <option value="{{ $str->id }}">{{ $str->user?->name ?? 'Santri' }} ({{ $str->no_induk }})</option>
                 @endforeach
             </x-select-option>
         </div>

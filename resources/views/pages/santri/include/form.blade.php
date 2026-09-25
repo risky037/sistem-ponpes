@@ -31,7 +31,7 @@
     <div class="col">
         <div class="mb-2">
             <x-input type='text' name='nama_lengkap' id="nama_lengkap" label='Nama Lengkap'
-                placeholder='Nama Lengkap' value="{{ isset($item) ? $item->user->name : old('nama_lengkap') }}"
+                placeholder='Nama Lengkap' value="{{ isset($item) ? ($item->user?->name ?? '') : old('nama_lengkap') }}"
                 attribute="required"></x-input>
         </div>
     </div>
@@ -185,10 +185,11 @@
     </div>
 </div>
 @isset($item)
-    <div class="row">
+    <div class="row mb-2">
         <div class="col">
-            <img src="{{ url($item->foto == 'santri.png' ? 'img' : '/storage/uploads/santri') . '/' . $item->foto }}"
-                alt="santri" width="70px" class="img-fluid">
+            <img src="{{ $item->fotoUrl() }}"
+                loading="lazy" alt="Foto Santri" width="70px" class="img-fluid rounded border p-1"
+                onerror="this.onerror=null;this.src='{{ asset('img/santri.png') }}';">
         </div>
         <div class="col"></div>
     </div>
@@ -196,7 +197,7 @@
 <div class="row mb-2">
     <div class="col">
         <div class="mb-3">
-            <x-input type='file' label='Foto' id="foto" name='foto'></x-input>
+            <x-input type='file' label='Foto' id="foto_santri_form" name='foto' accept=".jpg,.jpeg,.png,.webp" helper="Format: JPG, JPEG, PNG, WEBP (Maks 2MB)"></x-input>
         </div>
     </div>
 </div>

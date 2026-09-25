@@ -63,6 +63,16 @@ class SantriLifecycleService
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
 
+                $publicPath = public_path('uploads/santri/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
                 $data['foto'] = $filename;
             } else {
                 $data['foto'] = 'santri.png';
@@ -163,6 +173,16 @@ class SantriLifecycleService
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
 
+                $publicPath = public_path('uploads/santri/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
                 $data['foto'] = $filename;
             } else {
                 $data['foto'] = $santri->foto ?? 'santri.png';
@@ -248,6 +268,10 @@ class SantriLifecycleService
                 $filePath = "public/uploads/santri/{$santri->foto}";
                 if (Storage::exists($filePath)) {
                     Storage::delete($filePath);
+                }
+                $publicFile = public_path("uploads/santri/{$santri->foto}");
+                if (file_exists($publicFile)) {
+                    @unlink($publicFile);
                 }
             }
 

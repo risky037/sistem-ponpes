@@ -4,20 +4,18 @@
             <tr>
                 <td style="width: 30%;" class="font-weight-bold">Foto Santri</td>
                 <td>
-                    @if ($item->foto && $item->foto !== 'santri.png')
-                        <img src="{{ url('storage/uploads/santri/' . $item->foto) }}" alt="Foto Santri" class="img-fluid rounded border" style="width: 90px; height: 90px; object-fit: cover;">
-                    @else
-                        <img src="{{ url('img/santri.png') }}" alt="Foto Santri" class="img-fluid rounded-circle border" style="width: 80px; height: 80px; object-fit: cover;">
-                    @endif
+                    <img src="{{ $item->fotoUrl() }}" loading="lazy" alt="Foto {{ $item->user?->name ?? 'Santri' }}"
+                        class="img-fluid rounded border shadow-sm" style="width: 90px; height: 90px; object-fit: cover;"
+                        onerror="this.onerror=null;this.src='{{ asset('img/santri.png') }}';">
                 </td>
             </tr>
             <tr>
                 <td class="font-weight-bold">Nomor Induk (NIS)</td>
-                <td><span class="badge bg-light text-dark font-14">{{ $item->no_induk }}</span></td>
+                <td><span class="badge bg-light text-secondary border font-14">{{ $item->no_induk }}</span></td>
             </tr>
             <tr>
                 <td class="font-weight-bold">Nama Lengkap</td>
-                <td class="font-weight-bold text-dark">{{ $item->user->name }}</td>
+                <td class="font-weight-bold">{{ $item->user?->name ?? '-' }}</td>
             </tr>
             <tr>
                 <td class="font-weight-bold">Jenis Kelamin</td>

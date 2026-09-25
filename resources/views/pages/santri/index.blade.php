@@ -19,6 +19,13 @@
                                 </select>
                             </div>
                             <div class="me-2">
+                                <select id="filter_jenis_kelamin" class="form-select form-select-sm">
+                                    <option value="">Semua Jenis Kelamin</option>
+                                    <option value="Laki-Laki">Laki-Laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="me-2">
                                 <select id="filter_tahun_masuk" class="form-select form-select-sm">
                                     <option value="">Semua Tahun Masuk</option>
                                     @foreach ($tahunMasukList ?? [] as $yr)
@@ -98,6 +105,7 @@
             <div class="mb-3">
                 <label for="file" class="form-label font-weight-bold">Upload File Excel (.xlsx, .xls)</label>
                 <input type="file" name="file" id="file" class="form-control" required accept=".xlsx,.xls">
+                <small class="text-muted d-block mt-1">Format: .xlsx, .xls (Maks 10MB)</small>
             </div>
             <button type="submit" class="btn btn-primary">
                 <i class="bx bx-upload"></i> Proses Import
@@ -129,6 +137,7 @@
                     url: "{{ route('santri.index') }}",
                     data: function(d) {
                         d.status = $('#filter_status').val();
+                        d.jenis_kelamin = $('#filter_jenis_kelamin').val();
                         d.tahun_masuk = $('#filter_tahun_masuk').val();
                     }
                 },
@@ -149,12 +158,12 @@
                         name: 'user.name',
                         render: function(data, type, row) {
                             var imgUrl = (row.foto === 'santri.png' || !row.foto)
-                                ? '{{ url("img/santri.png") }}'
-                                : '{{ url("storage/uploads/santri") }}/' + row.foto;
+                                ? '{{ asset("img/santri.png") }}'
+                                : '{{ asset("storage/uploads/santri") }}/' + row.foto;
                             return `<div class="d-flex align-items-center gap-2">
-                                <img src="${imgUrl}" alt="santri" class="rounded-circle border shadow-sm" width="38" height="38" style="object-fit: cover;">
+                                <img src="${imgUrl}" loading="lazy" alt="Foto Santri" class="rounded-circle border shadow-sm" width="38" height="38" style="object-fit: cover;" onerror="this.onerror=null;this.src='{{ asset('img/santri.png') }}';">
                                 <div>
-                                    <div class="font-weight-bold text-dark">${data || '-'}</div>
+                                    <div class="font-weight-bold">${data || '-'}</div>
                                 </div>
                             </div>`;
                         }
@@ -189,7 +198,7 @@
                             } else if (data === 'Santri Alumni') {
                                 return '<span class="badge bg-secondary font-12">Santri Alumni</span>';
                             }
-                            return `<span class="badge bg-light text-dark border font-12">${data}</span>`;
+                            return `<span class="badge bg-light text-secondary border font-12">${data}</span>`;
                         }
                     },
                     {
@@ -201,7 +210,7 @@
                 ]
             });
 
-            $('#filter_status, #filter_tahun_masuk').on('change', function() {
+            $('#filter_status, #filter_jenis_kelamin, #filter_tahun_masuk').on('change', function() {
                 table.ajax.reload();
             });
         });

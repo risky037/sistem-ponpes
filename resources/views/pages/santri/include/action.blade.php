@@ -18,7 +18,7 @@
         </button>
 
         <x-delete-modal title='Hapus Data Santri' id="{{ $model->id }}" fn="{{ route('santri.destroy', $model->id) }}"
-            entity="Santri: {{ $model->user->name }} (NIS: {{ $model->no_induk }})" method="POST">
+            entity="Santri: {{ $model->user?->name ?? 'Santri' }} (NIS: {{ $model->no_induk }})" method="POST">
             @csrf
             @method('DELETE')
         </x-delete-modal>

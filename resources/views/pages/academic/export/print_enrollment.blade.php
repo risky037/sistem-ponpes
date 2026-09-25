@@ -127,7 +127,7 @@
                     <td><strong>{{ $row->santri?->nama_lengkap ?? $row->santri?->user?->name ?? '-' }}</strong></td>
                     <td class="text-center">{{ $row->santri?->jenis_kelamin ?? '-' }}</td>
                     <td>{{ $row->kelas ? $row->kelas->tingkatan . ' - ' . $row->kelas->kelas : '-' }}</td>
-                    <td>{{ $row->santri?->student_batch?->name ?? ($row->santri?->student_batch?->year ? 'Angkatan ' . $row->santri->student_batch->year : '-') }}</td>
+                    <td>{{ $row->santri?->student_batch?->name ?? ($row->santri?->student_batch?->year ? 'Angkatan ' . $row->santri?->student_batch?->year : '-') }}</td>
                     <td class="text-center">{{ $row->status ?? '-' }}</td>
                     <td class="text-center">{{ $row->enrolled_at ? $row->enrolled_at->format('d/m/Y') : ($row->created_at ? $row->created_at->format('d/m/Y') : '-') }}</td>
                 </tr>

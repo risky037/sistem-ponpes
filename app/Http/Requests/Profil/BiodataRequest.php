@@ -26,11 +26,11 @@ class BiodataRequest extends FormRequest
             'tempat_lahir' => ['required', 'string'],
             'tanggal_lahir' => ['required', 'date'],
             'jenis_kelamin' => ['required', 'in:Laki-Laki,Perempuan'],
-            'whatsapp' => ['required', 'string', 'max:13'],
+            'whatsapp' => ['required', 'string', 'max:20'],
             'alamat_lengkap' => ['required', 'string'],
-            'nik' => ['required', 'min:16'],
-            'kk' => ['required', 'min:16'],
-            'foto' => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:3020'],
+            'nik' => ['required', 'string', 'min:16'],
+            'kk' => ['required', 'string', 'min:16'],
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

@@ -37,11 +37,9 @@
                         <div class="col-12 col-xl-4 mb-4">
                             <div class="card radius-15 border shadow-sm h-100">
                                 <div class="card-body text-center p-4">
-                                    @if ($santri->foto && $santri->foto !== 'santri.png')
-                                        <img src="{{ url('storage/uploads/santri/' . $santri->foto) }}" alt="Foto Santri" class="rounded-circle p-1 border" style="width: 110px; height: 110px; object-fit: cover;">
-                                    @else
-                                        <img src="{{ url('img/santri.png') }}" alt="Foto Santri" class="rounded-circle p-1 border" style="width: 110px; height: 110px; object-fit: cover;">
-                                    @endif
+                                    <img src="{{ $santri->fotoUrl() }}" loading="lazy" alt="Foto {{ $santri->user?->name ?? 'Santri' }}"
+                                        class="rounded-circle p-1 border shadow-sm" style="width: 110px; height: 110px; object-fit: cover;"
+                                        onerror="this.onerror=null;this.src='{{ asset('img/santri.png') }}';">
                                     <h5 class="mb-1 mt-3 font-weight-bold">{{ $santri->user->name }}</h5>
                                     <p class="text-muted mb-2 font-13">NIS: <span class="fw-bold">{{ $santri->no_induk }}</span></p>
                                     <x-status-badge :status="$santri->status" />

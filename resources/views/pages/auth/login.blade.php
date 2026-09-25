@@ -58,8 +58,8 @@
                                 </div>
                             </div>
                             <div class="col-xl-6 col-md-6 bg-login-color d-flex align-items-center justify-content-center">
-                                <img src="{{ url('assets/images/login-images/login-frent-img.jpg') }}" class="img-fluid"
-                                    alt="image">
+                                <img src="{{ url('assets/images/login-images/login-frent-img.jpg') }}" loading="lazy" class="img-fluid"
+                                    alt="Ilustrasi Login DIGITREN">
                             </div>
                         </div>
                         <!--end row-->

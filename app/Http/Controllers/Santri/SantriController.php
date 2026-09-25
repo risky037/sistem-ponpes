@@ -58,6 +58,11 @@ class SantriController extends Controller
                     if ($request->filled('status')) {
                         $query->where('santris.status', $request->input('status'));
                     }
+                    if ($request->filled('jenis_kelamin')) {
+                        $jk = $request->input('jenis_kelamin');
+                        $normalizedJk = strtolower($jk) === 'laki-laki' ? 'Laki-Laki' : (strtolower($jk) === 'perempuan' ? 'Perempuan' : $jk);
+                        $query->where('santris.jenis_kelamin', $normalizedJk);
+                    }
                     if ($request->filled('tahun_masuk')) {
                         $year = $request->input('tahun_masuk');
                         $query->where(function ($q) use ($year) {
@@ -88,8 +93,9 @@ class SantriController extends Controller
             ->filter();
 
         $statusList = ['Santri Aktif', 'Santri Alumni'];
+        $jenisKelaminList = ['Laki-Laki', 'Perempuan'];
 
-        return view('pages.santri.index', compact('tahunMasukList', 'statusList'));
+        return view('pages.santri.index', compact('tahunMasukList', 'statusList', 'jenisKelaminList'));
     }
 
     public function show(Santri $santri)
@@ -208,7 +214,7 @@ class SantriController extends Controller
     {
         try {
             $request->validate([
-                'file' => 'required',
+                'file' => ['required', 'file', 'mimes:xlsx,xls', 'max:10240'],
             ]);
             if ($request->hasFile('file')) {
                 $file = $request->file('file');

@@ -35,7 +35,7 @@ class SantriRequest extends FormRequest
             'tahun_masuk' => 'required|date',
             'nama_ayah' => 'required',
             'nama_ibu' => 'required',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'password' => 'nullable|string|min:8|confirmed',
         ];
     }

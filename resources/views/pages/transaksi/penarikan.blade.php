@@ -101,9 +101,10 @@
             <div class="card-body p-4">
                 <h6 class="text-muted font-13 text-uppercase font-weight-bold mb-3">Verifikasi Santri</h6>
                 <div class="mb-3 position-relative d-inline-block">
-                    <img src="{{ url('assets/images/avatars/avatar-1.png') }}" alt="Foto Santri"
+                    <img src="{{ url('assets/images/avatars/avatar-1.png') }}" loading="lazy" alt="Foto Santri"
                         class="img-fluid rounded-circle border shadow-sm p-1" id="santri_profile"
-                        style="width: 120px; height: 120px; object-fit: cover;">
+                        style="width: 120px; height: 120px; object-fit: cover;"
+                        onerror="this.onerror=null;this.src='{{ url('assets/images/avatars/avatar-1.png') }}';">
                 </div>
                 <h5 class="font-weight-bold mb-1" id="preview_name">-</h5>
                 <p class="text-muted small mb-3">NIS: <span id="preview_nis" class="font-weight-bold text-primary">-</span></p>

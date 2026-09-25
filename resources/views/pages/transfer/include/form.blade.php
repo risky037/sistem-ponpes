@@ -2,7 +2,7 @@
     <x-select-option id="pengirim_id" name="pengirim_id" label="Pengirim" attribute="required">
         <option value="">-- Pilih Pengirim --</option>
         @foreach ($santris as $val)
-            <option value="{{ $val->id }}">{{ $val->user->name }}</option>
+            <option value="{{ $val->id }}">{{ $val->user?->name ?? 'Santri' }} (NIS: {{ $val->no_induk }})</option>
         @endforeach
     </x-select-option>
 </div>
@@ -10,7 +10,7 @@
     <x-select-option id="penerima_id" name="penerima_id" label="Penerima" attribute="required">
         <option value="">-- Pilih Penerima --</option>
         @foreach ($santris as $item)
-            <option value="{{ $item->id }}">{{ $item->user->name }}</option>
+            <option value="{{ $item->id }}">{{ $item->user?->name ?? 'Santri' }} (NIS: {{ $item->no_induk }})</option>
         @endforeach
     </x-select-option>
 </div>

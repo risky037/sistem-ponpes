@@ -119,7 +119,7 @@
                                     <select name="name" id="name" class="form-control single-select">
                                         <option value="" selected disabled>-- Atau Cari Nama Santri di Sini --</option>
                                         @foreach ($santri as $model)
-                                            <option value="{{ $model->id }}">{{ $model->user->name }} (NIS: {{ $model->id }})</option>
+                                            <option value="{{ $model->id }}">{{ $model->user?->name ?? 'Santri' }} (NIS: {{ $model->no_induk ?? $model->id }})</option>
                                         @endforeach
                                     </select>
                                 </div>

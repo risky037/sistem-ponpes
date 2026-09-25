@@ -92,9 +92,12 @@
             <div class="col">
                 <form action="{{ route('santri.import') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <label for="file">File excel</label>
-                    <input type="file" name="file" id="file" class="form-control">
-                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                    <label for="file" class="form-label font-weight-bold">File Excel (.xlsx, .xls)</label>
+                    <input type="file" name="file" id="file" class="form-control" required accept=".xlsx,.xls">
+                    <small class="text-muted d-block mt-1">Format: .xlsx, .xls (Maks 10MB)</small>
+                    <button type="submit" class="btn btn-primary mt-3">
+                        <i class="bx bx-upload me-1"></i> Proses Import
+                    </button>
                 </form>
             </div>
         </div>

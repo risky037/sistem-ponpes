@@ -17,24 +17,26 @@
                                     <div class="col-12 col-lg-7 border-right">
                                         <div class="d-md-flex align-items-center">
                                             <div class="mb-md-0 mb-3">
-                                                @isset($user->santri->foto)
-                                                    @if ($user->santri->foto === 'santri.png' || $user->santri->foto === '')
-                                                        <img src="{{ url('assets/images/avatars/avatar-1.png') }}" loading="lazy"
-                                                            class="rounded-circle shadow" width="130" height="130"
-                                                            alt="santri.png" />
-                                                    @else
-                                                        <img src="{{ url("storage/uploads/santri/{$user->santri->foto}") }}" loading="lazy"
-                                                            class="rounded-circle shadow" width="70" alt="santri.png" />
-                                                    @endif
-                                                @endisset
+                                                @if ($user->santri?->foto && $user->santri?->foto !== 'santri.png' && $user->santri?->foto !== '')
+                                                    <img src="{{ $user->santri?->fotoUrl() }}" loading="lazy"
+                                                        class="rounded-circle shadow" width="110" height="110" style="object-fit: cover;"
+                                                        alt="Foto {{ $user->name }}"
+                                                        onerror="this.onerror=null;this.src='{{ url('assets/images/avatars/avatar-1.png') }}';" />
+                                                @else
+                                                    <img src="{{ url('assets/images/avatars/avatar-1.png') }}" loading="lazy"
+                                                        class="rounded-circle shadow" width="110" height="110"
+                                                        alt="Avatar {{ $user->name }}" />
+                                                @endif
                                             </div>
                                             <div class="ms-md-4 flex-grow-1">
                                                 <div class="d-flex align-items-center mb-1">
                                                     <h4 class="mb-0">{{ $user->name }}</h4>
                                                 </div>
-                                                <p class="text-primary"><i class='bx bx-buildings'></i>
-                                                    {{ $user->roles->first()->name }} -
-                                                    {{ isset($user->santri) ? $user->santri->no_induk : '112' }}
+                                                <p class="text-primary mb-0"><i class='bx bx-buildings me-1'></i>
+                                                    {{ $user->roles->first()?->name ?? 'Pengguna' }}
+                                                    @if ($user->santri?->no_induk)
+                                                        - {{ $user->santri?->no_induk }}
+                                                    @endif
                                                 </p>
                                             </div>
                                         </div>

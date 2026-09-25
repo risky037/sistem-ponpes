@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ url('assets/css/app.css') }}" />
     <link rel="stylesheet" href="{{ url('assets/css/dark-sidebar.css') }}" />
     <link rel="stylesheet" href="{{ url('assets/css/dark-theme.css') }}" />
+    <link rel="stylesheet" href="{{ url('assets/css/enhancements.css') }}" />
     <link rel="stylesheet" href="{{ url('assets/plugins/notifications/css/lobibox.min.css') }}" />
     <link href="{{ url('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"
         type="text/css">

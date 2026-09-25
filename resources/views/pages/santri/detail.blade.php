@@ -13,17 +13,13 @@
                     <div class="card-body p-4">
                         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
                             <div class="position-relative">
-                                @if ($item->foto && $item->foto !== 'santri.png')
-                                    <img src="{{ url('storage/uploads/santri/' . $item->foto) }}" alt="{{ $item->user->name }}"
-                                        class="rounded-circle border shadow-sm" width="105" height="105" style="object-fit: cover;">
-                                @else
-                                    <img src="{{ url('img/santri.png') }}" alt="{{ $item->user->name }}"
-                                        class="rounded-circle border shadow-sm" width="105" height="105" style="object-fit: cover;">
-                                @endif
+                                <img src="{{ $item->fotoUrl() }}" loading="lazy" alt="Foto {{ $item->user?->name ?? 'Santri' }}"
+                                    class="rounded-circle border shadow-sm" width="105" height="105" style="object-fit: cover;"
+                                    onerror="this.onerror=null;this.src='{{ asset('img/santri.png') }}';">
                             </div>
                             <div class="text-center text-md-start flex-grow-1">
                                 <div class="d-flex flex-wrap align-items-center gap-2 justify-content-center justify-content-md-start mb-1">
-                                    <h4 class="mb-0 font-weight-bold text-dark">{{ $item->user->name }}</h4>
+                                    <h4 class="mb-0 font-weight-bold">{{ $item->user?->name ?? '-' }}</h4>
                                     <x-status-badge :status="$item->status" />
                                 </div>
                                 <div class="text-muted font-13 mb-2">
