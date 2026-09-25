@@ -105,7 +105,7 @@
                             <div class="row g-2 align-items-center">
                                 <div class="col-12 col-md-4">
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white"><i class="bx bx-barcode font-18"></i></span>
+                                        <span class="input-group-text"><i class="bx bx-barcode font-18"></i></span>
                                         <input type="search" class="form-control" maxlength="8" id="no_induk" name="no_induk"
                                             placeholder="Masukkan 8 digit No Induk" autofocus autocomplete="off">
                                     </div>

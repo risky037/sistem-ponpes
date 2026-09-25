@@ -6,8 +6,8 @@
         'Santri Alumni', 'Nonaktif', 0, false => 'bg-secondary',
         'Santri Pindah', 'Santri Drop Out' => 'bg-danger',
         'Ganjil' => 'bg-primary',
-        'Genap' => 'bg-info text-dark',
-        default => 'bg-light text-dark border',
+        'Genap' => 'bg-info text-white',
+        default => 'bg-light-secondary text-secondary border',
     };
 @endphp
 

@@ -83,20 +83,20 @@
                         class="img-fluid rounded-circle border shadow-sm p-1" id="santri_profile"
                         style="width: 120px; height: 120px; object-fit: cover;">
                 </div>
-                <h5 class="font-weight-bold text-dark mb-1" id="preview_name">-</h5>
+                <h5 class="font-weight-bold mb-1" id="preview_name">-</h5>
                 <p class="text-muted small mb-3">NIS: <span id="preview_nis" class="font-weight-bold text-primary">-</span></p>
 
                 <div class="row g-2 text-start small mb-3">
                     <div class="col-6">
                         <div class="p-2 border rounded bg-light">
                             <span class="text-muted d-block font-11">Kelas</span>
-                            <strong id="preview_kelas" class="text-dark">-</strong>
+                            <strong id="preview_kelas">-</strong>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="p-2 border rounded bg-light">
                             <span class="text-muted d-block font-11">Kamar</span>
-                            <strong id="preview_kamar" class="text-dark">-</strong>
+                            <strong id="preview_kamar">-</strong>
                         </div>
                     </div>
                 </div>

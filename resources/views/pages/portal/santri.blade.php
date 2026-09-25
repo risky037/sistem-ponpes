@@ -42,8 +42,8 @@
                                     @else
                                         <img src="{{ url('img/santri.png') }}" alt="Foto Santri" class="rounded-circle p-1 border" style="width: 110px; height: 110px; object-fit: cover;">
                                     @endif
-                                    <h5 class="mb-1 mt-3 font-weight-bold text-dark">{{ $santri->user->name }}</h5>
-                                    <p class="text-muted mb-2 font-13">NIS: <span class="fw-bold text-dark">{{ $santri->no_induk }}</span></p>
+                                    <h5 class="mb-1 mt-3 font-weight-bold">{{ $santri->user->name }}</h5>
+                                    <p class="text-muted mb-2 font-13">NIS: <span class="fw-bold">{{ $santri->no_induk }}</span></p>
                                     <x-status-badge :status="$santri->status" />
 
                                     <hr class="my-3">
@@ -51,27 +51,27 @@
                                     <div class="text-start">
                                         <div class="d-flex justify-content-between py-2 border-bottom font-13">
                                             <span class="text-muted">Kelas Aktif:</span>
-                                            <span class="fw-bold text-dark">
+                                            <span class="fw-bold">
                                                 {{ isset($santri->kelas_santri) && $santri->kelas_santri->kelas ? $santri->kelas_santri->kelas->tingkatan . ' - ' . $santri->kelas_santri->kelas->kelas : 'Belum ditentukan' }}
                                             </span>
                                         </div>
                                         <div class="d-flex justify-content-between py-2 border-bottom font-13">
                                             <span class="text-muted">Kamar Asrama:</span>
-                                            <span class="fw-bold text-dark">
+                                            <span class="fw-bold">
                                                 {{ isset($santri->kamar_santri) && $santri->kamar_santri->kamar ? $santri->kamar_santri->kamar->nama . ' (Blok ' . $santri->kamar_santri->kamar->blok . ')' : 'Belum ditentukan' }}
                                             </span>
                                         </div>
                                         <div class="d-flex justify-content-between py-2 border-bottom font-13">
                                             <span class="text-muted">Tempat, Tgl Lahir:</span>
-                                            <span class="text-dark">{{ $santri->tempat_lahir }}, @formatDate($santri->tanggal_lahir)</span>
+                                            <span>{{ $santri->tempat_lahir }}, @formatDate($santri->tanggal_lahir)</span>
                                         </div>
                                         <div class="d-flex justify-content-between py-2 border-bottom font-13">
                                             <span class="text-muted">Jenis Kelamin:</span>
-                                            <span class="text-dark">{{ $santri->jenis_kelamin }}</span>
+                                            <span>{{ $santri->jenis_kelamin }}</span>
                                         </div>
                                         <div class="d-flex justify-content-between py-2 border-bottom font-13">
                                             <span class="text-muted">Tahun Masuk:</span>
-                                            <span class="text-dark">{{ $santri->tahun_masuk }} ({{ $santri->tahun_masuk_hijriyah }} H)</span>
+                                            <span>{{ $santri->tahun_masuk }} ({{ $santri->tahun_masuk_hijriyah }} H)</span>
                                         </div>
                                         @if ($santri->student_batch)
                                             <div class="d-flex justify-content-between py-2 font-13">
@@ -89,7 +89,7 @@
                             <!-- Attendance KPI Grid -->
                             <div class="card radius-15 border shadow-sm mb-4">
                                 <div class="card-header bg-transparent border-bottom py-3">
-                                    <h6 class="mb-0 font-weight-bold text-dark">
+                                    <h6 class="mb-0 font-weight-bold">
                                         <i class="bx bx-check-square me-2 text-success"></i>Ringkasan Kehadiran Pembelajaran
                                     </h6>
                                 </div>
@@ -131,7 +131,7 @@
                             <!-- Read-Only Assessment Scores Table -->
                             <div class="card radius-15 border shadow-sm">
                                 <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between">
-                                    <h6 class="mb-0 font-weight-bold text-dark">
+                                    <h6 class="mb-0 font-weight-bold">
                                         <i class="bx bx-award me-2 text-success"></i>Rekap Nilai Penilaian Akademik
                                     </h6>
                                     @if ($activeEnrollment && $activeEnrollment->academicYear)

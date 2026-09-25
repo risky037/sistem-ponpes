@@ -21,8 +21,9 @@
                                             <h6 class="font-weight-bold font-14 mb-3">Logo Aplikasi</h6>
                                             @if ($setting->logo)
                                                 <div class="mb-3">
-                                                    <img src="{{ url('/storage/uploads/setting/', $setting->logo) }}"
-                                                        alt="logo" class="img-fluid border rounded p-1 bg-white" style="max-height: 80px;">
+                                                    <img src="{{ $setting->logoUrl() }}"
+                                                        alt="logo" class="img-fluid border rounded p-1" style="max-height: 80px;"
+                                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/logo-icon.png') }}';">
                                                 </div>
                                             @endif
                                             <x-input type="file" id="logo" name="logo" label="Ganti Logo (PNG, JPG, max 5MB)" />
@@ -34,8 +35,9 @@
                                             <h6 class="font-weight-bold font-14 mb-3">Favicon Aplikasi</h6>
                                             @if ($setting->favicon)
                                                 <div class="mb-3">
-                                                    <img src="{{ url('/storage/uploads/setting/', $setting->favicon) }}"
-                                                        alt="favicon" class="img-fluid border rounded p-1 bg-white" style="max-height: 48px;">
+                                                    <img src="{{ $setting->faviconUrl() }}"
+                                                        alt="favicon" class="img-fluid border rounded p-1" style="max-height: 48px;"
+                                                        onerror="this.onerror=null;this.src='{{ asset('assets/images/favicon-32x32.png') }}';">
                                                 </div>
                                             @endif
                                             <x-input type="file" id="favicon" name="favicon" label="Ganti Favicon (PNG, JPG, max 5MB)" />

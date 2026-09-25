@@ -175,6 +175,7 @@
                                         @empty
                                             <tr>
                                                 <td colspan="5" class="text-center py-4 text-muted">
+                                                    <i class="bx bx-user-x font-30 d-block mb-1"></i>
                                                     Tidak ada santri yang terdaftar aktif pada kelas dan tahun ajaran ini.
                                                 </td>
                                             </tr>

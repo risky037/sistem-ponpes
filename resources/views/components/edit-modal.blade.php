@@ -10,7 +10,7 @@
                         <i class="bx {{ $icon }} font-24"></i>
                     </div>
                     <div>
-                        <h5 class="modal-title font-weight-bold text-dark" id="editModalLabel-{{ $id }}">{{ $title }}</h5>
+                        <h5 class="modal-title font-weight-bold" id="editModalLabel-{{ $id }}">{{ $title }}</h5>
                     </div>
                 </div>
                 <button type="button" class="btn-close align-self-start" data-bs-dismiss="modal" aria-label="Close"></button>

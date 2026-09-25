@@ -16,7 +16,7 @@
                         <span class="badge bg-light-danger text-danger border border-danger px-2 py-1 font-11 d-block mb-1">
                             <i class="bx bx-error-circle me-1"></i> Min. Rp 10.000
                         </span>
-                        <span class="badge bg-light-warning text-dark border border-warning px-2 py-1 font-11">
+                        <span class="badge bg-light-warning text-warning border border-warning px-2 py-1 font-11">
                             <i class="bx bx-time me-1"></i> Maks. 1x / Hari
                         </span>
                     </div>
@@ -25,7 +25,7 @@
                 <div id="alert_withdrawal_status" style="display: none;" class="alert alert-warning border-0 bg-light-warning py-2 mb-3">
                     <div class="d-flex align-items-center">
                         <i class="bx bx-error font-24 text-warning me-2"></i>
-                        <span id="withdrawal_status_text" class="small text-dark"></span>
+                        <span id="withdrawal_status_text" class="small"></span>
                     </div>
                 </div>
 
@@ -105,20 +105,20 @@
                         class="img-fluid rounded-circle border shadow-sm p-1" id="santri_profile"
                         style="width: 120px; height: 120px; object-fit: cover;">
                 </div>
-                <h5 class="font-weight-bold text-dark mb-1" id="preview_name">-</h5>
+                <h5 class="font-weight-bold mb-1" id="preview_name">-</h5>
                 <p class="text-muted small mb-3">NIS: <span id="preview_nis" class="font-weight-bold text-primary">-</span></p>
 
                 <div class="row g-2 text-start small mb-3">
                     <div class="col-6">
                         <div class="p-2 border rounded bg-light">
                             <span class="text-muted d-block font-11">Kelas</span>
-                            <strong id="preview_kelas" class="text-dark">-</strong>
+                            <strong id="preview_kelas">-</strong>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="p-2 border rounded bg-light">
                             <span class="text-muted d-block font-11">Kamar</span>
-                            <strong id="preview_kamar" class="text-dark">-</strong>
+                            <strong id="preview_kamar">-</strong>
                         </div>
                     </div>
                 </div>

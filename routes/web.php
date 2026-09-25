@@ -24,6 +24,7 @@ use App\Http\Controllers\Riwayat\RiwayatController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Santri\SantriController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StorageFallbackController;
 use App\Http\Controllers\Tabungan\SaldoDebitController;
 use App\Http\Controllers\Transaksi\TransaksiController;
 use App\Http\Controllers\TransferController;
@@ -250,3 +251,8 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 });
+
+// Storage asset fallback for shared hosting environments without public/storage symlinks
+Route::get('storage/{path}', [StorageFallbackController::class, 'show'])
+    ->where('path', '.*')
+    ->name('storage.fallback');

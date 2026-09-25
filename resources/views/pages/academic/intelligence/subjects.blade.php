@@ -26,7 +26,7 @@
                             </div>
                             <div>
                                 <form action="{{ route('academic.intelligence.subjects') }}" method="GET" class="d-flex align-items-center gap-2">
-                                    <select name="academic_year_id" class="form-select form-select-sm bg-white text-dark fw-semibold" onchange="this.form.submit()">
+                                    <select name="academic_year_id" class="form-select form-select-sm fw-semibold" onchange="this.form.submit()">
                                         @foreach ($academicYears as $ay)
                                             <option value="{{ $ay->id }}" {{ $year && $year->id === $ay->id ? 'selected' : '' }}>
                                                 {{ $ay->name }} ({{ $ay->semester }})
@@ -49,7 +49,7 @@
                     <div class="card radius-15 border shadow-sm">
                         <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center py-3">
                             <h6 class="mb-0 fw-bold"><i class="bx bx-table me-1 text-primary"></i> Indikator Capaian Pembelajaran per Mata Pelajaran</h6>
-                            <span class="badge bg-light text-dark">{{ $subjectIndicators->count() }} Penugasan Mapel</span>
+                            <span class="badge bg-light-primary text-primary">{{ $subjectIndicators->count() }} Penugasan Mapel</span>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -71,8 +71,8 @@
                                         @forelse ($subjectIndicators as $idx => $item)
                                             <tr>
                                                 <td>{{ $idx + 1 }}</td>
-                                                <td class="fw-bold text-dark">{{ $item['mapel_name'] }}</td>
-                                                <td><span class="badge bg-light text-dark border">{{ $item['kelas_name'] }}</span></td>
+                                                <td class="fw-bold">{{ $item['mapel_name'] }}</td>
+                                                <td><span class="badge bg-light-secondary text-secondary border">{{ $item['kelas_name'] }}</span></td>
                                                 <td>{{ $item['teacher_name'] }}</td>
                                                 <td class="text-center">
                                                     @if ($item['assignment_status'] === 'Aktif')
@@ -114,7 +114,10 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="9" class="text-center py-4 text-muted">Belum ada data mata pelajaran pada tahun ajaran ini.</td>
+                                                <td colspan="9" class="text-center py-4 text-muted">
+                                                    <i class="bx bx-folder-open font-30 d-block mb-1"></i>
+                                                    Belum ada data mata pelajaran pada tahun ajaran ini.
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>

@@ -319,7 +319,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="fw-semibold">{{ $log->user?->name ?? 'Sistem' }}</td>
                                             <td>
-                                                <span class="badge bg-light text-dark border">
+                                                <span class="badge bg-light-secondary text-secondary border">
                                                     {{ match ($log->export_type) {
                                                         'enrollment' => 'Pendaftaran Santri',
                                                         'teaching_assignment' => 'Penugasan Guru',
@@ -334,7 +334,7 @@
                                                 @if ($log->format === 'xlsx')
                                                     <span class="badge bg-success"><i class="bx bx-spreadsheet me-1"></i>Excel</span>
                                                 @else
-                                                    <span class="badge bg-info text-dark"><i class="bx bx-printer me-1"></i>Cetak / PDF</span>
+                                                    <span class="badge bg-info text-white"><i class="bx bx-printer me-1"></i>Cetak / PDF</span>
                                                 @endif
                                             </td>
                                             <td>{{ $log->academicYear?->name ?? '-' }}</td>

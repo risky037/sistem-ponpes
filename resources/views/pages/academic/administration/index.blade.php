@@ -140,7 +140,7 @@
                         <div class="card radius-15 border shadow-sm h-100 bg-light">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar-lg bg-white text-dark rounded-circle p-3 me-3 shadow-sm">
+                                    <div class="avatar-lg bg-light-primary text-primary rounded-circle p-3 me-3 shadow-sm">
                                         <i class="bx bx-file fs-3"></i>
                                     </div>
                                     <div>
@@ -185,7 +185,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="fw-semibold">{{ $log->user?->name ?? 'Sistem' }}</td>
                                             <td>
-                                                <span class="badge bg-light text-dark border">
+                                                <span class="badge bg-light-secondary text-secondary border">
                                                     {{ match ($log->export_type) {
                                                         'enrollment' => 'Pendaftaran Santri',
                                                         'teaching_assignment' => 'Penugasan Mengajar',
@@ -200,7 +200,7 @@
                                                 @if ($log->format === 'xlsx')
                                                     <span class="badge bg-success"><i class="bx bx-spreadsheet me-1"></i>Excel</span>
                                                 @else
-                                                    <span class="badge bg-info text-dark"><i class="bx bx-printer me-1"></i>Cetak / PDF</span>
+                                                    <span class="badge bg-info text-white"><i class="bx bx-printer me-1"></i>Cetak / PDF</span>
                                                 @endif
                                             </td>
                                             <td>{{ $log->academicYear?->name ?? '-' }}</td>

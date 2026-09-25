@@ -7,11 +7,11 @@
 ])
 
 <div class="text-center py-5 px-3">
-    <div class="widgets-icons-2 rounded-circle bg-light text-muted mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+    <div class="widgets-icons-2 rounded-circle bg-light-secondary text-secondary mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
         <i class="{{ $icon }} font-30"></i>
     </div>
-    <h6 class="font-weight-bold text-dark mb-1">{{ $title }}</h6>
-    <p class="text-muted small mb-3" style="max-width: 420px; margin: 0 auto;">
+    <h6 class="font-weight-bold mb-1">{{ $title }}</h6>
+    <p class="text-secondary small mb-3" style="max-width: 420px; margin: 0 auto;">
         {{ $message }}
     </p>
     @if ($url && $buttonText)

@@ -26,12 +26,12 @@
                                     @else
                                         <span class="text-white">Belum Diatur</span>
                                     @endif
-                                    | Waktu Komputasi: <span class="badge bg-light text-dark">{{ $dashboardData ? \Illuminate\Support\Carbon::parse($dashboardData['generated_at'])->translatedFormat('d M Y H:i:s') : '-' }}</span>
+                                    | Waktu Komputasi: <span class="badge bg-light-primary text-primary">{{ $dashboardData ? \Illuminate\Support\Carbon::parse($dashboardData['generated_at'])->translatedFormat('d M Y H:i:s') : '-' }}</span>
                                 </p>
                             </div>
                             <div class="d-flex align-items-center flex-wrap gap-2">
                                 <form action="{{ route('academic.intelligence.index') }}" method="GET" class="d-flex align-items-center gap-2">
-                                    <select name="academic_year_id" class="form-select form-select-sm bg-white text-dark fw-semibold" onchange="this.form.submit()">
+                                    <select name="academic_year_id" class="form-select form-select-sm fw-semibold" onchange="this.form.submit()">
                                         @foreach ($academicYears as $ay)
                                             <option value="{{ $ay->id }}" {{ $year && $year->id === $ay->id ? 'selected' : '' }}>
                                                 {{ $ay->name }} ({{ $ay->semester }}) {{ $ay->is_active ? '★' : '' }}
@@ -164,7 +164,7 @@
                                     <div class="d-flex align-items-center">
                                         <div>
                                             <p class="text-muted mb-1 text-uppercase small fw-semibold">Rata-rata Institusi</p>
-                                            <h4 class="mb-0 fw-bold text-dark">
+                                            <h4 class="mb-0 fw-bold">
                                                 {{ $kpis['average_score'] !== null ? number_format((float) $kpis['average_score'], 2) : '-' }}
                                             </h4>
                                             <small class="text-muted">{{ $grades['total_scored_students'] ?? 0 }} Santri Terekap</small>
@@ -253,7 +253,7 @@
                     <div class="card radius-15 border shadow-sm mb-4">
                         <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center py-3">
                             <h6 class="mb-0 fw-bold"><i class="bx bx-shield-quarter me-1 text-primary"></i> Matriks Kesehatan Operasional Kelas</h6>
-                            <span class="badge bg-light text-dark">{{ $classHealth->count() }} Kelas Terdata</span>
+                            <span class="badge bg-light-primary text-primary">{{ $classHealth->count() }} Kelas Terdata</span>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -314,7 +314,10 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="9" class="text-center py-4 text-muted">Belum ada data operasional kelas pada tahun ajaran ini.</td>
+                                                <td colspan="9" class="text-center py-4 text-muted">
+                                                    <i class="bx bx-folder-open font-30 d-block mb-1"></i>
+                                                    Belum ada data operasional kelas pada tahun ajaran ini.
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -344,7 +347,7 @@
                                             @foreach ($snapshots->take(10) as $snap)
                                                 <tr>
                                                     <td>{{ $snap->snapshot_date->format('d M Y') }}</td>
-                                                    <td><span class="badge bg-light text-dark border">{{ $snap->snapshot_type }}</span></td>
+                                                    <td><span class="badge bg-light-secondary text-secondary border">{{ $snap->snapshot_type }}</span></td>
                                                     <td>{{ $snap->capturedBy?->name ?? 'Sistem / Otomatis' }}</td>
                                                     <td class="small text-muted">
                                                         @if ($snap->snapshot_type === 'institutional_kpi')

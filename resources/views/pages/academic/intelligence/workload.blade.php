@@ -26,7 +26,7 @@
                             </div>
                             <div>
                                 <form action="{{ route('academic.intelligence.workload') }}" method="GET" class="d-flex align-items-center gap-2">
-                                    <select name="academic_year_id" class="form-select form-select-sm bg-white text-dark fw-semibold" onchange="this.form.submit()">
+                                    <select name="academic_year_id" class="form-select form-select-sm fw-semibold" onchange="this.form.submit()">
                                         @foreach ($academicYears as $ay)
                                             <option value="{{ $ay->id }}" {{ $year && $year->id === $ay->id ? 'selected' : '' }}>
                                                 {{ $ay->name }} ({{ $ay->semester }})
@@ -104,7 +104,7 @@
                                     <div class="d-flex align-items-center">
                                         <div>
                                             <p class="text-muted mb-1 text-uppercase small fw-semibold">Realisasi Sesi Global</p>
-                                            <h4 class="mb-0 fw-bold text-dark">
+                                            <h4 class="mb-0 fw-bold">
                                                 {{ $workloadStats['overall_fulfillment_rate'] !== null ? $workloadStats['overall_fulfillment_rate'].'%' : '-' }}
                                             </h4>
                                             <small class="text-muted">Persentase Ketercapaian</small>
@@ -122,7 +122,7 @@
                     <div class="card radius-15 border shadow-sm">
                         <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center py-3">
                             <h6 class="mb-0 fw-bold"><i class="bx bx-list-check me-1 text-success"></i> Rincian Beban Kerja & Kinerja Pengajar</h6>
-                            <span class="badge bg-light text-dark">{{ $workloadOverview->count() }} Guru Terdata</span>
+                            <span class="badge bg-light-primary text-primary">{{ $workloadOverview->count() }} Guru Terdata</span>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -144,10 +144,10 @@
                                         @forelse ($workloadOverview as $idx => $row)
                                             <tr>
                                                 <td>{{ $idx + 1 }}</td>
-                                                <td class="fw-bold text-dark">{{ $row['name'] }}</td>
+                                                <td class="fw-bold">{{ $row['name'] }}</td>
                                                 <td class="small text-muted">{{ $row['email'] }}</td>
-                                                <td class="text-center"><span class="badge bg-light text-primary border">{{ $row['subjects_count'] }} Mapel</span></td>
-                                                <td class="text-center"><span class="badge bg-light text-dark border">{{ $row['classes_count'] }} Kelas</span></td>
+                                                <td class="text-center"><span class="badge bg-light-primary text-primary border">{{ $row['subjects_count'] }} Mapel</span></td>
+                                                <td class="text-center"><span class="badge bg-light-secondary text-secondary border">{{ $row['classes_count'] }} Kelas</span></td>
                                                 <td class="text-center"><span class="fw-semibold">{{ $row['weekly_schedule_slots'] }}</span></td>
                                                 <td class="text-center">
                                                     <span class="text-success fw-bold">{{ $row['completed_sessions'] }}</span>
@@ -176,7 +176,10 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="9" class="text-center py-4 text-muted">Belum ada penugasan mengajar untuk tahun ajaran ini.</td>
+                                                <td colspan="9" class="text-center py-4 text-muted">
+                                                    <i class="bx bx-folder-open font-30 d-block mb-1"></i>
+                                                    Belum ada penugasan mengajar untuk tahun ajaran ini.
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>

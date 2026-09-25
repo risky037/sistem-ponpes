@@ -32,6 +32,17 @@ class SettingController extends Controller
                 Image::read($logo->getRealPath())
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
+
+                $publicPath = public_path('uploads/setting/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
                 $validate['logo'] = $filename;
             }
             $favicon = request()->file('favicon');
@@ -46,6 +57,17 @@ class SettingController extends Controller
                 Image::read($favicon->getRealPath())
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
+
+                $publicPath = public_path('uploads/setting/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
                 $validate['favicon'] = $filename;
             }
             $kts_master = request()->file('kts_master');
@@ -60,6 +82,17 @@ class SettingController extends Controller
                 Image::read($kts_master->getRealPath())
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
+
+                $publicPath = public_path('uploads/setting/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
                 $validate['kts_master'] = $filename;
             }
             Setting::updateOrCreate($validate);
@@ -94,9 +127,25 @@ class SettingController extends Controller
                 Image::read($logo->getRealPath())
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
-                // delete old photo from storage
-                if ($setting->logo != null && file_exists($path.$setting->logo)) {
-                    unlink($path.$setting->logo);
+
+                $publicPath = public_path('uploads/setting/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
+                // delete old photo from storage and public mirror
+                if ($setting->logo != null) {
+                    if (file_exists($path.$setting->logo)) {
+                        @unlink($path.$setting->logo);
+                    }
+                    if (file_exists($publicPath.$setting->logo)) {
+                        @unlink($publicPath.$setting->logo);
+                    }
                 }
                 $validate['logo'] = $filename;
             }
@@ -110,9 +159,25 @@ class SettingController extends Controller
                 Image::read($favicon->getRealPath())
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
-                // delete old photo from storage
-                if ($setting->favicon != null && file_exists($path.$setting->favicon)) {
-                    unlink($path.$setting->favicon);
+
+                $publicPath = public_path('uploads/setting/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
+                // delete old photo from storage and public mirror
+                if ($setting->favicon != null) {
+                    if (file_exists($path.$setting->favicon)) {
+                        @unlink($path.$setting->favicon);
+                    }
+                    if (file_exists($publicPath.$setting->favicon)) {
+                        @unlink($publicPath.$setting->favicon);
+                    }
                 }
                 $validate['favicon'] = $filename;
             }
@@ -126,9 +191,25 @@ class SettingController extends Controller
                 Image::read($kts_master->getRealPath())
                     ->scaleDown(width: 240, height: 295)
                     ->save($path.$filename);
-                // delete old photo from storage
-                if ($setting->kts_master != null && file_exists($path.$setting->kts_master)) {
-                    unlink($path.$setting->kts_master);
+
+                $publicPath = public_path('uploads/setting/');
+                try {
+                    if (! file_exists($publicPath)) {
+                        mkdir($publicPath, 0755, true);
+                    }
+                    @copy($path.$filename, $publicPath.$filename);
+                } catch (\Throwable $e) {
+                    // Non-critical mirror failure
+                }
+
+                // delete old photo from storage and public mirror
+                if ($setting->kts_master != null) {
+                    if (file_exists($path.$setting->kts_master)) {
+                        @unlink($path.$setting->kts_master);
+                    }
+                    if (file_exists($publicPath.$setting->kts_master)) {
+                        @unlink($publicPath.$setting->kts_master);
+                    }
                 }
                 $validate['kts_master'] = $filename;
             }

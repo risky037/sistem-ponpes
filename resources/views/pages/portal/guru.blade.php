@@ -33,7 +33,7 @@
                                 <div class="d-flex align-items-center">
                                     <div>
                                         <p class="mb-1 text-muted text-uppercase font-12 font-weight-bold">Tahun Ajaran Aktif</p>
-                                        <h5 class="mb-0 font-weight-bold text-dark">{{ $activeYear ? $activeYear->name : 'Belum Diatur' }}</h5>
+                                        <h5 class="mb-0 font-weight-bold">{{ $activeYear ? $activeYear->name : 'Belum Diatur' }}</h5>
                                         <small class="text-muted">{{ $activeYear ? 'Semester ' . $activeYear->semester : '-' }}</small>
                                     </div>
                                     <div class="widgets-icons ms-auto rounded-circle bg-primary text-white">
@@ -83,7 +83,7 @@
                 <div class="card radius-15 border shadow-sm mb-4">
                     <div class="card-body p-3">
                         <div class="d-flex align-items-center gap-2 flex-wrap">
-                            <span class="fw-bold me-2 text-dark font-14"><i class="bx bx-bolt-circle text-warning align-middle font-18"></i> Akses Cepat:</span>
+                            <span class="fw-bold me-2 font-14"><i class="bx bx-bolt-circle text-warning align-middle font-18"></i> Akses Cepat:</span>
                             <a href="{{ route('attendance.index') }}" class="btn btn-primary btn-sm radius-10">
                                 <i class="bx bx-check-square me-1"></i> Input Presensi Kelas
                             </a>
@@ -100,7 +100,7 @@
                 <!-- Assigned Classes & Subjects Table -->
                 <div class="card radius-15 border shadow-sm">
                     <div class="card-header bg-transparent border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold text-dark">
+                        <h6 class="mb-0 font-weight-bold">
                             <i class="bx bx-list-check me-2 text-success"></i>Daftar Mata Pelajaran & Kelas yang Diampu
                         </h6>
                     </div>

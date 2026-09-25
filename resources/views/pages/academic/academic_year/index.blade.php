@@ -98,7 +98,7 @@
                             if (data === 'Ganjil') {
                                 return '<span class="badge bg-primary">Ganjil</span>';
                             } else if (data === 'Genap') {
-                                return '<span class="badge bg-info text-dark">Genap</span>';
+                                return '<span class="badge bg-info text-white">Genap</span>';
                             }
                             return data || '-';
                         }

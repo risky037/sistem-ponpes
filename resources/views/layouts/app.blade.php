@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>@yield('title', config('app.name'))</title>
     <link rel="icon"
-        href="{{ $setting != null ? url('storage/uploads/setting/', $setting->favicon) : url('assets/images/favicon-32x32.png') }}"
+        href="{{ \App\Models\Setting::getFaviconUrl($setting ?? null) }}"
         type="image/png" />
     <link href="{{ url('assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet" />
     <link href="{{ url('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet" />
@@ -72,6 +72,25 @@
             }
 
             if (window.jQuery && $.fn && $.fn.dataTable) {
+                $.extend(true, $.fn.dataTable.defaults, {
+                    language: {
+                        processing: '<div class="d-flex justify-content-center my-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Memuat data...</span></div></div>',
+                        search: "Cari:",
+                        lengthMenu: "Tampilkan _MENU_ entri",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                        infoEmpty: "Menampilkan 0 sampai 0 dari 0 entri",
+                        infoFiltered: "(disaring dari _MAX_ total entri)",
+                        zeroRecords: '<div class="text-center py-4 text-muted"><i class="bx bx-folder-open font-30 d-block mb-1"></i>Tidak ditemukan data yang sesuai</div>',
+                        emptyTable: '<div class="text-center py-4 text-muted"><i class="bx bx-folder-open font-30 d-block mb-1"></i>Tidak ada data yang tersedia pada tabel ini</div>',
+                        paginate: {
+                            first: "Pertama",
+                            previous: "Sebelumnya",
+                            next: "Berikutnya",
+                            last: "Terakhir"
+                        }
+                    }
+                });
+
                 var bulanIndoList = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
                 $.fn.dataTable.render.indonesianDate = function () {

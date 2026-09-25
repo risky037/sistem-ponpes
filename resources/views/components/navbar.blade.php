@@ -3,8 +3,8 @@
 <div class="sidebar-wrapper" data-simplebar="true">
     <div class="sidebar-header">
         <div class="">
-            <img src="{{ $setting != null ? url('storage/uploads/setting/', $setting->logo) : url('assets/images/logo-icon.png') }}"
-                class="logo-icon-2" alt="" />
+            <img src="{{ \App\Models\Setting::getLogoUrl($setting ?? null) }}"
+                class="logo-icon-2" alt="Logo" onerror="this.onerror=null;this.src='{{ asset('assets/images/logo-icon.png') }}';" />
         </div>
         <div>
             <h4 class="logo-text">Digitren</h4>

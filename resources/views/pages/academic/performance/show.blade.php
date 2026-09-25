@@ -188,7 +188,10 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="7" class="text-center text-muted py-3">Belum ada catatan presensi pembelajaran.</td>
+                                                    <td colspan="7" class="text-center text-muted py-4">
+                                                        <i class="bx bx-folder-open font-24 d-block mb-1"></i>
+                                                        Belum ada catatan presensi pembelajaran.
+                                                    </td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -230,7 +233,10 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="text-center text-muted py-3">Belum ada nilai komponen penilaian yang tercatat.</td>
+                                                    <td colspan="9" class="text-center text-muted py-4">
+                                                        <i class="bx bx-folder-open font-24 d-block mb-1"></i>
+                                                        Belum ada nilai komponen penilaian yang tercatat.
+                                                    </td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
