@@ -200,6 +200,15 @@ class SantriController extends Controller
 
     public function print_kts(Santri $santri)
     {
+        $santri->load([
+            'user',
+            'wali_santri',
+            'alamat_santri',
+            'kelas_santri.kelas',
+            'kamar_santri.kamar',
+            'student_batch',
+        ]);
+
         return view('pages.santri.print', compact('santri'));
     }
 

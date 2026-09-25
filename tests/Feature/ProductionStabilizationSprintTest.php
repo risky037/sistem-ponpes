@@ -3,8 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\AlamatSantri;
+use App\Models\Kamar;
+use App\Models\KamarSantri;
+use App\Models\Kelas;
+use App\Models\KelasSantri;
 use App\Models\Santri;
+use App\Models\StudentBatch;
 use App\Models\User;
+use App\Models\WaliSantri;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -228,5 +234,113 @@ class ProductionStabilizationSprintTest extends TestCase
         $response->assertSee('Ust Dev');
         $response->assertSee('Ridhsuki');
         $response->assertSee('https://github.com/Ridhsuki');
+    }
+
+    /**
+     * Test 8: Santri KTS print renders successfully when santri has complete relations.
+     */
+    public function test_santri_kts_print_renders_with_complete_relations(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('Administrator');
+
+        $user = User::factory()->create([
+            'name' => 'Ahmad Zaki',
+        ]);
+        $user->assignRole('Santri');
+
+        $batch = StudentBatch::create([
+            'name' => 'Angkatan 2024',
+            'year' => 2024,
+        ]);
+
+        $santri = Santri::factory()->create([
+            'user_id' => $user->id,
+            'no_induk' => '14450001',
+            'tempat_lahir' => 'Surabaya',
+            'tanggal_lahir' => '2008-05-15',
+            'student_batch_id' => $batch->id,
+        ]);
+
+        WaliSantri::create([
+            'santri_id' => $santri->id,
+            'nama_ayah' => 'Bapak Mahmud',
+            'nama_ibu' => 'Ibu Siti',
+        ]);
+
+        AlamatSantri::create([
+            'santri_id' => $santri->id,
+            'alamat_lengkap' => 'Jl. Pesantren No. 45, Sumenep',
+        ]);
+
+        $kelas = Kelas::create([
+            'kode' => 'K1A',
+            'kelas' => '1A',
+            'tingkatan' => 'Ula',
+        ]);
+        KelasSantri::create([
+            'santri_id' => $santri->id,
+            'kelas_id' => $kelas->id,
+        ]);
+
+        $kamar = Kamar::create([
+            'kode' => 'KMR-A',
+            'nama' => 'Kamar Abu Bakar',
+            'blok' => 'A',
+            'maksimal_santri' => 10,
+            'jumlah_santri' => 1,
+        ]);
+        KamarSantri::create([
+            'santri_id' => $santri->id,
+            'kamar_id' => $kamar->id,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('santri.print.kts', '14450001'));
+
+        $response->assertOk();
+        $response->assertSee('PRINT KTS - AHMAD ZAKI');
+        $response->assertSee('Ahmad Zaki');
+        $response->assertSee('14450001');
+        $response->assertSee('Surabaya');
+        $response->assertSee('Bapak Mahmud');
+        $response->assertSee('Ibu Siti');
+        $response->assertSee('Jl. Pesantren No. 45, Sumenep');
+        $response->assertSee('data-class="Ula 1A"', false);
+        $response->assertSee('data-room="Kamar Abu Bakar"', false);
+        $response->assertSee('data-batch="Angkatan 2024"', false);
+    }
+
+    /**
+     * Test 9: Santri KTS print renders safely when santri is missing optional relations.
+     */
+    public function test_santri_kts_print_renders_safely_when_optional_relations_are_missing(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('Administrator');
+
+        $user = User::factory()->create([
+            'name' => 'Santri Mandiri',
+        ]);
+        $user->assignRole('Santri');
+
+        // Santri without optional relations: wali, alamat, kelas, kamar, student_batch
+        $santri = Santri::factory()->create([
+            'user_id' => $user->id,
+            'no_induk' => '14450002',
+            'tempat_lahir' => '',
+            'tanggal_lahir' => '2009-01-01',
+            'student_batch_id' => null,
+            'foto' => 'santri.png',
+        ]);
+
+        $response = $this->actingAs($admin)->get('/print/kts/14450002');
+
+        $response->assertOk();
+        $response->assertDontSee('Attempt to read property');
+        $response->assertSee('PRINT KTS - SANTRI MANDIRI');
+        $response->assertSee('Santri Mandiri');
+        $response->assertSee('14450002');
+        $response->assertSee('data-class="-"', false);
+        $response->assertSee('data-room="-"', false);
     }
 }
