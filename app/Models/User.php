@@ -80,7 +80,17 @@ class User extends Authenticatable
         return $this->hasMany(LearningMaterial::class, 'teacher_id');
     }
 
+    public function learning_materials(): HasMany
+    {
+        return $this->hasMany(LearningMaterial::class, 'teacher_id');
+    }
+
     public function createdLearningMaterials(): HasMany
+    {
+        return $this->hasMany(LearningMaterial::class, 'created_by');
+    }
+
+    public function created_learning_materials(): HasMany
     {
         return $this->hasMany(LearningMaterial::class, 'created_by');
     }

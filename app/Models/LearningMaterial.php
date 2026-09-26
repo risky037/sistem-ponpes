@@ -157,6 +157,16 @@ class LearningMaterial extends Model
         return $this->hasMany(LearningMaterialFile::class, 'learning_material_id');
     }
 
+    public function learningMaterialFiles(): HasMany
+    {
+        return $this->files();
+    }
+
+    public function learning_material_files(): HasMany
+    {
+        return $this->files();
+    }
+
     /**
      * Targeted classes receiving this material.
      */
@@ -164,6 +174,16 @@ class LearningMaterial extends Model
     {
         return $this->belongsToMany(Kelas::class, 'learning_material_targets', 'learning_material_id', 'kelas_id')
             ->withTimestamps();
+    }
+
+    public function targetClasses(): BelongsToMany
+    {
+        return $this->targets();
+    }
+
+    public function target_classes(): BelongsToMany
+    {
+        return $this->targets();
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Kamar;
 use App\Models\Kelas;
+use App\Models\LearningMaterial;
 use App\Models\Santri;
 use App\Models\Setting;
 use App\Models\Tabungan;
@@ -20,6 +21,7 @@ use App\Observers\TransaksiTabunganActivityObserver;
 use App\Observers\TransferObserver;
 use App\Observers\UserObserver;
 use App\Observers\WaliSantriObserver;
+use App\Policies\LearningMaterialPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -66,6 +68,7 @@ class AppServiceProvider extends ServiceProvider
         WaliSantri::observe(WaliSantriObserver::class);
 
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(LearningMaterial::class, LearningMaterialPolicy::class);
 
         Password::defaults(function () {
             return Password::min(8);

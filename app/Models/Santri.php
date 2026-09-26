@@ -111,6 +111,26 @@ class Santri extends Model
         return $this->hasMany(AcademicEnrollment::class);
     }
 
+    public function academicEnrollments(): HasMany
+    {
+        return $this->hasMany(AcademicEnrollment::class);
+    }
+
+    public function kelasSantri(): HasOne
+    {
+        return $this->hasOne(KelasSantri::class);
+    }
+
+    public function waliSantri(): HasOne
+    {
+        return $this->hasOne(WaliSantri::class);
+    }
+
+    public function kamarSantri(): HasOne
+    {
+        return $this->hasOne(KamarSantri::class);
+    }
+
     public function pengiriman(): HasMany
     {
         return $this->hasMany(Transfer::class, 'pengirim_id');
@@ -144,6 +164,35 @@ class Santri extends Model
             'id',
             'kamar_id'
         );
+    }
+
+    /**
+     * Get the class assigned to the student via KelasSantri.
+     */
+    public function kelas(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Kelas::class,
+            KelasSantri::class,
+            'santri_id',
+            'id',
+            'id',
+            'kelas_id'
+        );
+    }
+
+    /**
+     * Get the active academic enrollment for a specific or current academic year.
+     */
+    public function activeAcademicEnrollment(?int $academicYearId = null): ?AcademicEnrollment
+    {
+        $query = $this->academic_enrollments()->where('status', AcademicEnrollment::STATUS_AKTIF);
+
+        if ($academicYearId) {
+            $query->where('academic_year_id', $academicYearId);
+        }
+
+        return $query->latest('id')->first();
     }
 
     /**
