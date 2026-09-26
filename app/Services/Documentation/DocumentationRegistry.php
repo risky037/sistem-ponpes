@@ -35,6 +35,7 @@ class DocumentationRegistry
      *     icon: string,
      *     description: string,
      *     order: int,
+     *     subfolder?: string,
      *     roles: array<string>,
      *     docs: array<string, array{
      *         title: string,
@@ -46,13 +47,53 @@ class DocumentationRegistry
     public function getCategories(): array
     {
         return [
+            'onboarding' => [
+                'name' => 'Mulai Menggunakan (Onboarding)',
+                'icon' => 'bx bx-rocket',
+                'description' => 'Panduan cepat langkah demi langkah bagi pengguna yang baru pertama kali masuk ke DIGITREN.',
+                'order' => 1,
+                'subfolder' => 'user-guide'.DIRECTORY_SEPARATOR.'onboarding',
+                'roles' => ['Administrator', 'Pengurus', 'Guru', 'Keuangan', 'Santri'],
+                'docs' => [
+                    '01-administrator-first-setup.md' => [
+                        'title' => 'Panduan Pertama Administrator',
+                        'slug' => 'administrator-first-setup',
+                        'roles' => ['Administrator'],
+                    ],
+                    '02-guru-first-use.md' => [
+                        'title' => 'Panduan Pertama Guru / Asatidz',
+                        'slug' => 'guru-first-use',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru'],
+                    ],
+                    '03-santri-first-use.md' => [
+                        'title' => 'Panduan Pertama Santri & Wali',
+                        'slug' => 'santri-first-use',
+                        'roles' => ['Administrator', 'Pengurus', 'Santri'],
+                    ],
+                    '04-pengurus-first-use.md' => [
+                        'title' => 'Panduan Pertama Dewan Pengurus',
+                        'slug' => 'pengurus-first-use',
+                        'roles' => ['Administrator', 'Pengurus'],
+                    ],
+                    '05-keuangan-first-use.md' => [
+                        'title' => 'Panduan Pertama Staf Keuangan',
+                        'slug' => 'keuangan-first-use',
+                        'roles' => ['Administrator', 'Pengurus', 'Keuangan'],
+                    ],
+                ],
+            ],
             'user-guide' => [
                 'name' => 'Panduan Pengguna',
                 'icon' => 'bx bx-book-open',
                 'description' => 'Buku panduan operasional langkah-demi-langkah bagi seluruh peran pengguna DIGITREN.',
-                'order' => 1,
+                'order' => 2,
                 'roles' => ['Administrator', 'Pengurus', 'Guru', 'Keuangan', 'Santri'],
                 'docs' => [
+                    '00-start-here.md' => [
+                        'title' => '00. Mulai Dari Sini (Start Here)',
+                        'slug' => 'start-here',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru', 'Keuangan', 'Santri'],
+                    ],
                     '01-pengenalan-sistem.md' => [
                         'title' => '01. Pengenalan Sistem DIGITREN',
                         'slug' => 'pengenalan-sistem',
@@ -109,7 +150,7 @@ class DocumentationRegistry
                 'name' => 'Arsitektur Akademik',
                 'icon' => 'bx bx-certification',
                 'description' => 'Dokumentasi fondasi alur kerja dan evaluasi pembelajaran pesantren.',
-                'order' => 2,
+                'order' => 3,
                 'roles' => ['Administrator', 'Pengurus', 'Guru'],
                 'docs' => [
                     'workflow-audit.md' => [
@@ -128,7 +169,7 @@ class DocumentationRegistry
                 'name' => 'Arsitektur Sistem & LMS',
                 'icon' => 'bx bx-cube-alt',
                 'description' => 'Desain arsitektur modul sistem, basis data, dan integrasi LMS.',
-                'order' => 3,
+                'order' => 4,
                 'roles' => ['Administrator', 'Pengurus', 'Guru'],
                 'docs' => [
                     'learning-management-design.md' => [
@@ -152,7 +193,7 @@ class DocumentationRegistry
                 'name' => 'Panduan Desain UI/UX',
                 'icon' => 'bx bx-palette',
                 'description' => 'Pedoman komponen antarmuka, token visual, dan tata letak aplikasi.',
-                'order' => 4,
+                'order' => 5,
                 'roles' => ['Administrator', 'Pengurus', 'Guru'],
                 'docs' => [
                     'lms-ui-guideline.md' => [
@@ -171,7 +212,7 @@ class DocumentationRegistry
                 'name' => 'Catatan Rilis',
                 'icon' => 'bx bx-tag',
                 'description' => 'Riwayat perubahan fitur, penguatan operasional, dan fase rilis.',
-                'order' => 5,
+                'order' => 6,
                 'roles' => ['Administrator', 'Pengurus'],
                 'docs' => [
                     'phase-5.8.8.1-release-notes.md' => [
@@ -227,11 +268,12 @@ class DocumentationRegistry
         }
 
         $category = $categories[$categoryKey];
+        $folder = $category['subfolder'] ?? $categoryKey;
 
         // 1. Search in defined docs in registry
         foreach ($category['docs'] as $filename => $docMeta) {
             if ($docMeta['slug'] === $slug) {
-                $filePath = $this->baseDocsPath.DIRECTORY_SEPARATOR.$categoryKey.DIRECTORY_SEPARATOR.$filename;
+                $filePath = $this->baseDocsPath.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$filename;
                 if (! file_exists($filePath)) {
                     continue;
                 }
@@ -247,8 +289,8 @@ class DocumentationRegistry
             }
         }
 
-        // 2. Fallback: Check if file with matching slug exists in docs/{category}/
-        $folderPath = $this->baseDocsPath.DIRECTORY_SEPARATOR.$categoryKey;
+        // 2. Fallback: Check if file with matching slug exists in docs/{folder}/
+        $folderPath = $this->baseDocsPath.DIRECTORY_SEPARATOR.$folder;
         if (is_dir($folderPath)) {
             $files = scandir($folderPath);
             foreach ($files as $file) {
@@ -291,14 +333,16 @@ class DocumentationRegistry
                 continue;
             }
 
+            $folder = $catData['subfolder'] ?? $catKey;
             $accessibleDocs = [];
+
             foreach ($catData['docs'] as $filename => $docData) {
                 $docRoles = $docData['roles'] ?? $catData['roles'];
                 if (! $this->canAccess($user, $docRoles)) {
                     continue;
                 }
 
-                $filePath = $this->baseDocsPath.DIRECTORY_SEPARATOR.$catKey.DIRECTORY_SEPARATOR.$filename;
+                $filePath = $this->baseDocsPath.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$filename;
                 if (! file_exists($filePath)) {
                     continue;
                 }
@@ -344,8 +388,17 @@ class DocumentationRegistry
             return null;
         }
 
+        $inFrontmatter = false;
         foreach ($lines as $line) {
             $line = trim($line);
+            if ($line === '---') {
+                $inFrontmatter = ! $inFrontmatter;
+
+                continue;
+            }
+            if ($inFrontmatter) {
+                continue;
+            }
             if (str_starts_with($line, '# ')) {
                 return trim(substr($line, 2));
             }

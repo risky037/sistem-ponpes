@@ -120,6 +120,95 @@
                     </div>
                 </div>
 
+                {{-- ONBOARDING SECTION: MULAI MENGGUNAKAN DIGITREN --}}
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h5 class="fw-bold mb-1"><i class="bx bx-compass me-1 text-primary"></i> Mulai Menggunakan DIGITREN</h5>
+                            <p class="text-muted font-13 mb-0">Panduan orientasi kilat langkah awal bagi seluruh pengguna baru di lingkungan pesantren.</p>
+                        </div>
+                        <div>
+                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'start-here']) }}" class="btn btn-sm btn-outline-primary radius-8">
+                                <i class="bx bx-map-pin me-1"></i> Mulai Dari Sini (Alur Peta)
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row row-cols-1 row-cols-md-3 g-3">
+                        {{-- Card 1: Mulai Dari Awal --}}
+                        <div class="col">
+                            <div class="card radius-15 border shadow-sm h-100 doc-category-card">
+                                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="widgets-icons-2 rounded-circle bg-light-primary text-primary me-3 font-24">
+                                                🚀
+                                            </div>
+                                            <h6 class="fw-bold mb-0">Mulai Dari Awal</h6>
+                                        </div>
+                                        <p class="text-muted font-13 mb-3">
+                                            Untuk administrator yang baru menggunakan sistem dari kondisi awal.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('documentation.show', ['category' => 'onboarding', 'slug' => 'administrator-first-setup']) }}" class="btn btn-primary btn-sm radius-8 w-100 fw-bold">
+                                            <i class="bx bx-play-circle me-1"></i> Mulai Setup
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Card 2: Panduan Guru --}}
+                        <div class="col">
+                            <div class="card radius-15 border shadow-sm h-100 doc-category-card">
+                                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="widgets-icons-2 rounded-circle bg-light-success text-success me-3 font-24">
+                                                👨‍🏫
+                                            </div>
+                                            <h6 class="fw-bold mb-0">Panduan Guru</h6>
+                                        </div>
+                                        <p class="text-muted font-13 mb-3">
+                                            Untuk ustadz/ustadzah pengampu kegiatan belajar mengajar di kelas.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('documentation.show', ['category' => 'onboarding', 'slug' => 'guru-first-use']) }}" class="btn btn-success btn-sm radius-8 w-100 fw-bold">
+                                            <i class="bx bx-book-reader me-1"></i> Buka Panduan Guru
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Card 3: Panduan Santri --}}
+                        <div class="col">
+                            <div class="card radius-15 border shadow-sm h-100 doc-category-card">
+                                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="widgets-icons-2 rounded-circle bg-light-info text-info me-3 font-24">
+                                                🎓
+                                            </div>
+                                            <h6 class="fw-bold mb-0">Panduan Santri</h6>
+                                        </div>
+                                        <p class="text-muted font-13 mb-3">
+                                            Untuk santri pengguna aplikasi dan wali santri pembina.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('documentation.show', ['category' => 'onboarding', 'slug' => 'santri-first-use']) }}" class="btn btn-info text-white btn-sm radius-8 w-100 fw-bold">
+                                            <i class="bx bx-user me-1"></i> Buka Panduan Santri
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- SECTION 1: JELAJAHI PANDUAN RESMI (MARKDOWN REPOSITORY) --}}
                 <div class="d-flex align-items-center justify-content-between mb-3 mt-4">
                     <div>

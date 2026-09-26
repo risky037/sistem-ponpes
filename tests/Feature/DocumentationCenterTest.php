@@ -207,4 +207,106 @@ MD;
         $this->assertNotNull($nav['next']);
         $this->assertStringContainsString('Pengaturan Awal Sistem', $nav['next']['title']);
     }
+
+    public function test_onboarding_quickstart_section_visible_on_homepage(): void
+    {
+        $admin = User::factory()->create(['name' => 'Admin Onboarding']);
+        $admin->assignRole('Administrator');
+
+        $response = $this->actingAs($admin)->get(route('documentation.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Mulai Menggunakan DIGITREN');
+        $response->assertSee('Mulai Dari Awal');
+        $response->assertSee('Panduan Guru');
+        $response->assertSee('Panduan Santri');
+        $response->assertSee('Mulai Setup');
+        $response->assertSee('Buka Panduan Guru');
+        $response->assertSee('Buka Panduan Santri');
+    }
+
+    public function test_onboarding_document_renders_frontmatter_metadata(): void
+    {
+        $admin = User::factory()->create(['name' => 'Admin Reader']);
+        $admin->assignRole('Administrator');
+
+        $response = $this->actingAs($admin)->get(route('documentation.show', [
+            'category' => 'onboarding',
+            'slug' => 'administrator-first-setup',
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSee('Panduan Pertama Administrator');
+        $response->assertSee('Tingkat: Beginner');
+        $response->assertSee('v5.8.8.2');
+        $response->assertSee('15 menit baca');
+
+        /** @var DocumentationService $service */
+        $service = app(DocumentationService::class);
+        $doc = $service->getDocument('onboarding', 'administrator-first-setup', $admin);
+
+        $this->assertNotNull($doc);
+        $this->assertEquals('beginner', $doc['difficulty']);
+        $this->assertEquals('5.8.8.2', $doc['version']);
+        $this->assertEquals(15, $doc['reading_time']);
+        $this->assertArrayHasKey('frontmatter', $doc);
+        $this->assertContains('Administrator', $doc['frontmatter']['role']);
+    }
+
+    public function test_start_here_document_renders_workflow_diagram(): void
+    {
+        $admin = User::factory()->create(['name' => 'Admin Workflow']);
+        $admin->assignRole('Administrator');
+
+        $response = $this->actingAs($admin)->get(route('documentation.show', [
+            'category' => 'user-guide',
+            'slug' => 'start-here',
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSee('Apa itu DIGITREN');
+        $response->assertSee('Urutan Penggunaan Sistem');
+        $response->assertSee('mermaid-diagram-card');
+        $response->assertSee('Sistem Kosong');
+        $response->assertSee('Profil Pondok');
+        $response->assertSee('Learning Management System');
+    }
+
+    public function test_role_authorization_on_onboarding_documents(): void
+    {
+        $santri = User::factory()->create(['name' => 'Santri Onboarding']);
+        $santri->assignRole('Santri');
+
+        // Santri can access santri-first-use
+        $responseSantri = $this->actingAs($santri)->get(route('documentation.show', [
+            'category' => 'onboarding',
+            'slug' => 'santri-first-use',
+        ]));
+        $responseSantri->assertStatus(200);
+        $responseSantri->assertSee('Panduan Pertama Santri &amp; Wali', false);
+
+        // Santri CANNOT access administrator-first-setup
+        $responseForbidden = $this->actingAs($santri)->get(route('documentation.show', [
+            'category' => 'onboarding',
+            'slug' => 'administrator-first-setup',
+        ]));
+        $responseForbidden->assertStatus(404);
+
+        // Guru can access guru-first-use but NOT administrator-first-setup
+        $guru = User::factory()->create(['name' => 'Guru Onboarding']);
+        $guru->assignRole('Guru');
+
+        $responseGuru = $this->actingAs($guru)->get(route('documentation.show', [
+            'category' => 'onboarding',
+            'slug' => 'guru-first-use',
+        ]));
+        $responseGuru->assertStatus(200);
+        $responseGuru->assertSee('Panduan Pertama Guru / Asatidz');
+
+        $responseGuruForbidden = $this->actingAs($guru)->get(route('documentation.show', [
+            'category' => 'onboarding',
+            'slug' => 'administrator-first-setup',
+        ]));
+        $responseGuruForbidden->assertStatus(404);
+    }
 }

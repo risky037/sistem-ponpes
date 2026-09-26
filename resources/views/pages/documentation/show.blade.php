@@ -203,6 +203,16 @@
                                 <span class="badge bg-light-primary text-primary px-3 py-1 radius-8 font-12 fw-bold">
                                     <i class="{{ $document['category_icon'] }} me-1"></i> {{ $document['category_name'] }}
                                 </span>
+                                @if (!empty($document['difficulty']))
+                                    <span class="badge bg-light-warning text-dark px-2 py-1 radius-8 font-11">
+                                        <i class="bx bx-signal-3 me-1"></i> Tingkat: {{ ucfirst($document['difficulty']) }}
+                                    </span>
+                                @endif
+                                @if (!empty($document['version']))
+                                    <span class="badge bg-light-secondary text-secondary px-2 py-1 radius-8 font-11">
+                                        v{{ $document['version'] }}
+                                    </span>
+                                @endif
                                 <span class="text-muted font-12">
                                     <i class="bx bx-time-five me-1"></i> Diperbarui {{ $document['formatted_date'] }}
                                 </span>

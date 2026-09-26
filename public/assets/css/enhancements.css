@@ -66,3 +66,42 @@
 img[loading="lazy"] {
     transition: opacity 0.2s ease-in-out;
 }
+
+/* ==========================================================================
+   Floating Action Layer & Z-Index Hierarchy (Phase 5.8.8.2)
+   ========================================================================== */
+:root {
+    --z-modal: 5000;
+    --z-theme-customizer: 3000;
+    --z-navbar: 2000;
+    --z-content: 1;
+}
+
+/* Theme Switcher Button & Drawer Layer */
+.btn-switcher {
+    z-index: 3000;
+}
+
+.switcher-body {
+    position: relative;
+    z-index: 3000;
+}
+
+.switcher-body .offcanvas {
+    z-index: 3100;
+}
+
+/* Content layer isolation so cards do not overlap floating action elements */
+.page-wrapper,
+.page-content,
+.doc-section,
+.doc-category-card {
+    position: relative;
+    z-index: 1;
+}
+
+/* Sidebar sticky elements inside content stay below floating switchers */
+.sticky-top {
+    z-index: 1020;
+}
+

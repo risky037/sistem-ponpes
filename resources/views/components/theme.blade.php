@@ -3,9 +3,9 @@
 @endphp
 <div>
     <!--start switcher-->
-    <div class="switcher-body">
+    <div class="switcher-body" style="position: relative; z-index: 3000;">
         <button class="btn btn-primary btn-switcher shadow-sm" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i
+            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" style="z-index: 3000;" title="Theme Customizer"><i
                 class="bx bx-cog bx-spin"></i></button>
         <div class="offcanvas offcanvas-end shadow border-start-0 p-2" data-bs-scroll="true" data-bs-backdrop="false"
             tabindex="-1" id="offcanvasScrolling">

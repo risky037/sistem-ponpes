@@ -66,10 +66,14 @@ class DocumentationService
             $parsed = $this->parser->parse($rawContent);
 
             $wordCount = str_word_count(strip_tags($rawContent));
-            $readingTime = max(1, (int) ceil($wordCount / 180));
+            $fm = $parsed['frontmatter'] ?? [];
+            $title = $fm['title'] ?? $docMeta['title'];
+            $readingTime = isset($fm['estimated_time'])
+                ? (int) filter_var($fm['estimated_time'], FILTER_SANITIZE_NUMBER_INT)
+                : max(1, (int) ceil($wordCount / 180));
 
             return [
-                'title' => $docMeta['title'],
+                'title' => $title,
                 'slug' => $docMeta['slug'],
                 'category' => $docMeta['category'],
                 'category_name' => $docMeta['category_name'],
@@ -77,6 +81,9 @@ class DocumentationService
                 'filename' => $docMeta['filename'],
                 'html' => $parsed['html'],
                 'toc' => $parsed['toc'],
+                'frontmatter' => $fm,
+                'difficulty' => $fm['difficulty'] ?? null,
+                'version' => $fm['version'] ?? null,
                 'last_modified' => $mtime,
                 'formatted_date' => date('d M Y, H:i', $mtime),
                 'size_bytes' => filesize($filePath),

@@ -11,11 +11,15 @@ class MarkdownParser
      *
      * @return array{
      *     html: string,
-     *     toc: array<int, array{level: int, text: string, id: string}>
+     *     toc: array<int, array{level: int, text: string, id: string}>,
+     *     frontmatter: array<string, mixed>
      * }
      */
     public function parse(string $markdown): array
     {
+        // 0. Extract YAML Frontmatter if present
+        [$frontmatter, $markdown] = $this->extractFrontmatter($markdown);
+
         // 1. Preprocess custom containers (::: type ... :::)
         $processed = $this->preprocessCustomContainers($markdown);
 
@@ -46,7 +50,56 @@ class MarkdownParser
         return [
             'html' => $html,
             'toc' => $toc,
+            'frontmatter' => $frontmatter,
         ];
+    }
+
+    /**
+     * Extract optional YAML frontmatter from top of markdown file.
+     *
+     * @return array{0: array<string, mixed>, 1: string}
+     */
+    public function extractFrontmatter(string $content): array
+    {
+        $frontmatter = [];
+        $body = $content;
+
+        if (preg_match('/^---\r?\n(.*?)\r?\n---\r?\n(.*)$/s', $content, $matches)) {
+            $rawYaml = $matches[1];
+            $body = $matches[2];
+            $lines = explode("\n", $rawYaml);
+            $currentKey = null;
+
+            foreach ($lines as $line) {
+                $line = rtrim($line, "\r\n");
+                if (trim($line) === '' || str_starts_with(trim($line), '#')) {
+                    continue;
+                }
+
+                if (preg_match('/^\s*-\s+(.*)$/', $line, $listMatch)) {
+                    if ($currentKey) {
+                        if (! isset($frontmatter[$currentKey]) || ! is_array($frontmatter[$currentKey])) {
+                            $frontmatter[$currentKey] = [];
+                        }
+                        $frontmatter[$currentKey][] = trim($listMatch[1], " \t\n\r\0\x0B\"'");
+                    }
+
+                    continue;
+                }
+
+                if (preg_match('/^([a-zA-Z0-9_\-]+)\s*:\s*(.*)$/', $line, $kvMatch)) {
+                    $currentKey = trim($kvMatch[1]);
+                    $val = trim($kvMatch[2]);
+                    if ($val === '') {
+                        $frontmatter[$currentKey] = [];
+                    } else {
+                        $frontmatter[$currentKey] = trim($val, " \t\n\r\0\x0B\"'");
+                    }
+                }
+            }
+        }
+
+        return [$frontmatter, $body];
     }
 
     /**
