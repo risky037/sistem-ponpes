@@ -1,6 +1,42 @@
 @extends('layouts.app')
 
-@section('title', 'Panduan Penggunaan Sistem | DIGITREN')
+@section('title', 'Pusat Dokumentasi & Panduan Sistem | DIGITREN')
+
+@push('css')
+<style>
+    .search-results-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        max-height: 380px;
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border: 1px solid #e2e8f0;
+    }
+    .search-result-item {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        text-decoration: none;
+        display: block;
+    }
+    .search-result-item:hover {
+        background: #f8fafc;
+    }
+    .doc-category-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .doc-category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+    }
+</style>
+@endpush
 
 @section('content')
     <div class="page-wrapper">
@@ -14,23 +50,131 @@
                         <div class="row align-items-center">
                             <div class="col-lg-8">
                                 <span class="badge bg-light text-primary px-3 py-1 mb-2 font-12 font-weight-bold">
-                                    <i class="bx bx-book-open me-1"></i> Dokumentasi & SOP Resmi
+                                    <i class="bx bx-book-open me-1"></i> Dokumentasi & SOP Resmi DIGITREN
                                 </span>
                                 <h3 class="font-weight-bold text-white mb-2">Panduan Penggunaan Sistem DIGITREN</h3>
                                 <p class="text-white-50 mb-4 font-14">
                                     Pusat petunjuk teknis operasional terpadu Pondok Pesantren Fatimah Az Zahra. Panduan disesuaikan dengan peran hak akses Anda:
                                     <strong class="text-white">{{ ucfirst($primaryRole) }}</strong>.
                                 </p>
-                                <div class="position-relative" style="max-width: 500px;">
+                                <div class="position-relative" style="max-width: 550px;">
                                     <input type="text" id="doc_search" class="form-control form-control-lg border-0 ps-5"
-                                           placeholder="Cari topik panduan... (mis: presensi, setoran, reset)">
+                                           placeholder="Cari topik panduan... (mis: presensi, setoran, reset, lms, skenario)">
                                     <i class="bx bx-search position-absolute top-50 start-0 translate-middle-y ms-3 font-22 text-muted"></i>
+                                    <div id="search_results_container" class="search-results-dropdown d-none text-dark"></div>
                                 </div>
                             </div>
                             <div class="col-lg-4 text-center d-none d-lg-block">
-                                <i class="bx bx-support font-100 text-white-50 opacity-25"></i>
+                                <i class="bx bx-book-reader font-100 text-white-50 opacity-25"></i>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {{-- KPI METRICS STRIP --}}
+                <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+                    <div class="col">
+                        <div class="card radius-15 border shadow-sm mb-0">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="widgets-icons rounded-circle bg-light-primary text-primary me-3">
+                                        <i class="bx bx-file"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted text-uppercase font-11 fw-bold">Total Panduan Tersedia</small>
+                                        <h5 class="mb-0 fw-bold text-primary">{{ $totalArticles }} Dokumen Resmi</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card radius-15 border shadow-sm mb-0">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="widgets-icons rounded-circle bg-light-success text-success me-3">
+                                        <i class="bx bx-category"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted text-uppercase font-11 fw-bold">Kategori Panduan</small>
+                                        <h5 class="mb-0 fw-bold text-success">{{ $totalCategories }} Modul Utama</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card radius-15 border shadow-sm mb-0">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="widgets-icons rounded-circle bg-light-info text-info me-3">
+                                        <i class="bx bx-shield-quarter"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted text-uppercase font-11 fw-bold">Akses Hak Peran</small>
+                                        <h5 class="mb-0 fw-bold text-info">{{ ucfirst($primaryRole) }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- SECTION 1: JELAJAHI PANDUAN RESMI (MARKDOWN REPOSITORY) --}}
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-4">
+                    <div>
+                        <h5 class="fw-bold mb-1"><i class="bx bx-grid-alt me-1 text-primary"></i> Pustaka Panduan Lengkap</h5>
+                        <p class="text-muted font-13 mb-0">Pilih modul panduan berbasis dokumen markdown resmi pesantren untuk membaca petunjuk lengkap.</p>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-5">
+                    @forelse ($menu as $catKey => $category)
+                        <div class="col-12 col-md-6 col-xl-4" id="cat-{{ $catKey }}">
+                            <div class="card radius-15 border shadow-sm h-100 doc-category-card">
+                                <div class="card-header bg-transparent border-bottom py-3">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <div class="widgets-icons-2 rounded-circle bg-light-primary text-primary me-2 font-20">
+                                                <i class="{{ $category['icon'] }}"></i>
+                                            </div>
+                                            <h6 class="mb-0 fw-bold font-15">{{ $category['name'] }}</h6>
+                                        </div>
+                                        <span class="badge bg-light text-primary rounded-pill font-11 fw-bold">
+                                            {{ count($category['docs']) }} Bab
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-3">
+                                    <p class="text-muted font-13 mb-3">{{ $category['description'] }}</p>
+                                    <div class="list-group list-group-flush">
+                                        @foreach ($category['docs'] as $doc)
+                                            <a href="{{ $doc['url'] }}" class="list-group-item list-group-item-action border-0 px-2 py-2 d-flex align-items-center justify-content-between font-13 text-secondary hover-primary radius-8 mb-1">
+                                                <div class="text-truncate me-2">
+                                                    <i class="bx bx-chevron-right text-muted me-1"></i>
+                                                    <span>{{ $doc['title'] }}</span>
+                                                </div>
+                                                <span class="badge bg-light-secondary text-muted font-10">Buka</span>
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="card radius-15 border shadow-sm p-4 text-center">
+                                <p class="text-muted mb-0">Tidak ada modul panduan yang diizinkan untuk peran Anda saat ini.</p>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+
+                {{-- SECTION 2: SOP & RINGKASAN CEPAT BERBASIS ROLE --}}
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-4">
+                    <div>
+                        <h5 class="fw-bold mb-1"><i class="bx bx-bolt-circle me-1 text-warning"></i> Petunjuk Singkat Cepat Peran</h5>
+                        <p class="text-muted font-13 mb-0">Akses cepat langkah kerja operasional harian sesuai peran Anda.</p>
                     </div>
                 </div>
 
@@ -109,7 +253,12 @@
                                             <li>Setiap akun dapat direset kata sandinya oleh Admin melalui tombol <strong>Reset Password</strong> di tabel pengguna.</li>
                                             <li>Aturan keamanan: Akun Administrator tidak dapat menghapus akunnya sendiri dan akun admin terakhir dilindungi oleh sistem.</li>
                                         </ol>
-                                        <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-primary">Buka Menu Pengguna</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-primary">Buka Menu Pengguna</a>
+                                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'role-dan-hak-akses']) }}" class="btn btn-sm btn-primary">
+                                                <i class="bx bx-book-open me-1"></i> Baca Panduan Lengkap
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +280,12 @@
                                             <li>Hanya satu tahun akademik yang berstatus aktif dalam satu waktu.</li>
                                             <li>Jadwalkan agenda di <strong>Kalender Akademik</strong> untuk sinkronisasi jadwal libur, ujian, dan kegiatan pondok.</li>
                                         </ol>
-                                        <a href="{{ route('academic-year.index') }}" class="btn btn-sm btn-outline-success">Buka Tahun Akademik</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('academic-year.index') }}" class="btn btn-sm btn-outline-success">Buka Tahun Akademik</a>
+                                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'academic-setup-workflow']) }}" class="btn btn-sm btn-success">
+                                                <i class="bx bx-book-open me-1"></i> Baca Panduan Setup
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +314,12 @@
                                             <li>Daftar santri dengan kehadiran di bawah ambang batas (75%) disorot secara otomatis untuk tindakan wali kelas.</li>
                                             <li>Gunakan filter semester untuk mengomparasi performa antar periode akademik.</li>
                                         </ul>
-                                        <a href="{{ route('academic.intelligence.index') }}" class="btn btn-sm btn-outline-info">Buka Intelligence Portal</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('academic.intelligence.index') }}" class="btn btn-sm btn-outline-info">Buka Intelligence Portal</a>
+                                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'intelligence-dashboard']) }}" class="btn btn-sm btn-info text-white">
+                                                <i class="bx bx-book-open me-1"></i> Panduan Dasbor
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +371,12 @@
                                             <li>Gunakan tombol <strong>Tandai Semua Hadir</strong> untuk mempercepat input kelas.</li>
                                             <li>Klik <strong>Simpan Presensi</strong> untuk menyimpan catatan sesi ke server.</li>
                                         </ol>
-                                        <a href="{{ route('attendance.index') }}" class="btn btn-sm btn-outline-success">Buka Presensi Kelas</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('attendance.index') }}" class="btn btn-sm btn-outline-success">Buka Presensi Kelas</a>
+                                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'guru-workflow']) }}" class="btn btn-sm btn-success">
+                                                <i class="bx bx-book-open me-1"></i> Panduan Guru Lengkap
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +399,12 @@
                                             <li>Masukkan nilai santri (rentang 0 - 100).</li>
                                             <li>Nilai tersimpan akan dapat dipantau oleh santri bersangkutan secara transparan (read-only).</li>
                                         </ol>
-                                        <a href="{{ route('assessment.score.index') }}" class="btn btn-sm btn-outline-warning">Buka Perekaman Asesmen</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('assessment.score.index') }}" class="btn btn-sm btn-outline-warning">Buka Perekaman Asesmen</a>
+                                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'penilaian-workflow']) }}" class="btn btn-sm btn-warning text-dark">
+                                                <i class="bx bx-book-open me-1"></i> Panduan Penilaian
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -266,7 +435,12 @@
                                             <li>Gunakan tombol nominal cepat (<code>+50rb</code>, <code>+100rb</code>, <code>+200rb</code>) untuk efisiensi kasir.</li>
                                             <li>Klik <strong>Simpan Setoran</strong> dan pastikan saldo terkini bertambah secara langsung.</li>
                                         </ul>
-                                        <a href="{{ route('transaksi.index', ['jenis_transaksi' => 'Setoran']) }}" class="btn btn-sm btn-outline-success">Buka Terminal Setoran</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('transaksi.index', ['jenis_transaksi' => 'Setoran']) }}" class="btn btn-sm btn-outline-success">Buka Terminal Setoran</a>
+                                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'keuangan-workflow']) }}" class="btn btn-sm btn-success">
+                                                <i class="bx bx-book-open me-1"></i> Panduan Keuangan
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -319,7 +493,12 @@
                                             <li><strong>Capaian Asesmen:</strong> Mengetahui nilai tugas, ujian lisan, dan evaluasi pengajar tanpa ranking kompetitif.</li>
                                             <li><strong>Catatan Tabungan:</strong> Memantau saldo akhir dan riwayat transaksi setoran/penarikan.</li>
                                         </ul>
-                                        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-outline-primary">Ke Beranda Santri</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-outline-primary">Ke Beranda Santri</a>
+                                            <a href="{{ route('documentation.show', ['category' => 'user-guide', 'slug' => 'santri-workflow']) }}" class="btn btn-sm btn-primary">
+                                                <i class="bx bx-book-open me-1"></i> Panduan Santri Lengkap
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -360,10 +539,22 @@
 @push('js')
     <script>
         $(document).ready(function() {
+            var searchIndexData = null;
+            var searchTimeout = null;
+
+            // Load search index JSON in background
+            $.getJSON("{{ route('documentation.search-index') }}", function(data) {
+                searchIndexData = data;
+            });
+
             $('#doc_search').on('input', function() {
                 var query = $(this).val().toLowerCase().trim();
+                var resultsContainer = $('#search_results_container');
+
+                // 1. Filter local doc-item on current page
                 if (!query) {
                     $('.doc-item').show();
+                    resultsContainer.addClass('d-none').empty();
                     return;
                 }
 
@@ -375,6 +566,53 @@
                         $(this).hide();
                     }
                 });
+
+                // 2. Debounced search across full markdown knowledge base
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    if (!searchIndexData || query.length < 2) {
+                        resultsContainer.addClass('d-none').empty();
+                        return;
+                    }
+
+                    var matches = searchIndexData.filter(function(item) {
+                        var inTitle = item.title.toLowerCase().indexOf(query) !== -1;
+                        var inKeywords = item.keywords.toLowerCase().indexOf(query) !== -1;
+                        var inExcerpt = item.excerpt.toLowerCase().indexOf(query) !== -1;
+                        return inTitle || inKeywords || inExcerpt;
+                    });
+
+                    resultsContainer.empty();
+
+                    if (matches.length === 0) {
+                        resultsContainer.html('<div class="p-3 text-muted font-13 text-center"><i class="bx bx-info-circle me-1"></i> Tidak ditemukan panduan untuk kata kunci tersebut.</div>').removeClass('d-none');
+                        return;
+                    }
+
+                    var html = '<div class="p-2 bg-light border-bottom font-11 text-uppercase fw-bold text-muted d-flex justify-content-between">' +
+                               '<span>Hasil Pencarian Dokumen (' + matches.length + ')</span>' +
+                               '<span class="text-primary">Klik untuk membaca</span>' +
+                               '</div>';
+
+                    matches.slice(0, 7).forEach(function(item) {
+                        html += '<a href="' + item.url + '" class="search-result-item">' +
+                                '<div class="d-flex align-items-center justify-content-between mb-1">' +
+                                '<span class="fw-bold font-13 text-primary">' + item.title + '</span>' +
+                                '<span class="badge bg-light text-secondary font-10">' + item.category_name + '</span>' +
+                                '</div>' +
+                                '<p class="mb-0 font-12 text-muted text-truncate">' + item.excerpt + '</p>' +
+                                '</a>';
+                    });
+
+                    resultsContainer.html(html).removeClass('d-none');
+                }, 200);
+            });
+
+            // Close search results dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#doc_search, #search_results_container').length) {
+                    $('#search_results_container').addClass('d-none');
+                }
             });
         });
     </script>

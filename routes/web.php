@@ -55,6 +55,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('dashboard', DashboardController::class)->name('dashboard');
     Route::get('panduan', [DocumentationController::class, 'index'])->name('documentation.index');
+    Route::get('panduan/search-index.json', [DocumentationController::class, 'searchIndex'])->name('documentation.search-index');
+    Route::get('panduan/{category}/{slug}', [DocumentationController::class, 'show'])->name('documentation.show');
     Route::controller(ProfilController::class)->as('profil.')->group(function () {
         Route::get('/profil/{user}', 'show')->name('show');
         Route::post('/profil/account/{user}', 'account')->name('account');
