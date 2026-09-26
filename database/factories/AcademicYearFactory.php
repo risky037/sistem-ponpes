@@ -14,7 +14,7 @@ class AcademicYearFactory extends Factory
 
     public function definition(): array
     {
-        $year = fake()->numberBetween(2023, 2026);
+        $year = fake()->unique()->numberBetween(2000, 2099);
         $semester = fake()->randomElement(['Ganjil', 'Genap']);
         $nextYear = $year + 1;
 

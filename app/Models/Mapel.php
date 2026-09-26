@@ -47,4 +47,9 @@ class Mapel extends Model
     {
         return $this->hasMany(TeachingAssignment::class, 'mapel_id');
     }
+
+    public function learningMaterials(): HasMany
+    {
+        return $this->hasMany(LearningMaterial::class, 'mapel_id');
+    }
 }

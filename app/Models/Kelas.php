@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\LogActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kelas extends Model
@@ -41,5 +42,16 @@ class Kelas extends Model
     public function class_schedules(): HasMany
     {
         return $this->hasMany(ClassSchedule::class);
+    }
+
+    public function primaryLearningMaterials(): HasMany
+    {
+        return $this->hasMany(LearningMaterial::class, 'kelas_id');
+    }
+
+    public function targetedLearningMaterials(): BelongsToMany
+    {
+        return $this->belongsToMany(LearningMaterial::class, 'learning_material_targets', 'kelas_id', 'learning_material_id')
+            ->withTimestamps();
     }
 }

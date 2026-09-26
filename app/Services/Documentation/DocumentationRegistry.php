@@ -245,6 +245,11 @@ class DocumentationRegistry
                 'order' => 6,
                 'roles' => ['Administrator', 'Pengurus'],
                 'docs' => [
+                    'phase-5.8.10-release-notes.md' => [
+                        'title' => 'Catatan Rilis Fase 5.8.10',
+                        'slug' => 'phase-5-8-10-release-notes',
+                        'roles' => ['Administrator', 'Pengurus'],
+                    ],
                     'phase-5.8.9-release-notes.md' => [
                         'title' => 'Catatan Rilis Fase 5.8.9',
                         'slug' => 'phase-5-8-9-release-notes',

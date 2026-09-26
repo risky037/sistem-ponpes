@@ -74,4 +74,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(AcademicKpiSnapshot::class, 'captured_by');
     }
+
+    public function learningMaterials(): HasMany
+    {
+        return $this->hasMany(LearningMaterial::class, 'teacher_id');
+    }
+
+    public function createdLearningMaterials(): HasMany
+    {
+        return $this->hasMany(LearningMaterial::class, 'created_by');
+    }
 }
