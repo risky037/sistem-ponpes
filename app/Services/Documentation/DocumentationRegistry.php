@@ -172,6 +172,31 @@ class DocumentationRegistry
                 'order' => 4,
                 'roles' => ['Administrator', 'Pengurus', 'Guru'],
                 'docs' => [
+                    'lms-existing-domain-audit.md' => [
+                        'title' => 'Audit Domain Akademik Eksisting & Kesiapan Integrasi LMS',
+                        'slug' => 'lms-existing-domain-audit',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru'],
+                    ],
+                    'lms-database-schema.md' => [
+                        'title' => 'Desain Skema Basis Data LMS',
+                        'slug' => 'lms-database-schema',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru'],
+                    ],
+                    'lms-authorization-design.md' => [
+                        'title' => 'Desain Otorisasi & Kebijakan Akses LMS',
+                        'slug' => 'lms-authorization-design',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru'],
+                    ],
+                    'lms-service-architecture.md' => [
+                        'title' => 'Desain Arsitektur Layanan LMS',
+                        'slug' => 'lms-service-architecture',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru'],
+                    ],
+                    'lms-roadmap.md' => [
+                        'title' => 'Peta Jalan Pengembangan LMS',
+                        'slug' => 'lms-roadmap',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru'],
+                    ],
                     'learning-management-design.md' => [
                         'title' => 'Desain Arsitektur LMS Pesantren',
                         'slug' => 'learning-management-design',
@@ -196,6 +221,11 @@ class DocumentationRegistry
                 'order' => 5,
                 'roles' => ['Administrator', 'Pengurus', 'Guru'],
                 'docs' => [
+                    'lms-user-interface-design.md' => [
+                        'title' => 'Desain Antarmuka & Tata Letak LMS',
+                        'slug' => 'lms-user-interface-design',
+                        'roles' => ['Administrator', 'Pengurus', 'Guru'],
+                    ],
                     'lms-ui-guideline.md' => [
                         'title' => 'Pedoman Desain Antarmuka LMS',
                         'slug' => 'lms-ui-guideline',
@@ -215,6 +245,11 @@ class DocumentationRegistry
                 'order' => 6,
                 'roles' => ['Administrator', 'Pengurus'],
                 'docs' => [
+                    'phase-5.8.9-release-notes.md' => [
+                        'title' => 'Catatan Rilis Fase 5.8.9',
+                        'slug' => 'phase-5-8-9-release-notes',
+                        'roles' => ['Administrator', 'Pengurus'],
+                    ],
                     'phase-5.8.8.1-release-notes.md' => [
                         'title' => 'Catatan Rilis Fase 5.8.8.1',
                         'slug' => 'phase-5-8-8-1-release-notes',
